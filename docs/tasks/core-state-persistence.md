@@ -109,19 +109,23 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent / session model; working tre
 
 ### CORE-05: Connect checkpoints to player and domain state
 
-- [ ] **CORE-05 — deliverable complete** (Stage 1).
+- [x] **CORE-05 — deliverable complete** (Stage 1; accepted 24 October 2026, Main Agent).
 
 **Dependencies / sequencing:** CORE-04, PLAYER-04, INV-04, NPC-05, HACK-05. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/persistence/checkpoint_controller.gd`; `game/tests/persistence/test_checkpoint.gd`; `game/tests/scenes/checkpoint_fixture.tscn`.
+**Files / ownership:** `game/persistence/checkpoint_controller.gd`; `game/tests/persistence/test_checkpoint.gd`; `game/tests/scenes/checkpoint_fixture.tscn`; coordinated registration in `game/tests/run_tests.gd`.
 
 **Interfaces:** Consume player `on_death` and domain snapshot adapters; orchestrate restore after validated load, before control is returned.
 
-- [ ] **Acceptance:** Death restores a coherent checkpoint containing health, equipment/ammo, missions, world flags, NPC facts and active-effect state. Missing/corrupt checkpoints fail with a recoverable user state. Reject save/load reentrancy and partial restore.
+**Supporting integration scope recorded before implementation (24 October 2026):** Compose the accepted `PlayerSnapshot`, `InventorySnapshot`, `DialogueSnapshot` (NPC memory + missions), and `HackSnapshot` through CORE-04 `SnapshotAdapters` callbacks without modifying shared adapter contracts. Add the focused `checkpoint` suite and coordinated registration in `game/tests/run_tests.gd`; exercise a real native `user://` save across an isolated Godot child process to verify quit/relaunch hydration. The fixture scene is used to host a player projection; no product scene or new gameplay domain is added. The controller owns save/load reentrancy and a validated in-memory recovery snapshot; failed disk load may recover that snapshot while reporting the original disk error.
 
-- [ ] **Test expectations:** Change each domain, die, restore and assert the checkpoint values together. Save, fully quit and relaunch fixture; verify no loot duplication, mission re-award or dead NPC resurrection beyond checkpoint policy.
+- [x] **Acceptance:** Death restores a coherent checkpoint containing health, equipment/ammo, missions, world flags, NPC facts and active-effect state. Missing/corrupt checkpoints fail with a recoverable user state. Reject save/load reentrancy and partial restore.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Change each domain, die, restore and assert the checkpoint values together. Save, fully quit and relaunch fixture; verify no loot duplication, mission re-award or dead NPC resurrection beyond checkpoint policy.
+
+- [x] **Evidence recorded:** [CORE-05 report](../reports/CORE-05.md); focused checkpoint 15/15 including fresh-process relaunch; import and diff check exit 0. Latest integrated run exposed the known intermittent AI-03 empty-route failure (exit 1); details in report.
+
+Accepted 24 October 2026 (Asia/Kolkata), Main Agent. Checkpoint restore composes the existing real domain owners through CORE-04 adapters; no `SnapshotAdapters` contract change. Missing/corrupt reads report the disk error and restore the last validated recovery snapshot. The latest full suite is recorded as failed due to the independent AI-03 navigation race; CORE-05 focused acceptance passed. [Report](../reports/CORE-05.md).
 
 ### CORE-06: Exercise save compatibility for release
 

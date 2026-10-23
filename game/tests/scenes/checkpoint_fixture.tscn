@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://persistence/checkpoint_controller.gd" id="1_controller"]
+
+[node name="CheckpointFixture" type="Node3D"]
+
+[node name="PlayerProjection" type="Node3D" parent="."]
+position = Vector3(2, 0, 3)
+
+[node name="CheckpointController" type="Node" parent="."]
+script = ExtResource("1_controller")
