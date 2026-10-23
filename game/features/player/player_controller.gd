@@ -91,6 +91,15 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
+func _input(event: InputEvent) -> void:
+	if not can_act or not is_mouse_captured or not event is InputEventMouseMotion:
+		return
+	var motion: InputEventMouseMotion = event as InputEventMouseMotion
+	var invert_sign: float = 1.0 if invert_look else -1.0
+	rotate_y(-motion.relative.x * mouse_sensitivity)
+	_head.rotation.x = clampf(_head.rotation.x + motion.relative.y * mouse_sensitivity * invert_sign, deg_to_rad(-85.0), deg_to_rad(85.0))
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not can_act or not _focused or not _control_locks.is_empty():
 		return
@@ -99,13 +108,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		if not is_mouse_captured and mouse_button.pressed and mouse_button.button_index == MOUSE_BUTTON_LEFT:
 			set_mouse_capture_enabled(true)
 			get_viewport().set_input_as_handled()
-		return
-	if not is_mouse_captured or not event is InputEventMouseMotion:
-		return
-	var motion: InputEventMouseMotion = event as InputEventMouseMotion
-	var invert_sign: float = 1.0 if invert_look else -1.0
-	rotate_y(-motion.relative.x * mouse_sensitivity)
-	_head.rotation.x = clampf(_head.rotation.x + motion.relative.y * mouse_sensitivity * invert_sign, deg_to_rad(-85.0), deg_to_rad(85.0))
 
 
 func add_control_lock(lock_id: StringName) -> void:

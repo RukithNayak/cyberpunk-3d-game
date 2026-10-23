@@ -137,7 +137,7 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Magazine and reserve remain
 
 Accepted 24 October 2026 (Asia/Kolkata), Main Agent. Pause/settings work and automated checks are recorded in [PLAYER-05 report](../reports/PLAYER-05.md). Human pause-screen visual/art-direction playtest remains unrun; combat audio is deferred to PLAYER-08.
 
-Mouse-look recovery follow-up, 24 October 2026: returning focus leaves capture released until the player clicks the game window; that click now recaptures for look. `player_controller` regression reproduced red (44 cases, 2 failures) and green (44/44); import exit 0. See the [PLAYER-05 report](../reports/PLAYER-05.md).
+Mouse-look recovery follow-up, 24 October 2026: returning focus leaves capture released until the player clicks the game window; that click now recaptures for look. A second user retest found that the full-screen dialogue could consume captured mouse-motion before the player received it. Camera motion now runs before GUI handling. The overlay-routing regression reproduced red (45 cases, 1 failure) and green (45/45); import exit 0. Physical trackpad retest remains pending. See the [PLAYER-05 report](../reports/PLAYER-05.md).
 
 ### PLAYER-06: Produce reference combat presentation and weapon families
 

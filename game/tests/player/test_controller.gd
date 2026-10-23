@@ -144,8 +144,25 @@ func _exercise_movement(fixture_scene: PackedScene, check: Callable) -> void:
 	look_motion.relative = Vector2(24.0, 12.0)
 	var yaw_before_look: float = player.rotation.y
 	var pitch_before_look: float = head.rotation.x
-	player.call("_unhandled_input", look_motion)
+	player.call("_input", look_motion)
 	check.call(not is_equal_approx(player.rotation.y, yaw_before_look) and not is_equal_approx(head.rotation.x, pitch_before_look), "mouse motion after recapture rotates player and camera")
+	var overlay_layer: CanvasLayer = CanvasLayer.new()
+	root.add_child(overlay_layer)
+	var dialogue_overlay: Control = Control.new()
+	dialogue_overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dialogue_overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay_layer.add_child(dialogue_overlay)
+	await _scene_tree().process_frame
+	var routed_motion: InputEventMouseMotion = InputEventMouseMotion.new()
+	routed_motion.position = _scene_tree().root.get_visible_rect().size * 0.5
+	routed_motion.global_position = routed_motion.position
+	routed_motion.relative = Vector2(24.0, 12.0)
+	yaw_before_look = player.rotation.y
+	pitch_before_look = head.rotation.x
+	_scene_tree().root.push_input(routed_motion)
+	check.call(not is_equal_approx(player.rotation.y, yaw_before_look) and not is_equal_approx(head.rotation.x, pitch_before_look), "mouse look receives motion while full-screen dialogue UI is visible")
+	overlay_layer.queue_free()
+	await _scene_tree().process_frame
 	player.call("simulate_focus_lost")
 	check.call(not player.call("resume_mouse_capture"), "resume is rejected while unfocused")
 
