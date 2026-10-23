@@ -117,32 +117,43 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Distraction broadcasts are 
 
 ### HACK-05: Persist effects and present target feedback
 
-- [ ] **HACK-05 — deliverable complete** (Stage 1).
+- [x] **HACK-05 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** HACK-02, HACK-03, HACK-04, CORE-04. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/features/hacking/hack_snapshot.gd`; `game/ui/hacking_hud.gd`; `game/tests/hacking/test_effect_persistence.gd`.
+**Files / ownership:** `game/features/hacking/{hack_snapshot,hacking_service}.gd`; `game/features/hacking/targets/{hackable_camera,hackable_turret,hackable_implant}.gd`; `game/ui/{hacking_hud.gd,hacking_hud.tscn}`; `game/tests/hacking/test_effect_persistence.gd`; coordinated test-runner registration.
 
 **Interfaces:** Use CORE-04’s documented timed-effect clock policy and WORLD-01 lifecycle events; HUD reads eligibility/effect events.
 
-- [ ] **Acceptance:** Persist permanent flags and remaining timed effects; unloading cancels transient operations without losing durable truth. Save/load restores durations consistently; invalid targets cannot receive delayed effects. Show valid target, cost, cooldown, duration and rejection reason.
+**Supporting contract recorded before implementation, 23 October 2026:** CORE-04 `domains.active_hacks` is owned by a data-only `HackSnapshot` API with `capture_domain`, `prepare_domain`, and `commit_domain` callbacks suitable for composition with the existing CORE-04 `SnapshotAdapters`; records contain only canonical target UUID, ability ID, remaining seconds, and owning chunk ID. Existing permanent UNLOCK_DOOR flags remain authoritative in the target's EntityRegistry record and are not duplicated in the hack domain. The runtime effect owner keeps Node references only in a separate weak-reference projection cache. It receives WORLD-01 `chunk_pre_unload`/`chunk_activated` events, pauses effect time while a chunk is inactive, and requires a freshly hydrated target with a matching UUID before reapplying a saved remainder; stale or missing targets are discarded without delayed mutation. Active time advances only from the gameplay simulation tick; offline time never advances. HackingService optionally records timed hacks after a target commit and offers a side-effect-free status query. HackingHUD presents that query and service result/rejection signals, including a visible provider-offline state. Display cost, cooldown and duration values are existing configurable tuning defaults, not approved balance.
 
-- [ ] **Test expectations:** Save mid-effect, unload/destroy target, reload and advance the agreed clock; verify energy, effect expiry and cleanup. Playtest readable feedback during combat and provider failure.
+- [x] **Acceptance:** Permanent UNLOCK_DOOR flags remain in the existing EntityRegistry save path; timed camera/turret/implant effects persist only as target UUID, ability ID, remaining seconds and chunk ID. WORLD-01 unload pauses duration; CORE-04 SaveStore reload resumes it on a same-UUID projection, and mismatched-chunk targets do not receive the effect. HackingHUD displays eligibility, cost, cooldown, duration, commit/rejection, and provider-offline state.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Saved mid-effect through CORE-04 SaveStore, reloaded into same and fresh snapshot owners, verified unload pause/re-entry, cleanup on expiry, rejection for a mismatched chunk projection, and no Nodes in saved domain data. HUD feedback and provider failure are covered in-engine/headlessly. Human combat readability remains at WORLD-06.
+
+- [x] **Evidence recorded:** [HACK-05 report](../reports/HACK-05.md); `hacking_effects`29/29 and integrated `all`819/819, both exit0; import exit0; Godot MCP scene launch had empty errors after a HUD warning fix. Existing ObjectDB/physics RID shutdown warnings remain in the integrated runner.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `HackSnapshot` provides CORE-04 domain callbacks, data-only timed records and weak runtime projection bindings; WORLD-01 chunk events pause/resume the active simulation clock. HackingHUD consumes a side-effect-free HackingService status query and its result signals. Permanent unlock truth remains in existing entity state. See [report](../reports/HACK-05.md).
 
 ### HACK-06: Author representative hacking encounter scenarios
 
-- [ ] **HACK-06 — deliverable complete** (Stage 1; added at the user's request on 23 October 2026).
+- [x] **HACK-06 — deliverable complete** (Stage 1; added at the user's request on 23 October 2026).
 
 **Dependencies / sequencing:** HACK-02, HACK-03, HACK-04, HACK-05, AI-03, WORLD-03, ASSET-03. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/world/fixtures/hacking/{stealth_route,security_corridor}.{tscn,gd}`; `game/tests/world/test_hacking_scenarios.gd`; coordinated test-runner registration.
+**Files / ownership:** `game/world/fixtures/hacking/{stealth_route,security_corridor}.{tscn,gd}`; shared `game/world/fixtures/hacking/hacking_encounter_base.gd`; `game/tests/world/test_hacking_scenarios.gd`; coordinated test-runner registration.
 
 **Interfaces:** Compose existing target, AI, player, navigation and asset contracts. Do not add a second source of gameplay truth or persistent Node references. These are Stage 1 representative scenarios, not the final district/city content.
 
-- [ ] **Acceptance:** Provide at least two visually distinct cyberpunk security encounters. The stealth route uses camera surveillance and an eligible locked-door shortcut with a viable un-hacked route; the security corridor uses a turret-covered crossing with nearby cover/flanking and an enemy implant/distraction opportunity. Targets are reachable and visible from natural approach points, hacking each has a clear tactical consequence, and a no-hack/resource-depleted route remains possible. Preserve room for later distinct districts and larger continuous-city content.
+**Supporting contract recorded before implementation, 23 October 2026:** `stealth_route` is a neon-market maintenance alley with an obvious camera-covered approach, a durable service-door shortcut, and a physical outer bypass that remains walkable without hacking; `security_corridor` is a visually separate corporate transit/security spine with a turret-covered crossing, concrete cover/flank, guard distraction device and implant target. Each fixture owns a stable chunk ID, authored UUIDs, approach/player markers, floor/walls/collision and its service setup; it binds door persistence through the existing EntityRegistry/EntityHydrator and hacking effects through the existing HackingService/HackSnapshot. Geometry uses existing ASSET-03 reference meshes plus engine-authored structural blocks/signage/emissive lighting; no model downloads, new Blender assets or persistent Node references. Route checks exercise the authored route graph and actual blocking geometry. These are focused Stage 1 encounter samples only; the large continuous walkable city and distinct districts remain the project direction and later production scope.
 
-- [ ] **Test expectations:** Load both scenes and verify target IDs/tags/range/line-of-sight, route reachability, guard response to distraction/implant disruption, and timed camera/turret effect consequences. Human layout/playability review may be recorded as deferred if only automated scene checks are available.
+**Implementation clarification recorded before coding:** Both fixtures subclass a shared `HackingEncounterBase` that owns repeated scene construction and setup of accepted managers/services; each fixture keeps its layout, route markers and visual palette authored in its own scene script. This avoids duplicated lifecycle/configuration glue while keeping the encounter layouts independently editable.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable captures/report links before checking the deliverable.
+- [x] **Acceptance:** Provide at least two visually distinct cyberpunk security encounters. The stealth route uses camera surveillance and an eligible locked-door shortcut with a viable un-hacked route; the security corridor uses a turret-covered crossing with nearby cover/flanking and an enemy implant/distraction opportunity. Targets are reachable and visible from natural approach points, hacking each has a clear tactical consequence, and a no-hack/resource-depleted route remains possible. Preserve room for later distinct districts and larger continuous-city content.
+
+- [x] **Test expectations:** Loaded both scenes and verified target UUIDs/tags/range/line-of-sight, route reachability, guard response to distraction/implant disruption, and timed camera/turret effect consequences. Rendered scene captures are recorded; detailed human free-walk/combat readability playtest is deferred to WORLD-06.
+
+- [x] **Evidence recorded:** [HACK-06 report](../reports/HACK-06.md); `hacking_scenarios`24/24 and integrated `all`843/843 exit0; import and diff check exit0; Godot MCP launched both scenes with no runtime errors. Existing AI script-shadowing warnings and integrated shutdown leaks are noted in the report.
+
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. The neon-market alley combines a camera-covered shortcut with a verified maintenance bypass; the corporate transit spine combines a turret crossing with cover, flank, distraction and implant tactics. Both preserve the larger continuous cyberpunk city direction. Human encounter playtest remains at WORLD-06. See [report](../reports/HACK-06.md).

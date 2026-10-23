@@ -7,12 +7,14 @@ signal detection_state_changed(target_uuid: String, enabled: bool)
 const UUID_PATTERN: String = "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
 
 @export var persistent_uuid: String = ""
+@export var chunk_id: String = ""
 @export_range(0.5, 100.0, 0.5) var detection_range: float = 18.0
 @export_range(1.0, 179.0, 1.0) var field_of_view_degrees: float = 70.0
 @export_flags_3d_physics var detection_collision_mask: int = 1
 
 var detection_enabled: bool = true
 var effect_remaining_seconds: float = 0.0
+var _external_hack_clock: bool = false
 
 var _uuid_regex: RegEx = RegEx.new()
 
@@ -26,7 +28,7 @@ func _enter_tree() -> void:
 
 
 func _process(delta: float) -> void:
-	if not is_finite(delta) or delta < 0.0 or effect_remaining_seconds <= 0.0:
+	if _external_hack_clock or not is_finite(delta) or delta < 0.0 or effect_remaining_seconds <= 0.0:
 		return
 	effect_remaining_seconds = maxf(0.0, effect_remaining_seconds - delta)
 	if effect_remaining_seconds == 0.0 and not detection_enabled and is_inside_tree() and not is_queued_for_deletion():
@@ -36,6 +38,37 @@ func _process(delta: float) -> void:
 
 func get_persistent_uuid() -> String:
 	return persistent_uuid
+
+
+func get_hack_chunk_id() -> String:
+	return chunk_id
+
+
+func set_external_hack_clock(enabled: bool) -> void:
+	_external_hack_clock = enabled
+
+
+func restore_hack_effect(ability_id: int, remaining_seconds: float) -> bool:
+	if ability_id != HackDefinition.Ability.DISABLE_CAMERA or not is_finite(remaining_seconds) or remaining_seconds <= 0.0:
+		return false
+	detection_enabled = false
+	effect_remaining_seconds = remaining_seconds
+	detection_state_changed.emit(persistent_uuid, false)
+	return true
+
+
+func set_hack_remaining(ability_id: int, remaining_seconds: float) -> bool:
+	if ability_id != HackDefinition.Ability.DISABLE_CAMERA or not is_finite(remaining_seconds) or remaining_seconds < 0.0:
+		return false
+	effect_remaining_seconds = remaining_seconds
+	if remaining_seconds == 0.0 and not detection_enabled:
+		detection_enabled = true
+		detection_state_changed.emit(persistent_uuid, true)
+	return true
+
+
+func clear_hack_effect(ability_id: int) -> bool:
+	return set_hack_remaining(ability_id, 0.0)
 
 
 func can_detect_target(target: Node3D) -> bool:

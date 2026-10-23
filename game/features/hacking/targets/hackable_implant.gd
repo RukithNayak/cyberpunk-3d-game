@@ -7,6 +7,7 @@ signal implant_disrupted(target_uuid: String, duration_seconds: float, damage: i
 const UUID_PATTERN: String = "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
 
 @export var persistent_uuid: String = ""
+@export var chunk_id: String = ""
 @export var source_faction_id: String = "player"
 @export var owner_agent_path: NodePath = ^".."
 
@@ -31,6 +32,34 @@ func _ready() -> void:
 
 func get_persistent_uuid() -> String:
 	return persistent_uuid
+
+
+func get_hack_chunk_id() -> String:
+	return chunk_id
+
+
+func set_external_hack_clock(enabled: bool) -> void:
+	if _agent != null:
+		_agent.set_external_stun_clock(enabled)
+
+
+func restore_hack_effect(ability_id: int, remaining_seconds: float) -> bool:
+	if ability_id != HackDefinition.Ability.DISRUPT_IMPLANT or _agent == null or not _agent.can_accept_implant_disruption():
+		return false
+	return _agent.apply_stun(remaining_seconds) and _agent.set_stun_remaining_seconds(remaining_seconds)
+
+
+func set_hack_remaining(ability_id: int, remaining_seconds: float) -> bool:
+	if ability_id != HackDefinition.Ability.DISRUPT_IMPLANT or _agent == null:
+		return false
+	return _agent.set_stun_remaining_seconds(remaining_seconds)
+
+
+func clear_hack_effect(ability_id: int) -> bool:
+	if not set_hack_remaining(ability_id, 0.0):
+		return false
+	_agent.set_external_stun_clock(false)
+	return true
 
 
 func can_accept_hack(definition: Resource, _operator: Node3D) -> bool:

@@ -11,12 +11,14 @@ enum EffectiveMode { HOSTILE, NEUTRAL, FRIENDLY, DESTROYED }
 const UUID_PATTERN: String = "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
 
 @export var persistent_uuid: String = ""
+@export var chunk_id: String = ""
 @export var faction_id: String = ""
 @export var player_faction_id: String = "player"
 @export_enum("Unconfigured", "Neutral", "Friendly") var temporary_override_mode: int = TemporaryOverrideMode.UNCONFIGURED
 @export var collision_shape_path: NodePath = ^"CollisionShape3D"
 
 var effect_remaining_seconds: float = 0.0
+var _external_hack_clock: bool = false
 var override_active: bool = false
 var is_destroyed: bool = false
 
@@ -38,7 +40,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if is_destroyed or not is_finite(delta) or delta < 0.0 or effect_remaining_seconds <= 0.0:
+	if _external_hack_clock or is_destroyed or not is_finite(delta) or delta < 0.0 or effect_remaining_seconds <= 0.0:
 		return
 	effect_remaining_seconds = maxf(0.0, effect_remaining_seconds - delta)
 	if effect_remaining_seconds == 0.0 and override_active and is_inside_tree() and not is_queued_for_deletion():
@@ -64,6 +66,37 @@ func configure(faction_state: FactionState) -> bool:
 
 func get_persistent_uuid() -> String:
 	return persistent_uuid
+
+
+func get_hack_chunk_id() -> String:
+	return chunk_id
+
+
+func set_external_hack_clock(enabled: bool) -> void:
+	_external_hack_clock = enabled
+
+
+func restore_hack_effect(ability_id: int, remaining_seconds: float) -> bool:
+	if ability_id != HackDefinition.Ability.DISABLE_TURRET or is_destroyed or not is_finite(remaining_seconds) or remaining_seconds <= 0.0:
+		return false
+	override_active = true
+	effect_remaining_seconds = remaining_seconds
+	allegiance_changed.emit(persistent_uuid, get_effective_mode(), true)
+	return true
+
+
+func set_hack_remaining(ability_id: int, remaining_seconds: float) -> bool:
+	if ability_id != HackDefinition.Ability.DISABLE_TURRET or is_destroyed or not is_finite(remaining_seconds) or remaining_seconds < 0.0:
+		return false
+	effect_remaining_seconds = remaining_seconds
+	if remaining_seconds == 0.0 and override_active:
+		override_active = false
+		allegiance_changed.emit(persistent_uuid, get_effective_mode(), false)
+	return true
+
+
+func clear_hack_effect(ability_id: int) -> bool:
+	return set_hack_remaining(ability_id, 0.0)
 
 
 func can_accept_hack(definition: Resource, _operator: Node3D) -> bool:

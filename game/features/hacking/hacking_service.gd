@@ -5,6 +5,7 @@ class_name HackingService
 signal energy_changed(current: float, maximum: float)
 signal hack_committed(target_uuid: String, ability_id: int, remaining_energy: float)
 signal hack_rejected(target_uuid: String, ability_id: int, reason: StringName)
+signal effect_committed(target_uuid: String, ability_id: int, duration_seconds: float)
 
 const TARGET_UUID_PATTERN: String = "^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
 const REASON_UNCONFIGURED: StringName = &"unconfigured"
@@ -26,6 +27,7 @@ var _operator: Node3D
 var _state: HackingState
 var _definitions: Dictionary = {}
 var _line_of_sight_check: Callable
+var _effect_snapshot: HackSnapshot
 var _pending_requests: Dictionary = {}
 var _uuid_regex: RegEx = RegEx.new()
 var _configured: bool = false
@@ -35,7 +37,7 @@ func _init() -> void:
 	_uuid_regex.compile(TARGET_UUID_PATTERN)
 
 
-func configure(operator: Node3D, state: HackingState, definitions: Array, line_of_sight_check: Callable = Callable()) -> bool:
+func configure(operator: Node3D, state: HackingState, definitions: Array, line_of_sight_check: Callable = Callable(), effect_snapshot: HackSnapshot = null) -> bool:
 	if _configured or operator == null or state == null or definitions.is_empty():
 		return false
 	var staged_definitions: Dictionary = {}
@@ -50,6 +52,7 @@ func configure(operator: Node3D, state: HackingState, definitions: Array, line_o
 	_state = state
 	_definitions = staged_definitions
 	_line_of_sight_check = line_of_sight_check
+	_effect_snapshot = effect_snapshot
 	_configured = true
 	return true
 
@@ -97,6 +100,7 @@ func request_hack(target_node: Node3D, hack_type: int) -> bool:
 		return _reject(target_uuid, hack_type, REASON_REENTRANT)
 	_pending_requests[request_key] = true
 	var reason: StringName = _eligibility_failure(target_node, target_uuid, definition)
+	var effect_chunk_id: String = ""
 	if reason == &"" and not target_node.has_method("can_accept_hack"):
 		reason = REASON_TARGET_STATE
 	if reason == &"":
@@ -107,22 +111,45 @@ func request_hack(target_node: Node3D, hack_type: int) -> bool:
 		reason = _eligibility_failure(target_node, target_uuid, definition)
 	if reason == &"" and not target_node.has_method("apply_hack"):
 		reason = REASON_TARGET_COMMIT
+	if reason == &"" and _effect_snapshot != null and definition.effect_duration_seconds > 0.0:
+		if not target_node.has_method("get_hack_chunk_id"):
+			reason = REASON_TARGET_STATE
+		else:
+			effect_chunk_id = String(target_node.call("get_hack_chunk_id"))
+			if not _effect_snapshot.can_record_effect(target_uuid, hack_type, definition.effect_duration_seconds, effect_chunk_id):
+				reason = REASON_TARGET_STATE
 	if reason != &"":
 		_pending_requests.erase(request_key)
 		return _reject(target_uuid, hack_type, reason)
 	if not _state.try_spend(definition.energy_cost):
 		_pending_requests.erase(request_key)
 		return _reject(target_uuid, hack_type, REASON_INSUFFICIENT_ENERGY)
+	if _effect_snapshot != null and definition.effect_duration_seconds > 0.0 \
+		and not _effect_snapshot.register_target(target_node, effect_chunk_id):
+		_state.refund(definition.energy_cost)
+		_pending_requests.erase(request_key)
+		return _reject(target_uuid, hack_type, REASON_TARGET_STATE)
 	var committed: bool = bool(target_node.call("apply_hack", definition, _operator))
 	if not committed:
 		_state.refund(definition.energy_cost)
+		if _effect_snapshot != null and definition.effect_duration_seconds > 0.0:
+			_effect_snapshot.unregister_target(target_uuid)
 		_pending_requests.erase(request_key)
 		return _reject(target_uuid, hack_type, REASON_TARGET_COMMIT)
+	if _effect_snapshot != null and definition.effect_duration_seconds > 0.0:
+		var recorded: bool = _effect_snapshot.record_effect(target_uuid, hack_type, definition.effect_duration_seconds, effect_chunk_id)
+		if not recorded:
+			push_error("HackingService committed an effect that its prevalidated snapshot could not record: %s" % target_uuid)
+			_state.refund(definition.energy_cost)
+			_pending_requests.erase(request_key)
+			return _reject(target_uuid, hack_type, REASON_TARGET_COMMIT)
 	_state.start_cooldown(target_uuid, hack_type, definition.cooldown_seconds)
 	_pending_requests.erase(request_key)
 	last_rejection_reason = &""
 	energy_changed.emit(_state.current_energy, _state.max_energy)
 	hack_committed.emit(target_uuid, hack_type, _state.current_energy)
+	if definition.effect_duration_seconds > 0.0:
+		effect_committed.emit(target_uuid, hack_type, definition.effect_duration_seconds)
 	return true
 
 
@@ -131,10 +158,40 @@ func tick_energy_regen(delta: float) -> void:
 		var previous_energy: float = _state.current_energy
 		if _state.tick(delta) and not is_equal_approx(previous_energy, _state.current_energy):
 			energy_changed.emit(_state.current_energy, _state.max_energy)
+		if _effect_snapshot != null:
+			_effect_snapshot.advance_active_time(delta)
 
 
 func get_last_rejection_reason() -> StringName:
 	return last_rejection_reason
+
+
+func get_target_status(target_node: Node3D, ability_id: int) -> Dictionary:
+	if not _configured:
+		return {"valid": false, "reason": REASON_UNCONFIGURED, "cost": 0.0, "cooldown": 0.0, "duration": 0.0, "name": "HACK SERVICE OFFLINE"}
+	if not _is_live_node(target_node) or not _definitions.has(ability_id):
+		return {"valid": false, "reason": REASON_INVALID_TARGET, "cost": 0.0, "cooldown": 0.0, "duration": 0.0, "name": "UNKNOWN TARGET"}
+	var definition: HackDefinition = _definitions[ability_id]
+	var target_uuid: String = String(target_node.call("get_persistent_uuid")) if target_node.has_method("get_persistent_uuid") else ""
+	var cooldown: float = _state.get_cooldown_remaining(target_uuid, ability_id)
+	var reason: StringName = _eligibility_failure(target_node, target_uuid, definition)
+	if reason == &"" and (not target_node.has_method("can_accept_hack") or not bool(target_node.call("can_accept_hack", definition, _operator))):
+		reason = REASON_TARGET_STATE
+	if reason == &"" and _effect_snapshot != null and definition.effect_duration_seconds > 0.0:
+		if not target_node.has_method("get_hack_chunk_id"):
+			reason = REASON_TARGET_STATE
+		else:
+			var chunk_id: String = String(target_node.call("get_hack_chunk_id"))
+			if not _effect_snapshot.can_record_effect(target_uuid, ability_id, definition.effect_duration_seconds, chunk_id):
+				reason = REASON_TARGET_STATE
+	return {
+		"valid": reason == &"",
+		"reason": reason,
+		"cost": definition.energy_cost,
+		"cooldown": cooldown,
+		"duration": definition.effect_duration_seconds,
+		"name": definition.display_name,
+	}
 
 
 func _eligibility_failure(target_node: Node3D, target_uuid: String, definition: HackDefinition) -> StringName:

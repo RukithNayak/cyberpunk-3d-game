@@ -56,6 +56,7 @@ var _has_last_hostile_position: bool = false
 var _authored_hostility: Dictionary = {}
 var _attack_remaining: float = 0.0
 var _stun_remaining: float = 0.0
+var _external_stun_clock: bool = false
 var _search_remaining: float = 0.0
 var _movement_speed_intent: float = 0.0
 var _unloaded: bool = false
@@ -145,6 +146,7 @@ func restore_simulation_state(faction_state: FactionState, faction_id: String, c
 	_has_last_hostile_position = false
 	_attack_remaining = 0.0
 	_stun_remaining = 0.0
+	_external_stun_clock = false
 	_search_remaining = 0.0
 	_authored_hostility.clear()
 	if dead:
@@ -174,6 +176,7 @@ func prepare_for_unload() -> void:
 	_has_last_hostile_position = false
 	_attack_remaining = 0.0
 	_stun_remaining = 0.0
+	_external_stun_clock = false
 	_search_remaining = 0.0
 	_authored_hostility.clear()
 	if _perception != null:
@@ -225,6 +228,20 @@ func apply_stun(duration_seconds: float) -> bool:
 	return true
 
 
+func set_external_stun_clock(enabled: bool) -> void:
+	_external_stun_clock = enabled
+
+
+func set_stun_remaining_seconds(remaining_seconds: float) -> bool:
+	if not _configured or state == AIState.DEAD or not is_finite(remaining_seconds) or remaining_seconds < 0.0 or remaining_seconds > MAX_STUN_SECONDS:
+		return false
+	_stun_remaining = remaining_seconds
+	if remaining_seconds > 0.0:
+		_set_substate(Substate.STUNNED)
+		_set_movement_intent(Vector3.ZERO, 0.0, false)
+	return true
+
+
 func can_accept_implant_disruption() -> bool:
 	return _configured and not _unloaded and health_state != null and not health_state.is_dead() \
 		and state != AIState.DEAD and _stun_remaining <= 0.0
@@ -252,7 +269,8 @@ func tick(delta: float) -> bool:
 		_on_death()
 		return false
 	if _stun_remaining > 0.0:
-		_stun_remaining = maxf(0.0, _stun_remaining - delta)
+		if not _external_stun_clock:
+			_stun_remaining = maxf(0.0, _stun_remaining - delta)
 		_set_substate(Substate.STUNNED)
 		_set_movement_intent(Vector3.ZERO, 0.0, false)
 		return true
