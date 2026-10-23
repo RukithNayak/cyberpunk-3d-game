@@ -28,6 +28,10 @@ var _faction_rules: FactionRules
 var _configured: bool = false
 
 
+func _enter_tree() -> void:
+	add_to_group(&"npc_perception")
+
+
 func configure(faction_state: FactionState, configured_sight_range: float = DEFAULT_SIGHT_RANGE, configured_collision_mask: int = DEFAULT_COLLISION_MASK, configured_sound_event_limit: int = DEFAULT_SOUND_EVENT_LIMIT) -> bool:
 	if _configured or faction_state == null:
 		return false

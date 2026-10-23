@@ -137,7 +137,7 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `navigation_handoff` 40/40,
 
 - [ ] **WORLD-06 — deliverable complete** (Stage 1).
 
-**Dependencies / sequencing:** CORE-05, WORLD-04, WORLD-05, PLAYER-05, INV-05, AI-05, HACK-05, NPC-06, ASSET-03, ASSET-04. Prerequisite IDs resolve through the master progress task index.
+**Dependencies / sequencing:** CORE-05, WORLD-04, WORLD-05, PLAYER-05, INV-05, AI-05, HACK-05, HACK-06, NPC-06, ASSET-03, ASSET-04. Prerequisite IDs resolve through the master progress task index.
 
 **Files / ownership:** `game/tests/scenes/feasibility.tscn`; `benchmarks/feasibility/`; `docs/feasibility-report.md`.
 

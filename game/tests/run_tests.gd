@@ -8,7 +8,7 @@ var _failures: int = 0
 func _initialize() -> void:
 	var args: PackedStringArray = OS.get_cmdline_user_args()
 	if args.size() != 2 or args[0] != "--suite":
-		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|hitscan|weapon_transactions|player_hud|inventory_items|inventory_grid|inventory_equipment|inventory_persistence|inventory_ui|hacking_energy|hacking_door|ai_perception|ai_states|ai_navigation|ai_unload|navigation_handoff|ai_encounter|interiors|deliberate_failure>")
+		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|hitscan|weapon_transactions|player_hud|inventory_items|inventory_grid|inventory_equipment|inventory_persistence|inventory_ui|hacking_energy|hacking_door|hacking_security|hacking_combat|ai_perception|ai_states|ai_navigation|ai_unload|navigation_handoff|ai_encounter|interiors|deliberate_failure>")
 		quit(2)
 		return
 	var suite: String = args[1]
@@ -59,6 +59,10 @@ func _initialize() -> void:
 				await hacking_energy_test.run(_check)
 				var hacking_door_test: RefCounted = load("res://tests/hacking/test_door.gd").new()
 				await hacking_door_test.run(_check)
+				var hacking_security_test: RefCounted = load("res://tests/hacking/test_security.gd").new()
+				await hacking_security_test.run(_check)
+				var hacking_combat_test: RefCounted = load("res://tests/hacking/test_combat_hacks.gd").new()
+				await hacking_combat_test.run(_check)
 				var ai_perception_test: RefCounted = load("res://tests/ai/test_perception.gd").new()
 				await ai_perception_test.run(_check)
 				var ai_states_test: RefCounted = load("res://tests/ai/test_states.gd").new()
@@ -125,6 +129,12 @@ func _initialize() -> void:
 		"hacking_door":
 			var hacking_door_test: RefCounted = load("res://tests/hacking/test_door.gd").new()
 			await hacking_door_test.run(_check)
+		"hacking_security":
+			var hacking_security_test: RefCounted = load("res://tests/hacking/test_security.gd").new()
+			await hacking_security_test.run(_check)
+		"hacking_combat":
+			var hacking_combat_test: RefCounted = load("res://tests/hacking/test_combat_hacks.gd").new()
+			await hacking_combat_test.run(_check)
 		"ai_perception":
 			var ai_perception_test: RefCounted = load("res://tests/ai/test_perception.gd").new()
 			await ai_perception_test.run(_check)

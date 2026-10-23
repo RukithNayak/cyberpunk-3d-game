@@ -77,7 +77,7 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `HackableDoor` commits unlo
 
 ### HACK-03: Implement timed camera and turret effects
 
-- [ ] **HACK-03 — deliverable complete** (Stage 1).
+- [x] **HACK-03 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** HACK-01, AI-01. Prerequisite IDs resolve through the master progress task index.
 
@@ -85,27 +85,35 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `HackableDoor` commits unlo
 
 **Interfaces:** DISABLE_CAMERA removes detection for configured duration; DISABLE_TURRET uses an explicitly configured neutral/friendly override and restores prior allegiance.
 
-- [ ] **Acceptance:** Publish chosen temporary durations and turret mode in data, not inferred defaults. Reapplication follows one documented refresh/reject policy. Expiry restores prior state without undoing later authoritative destruction or faction changes.
+**Supporting contract recorded before implementation, 23 October 2026:** Camera detection is queried through a target-owned `can_detect_target(Node3D)` API that checks enabled state, exported FOV/range, and live physics line-of-sight. Camera effect duration uses its `HackDefinition` data (current tuning default 8 seconds). Turret effect duration uses the definition (current tuning default 10 seconds); the scene must explicitly configure the temporary mode as neutral or friendly before the target can accept a hack. Neutral never selects targets; friendly selects factions currently hostile to the player via live `FactionRules`. After expiry, normal hostility is recomputed from `FactionState`, so standing changes during the effect are preserved. Active effects reject reapplication; HackingService cooldowns also reject requests until elapsed. Targets destroyed during an effect do not restore or mutate external faction state. Durations/modes are configurable tuning, not approved balance. Effects remain transient until HACK-05.
 
-- [ ] **Test expectations:** Advance a fake clock through start/reapply/expiry; test disabled detection, turret targeting, target destruction and allegiance change during an effect. No permanent faction mutation from a temporary hack.
+- [x] **Acceptance:** Camera/turret durations use explicit HackDefinition values (8/10 seconds), and turret nodes require an explicit neutral/friendly mode. Reapplication is rejected during an active effect and by the configured cooldown. Expiry recomputes current faction hostility; target destruction cancels the temporary projection without writing faction state.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Deterministically advanced effect time through start/expiry; verified camera FOV/physics occlusion and suppression, neutral/friendly turret targeting, reapply rejection, target destruction, and faction standing changes during an effect. No faction mutation is performed by the target adapters.
+
+- [x] **Evidence recorded:** [HACK-03 report](../reports/HACK-03.md); `hacking_security`23/23, `hacking_door`25/25, `hacking_energy`30/30, integrated `all`771/771, import and diff check exit0. Integrated shutdown still emits one ObjectDB and one physics-body RID leak warning. Godot MCP confirmed 4.7.2; no target scene exists for visual review yet. HACK-06 owns representative world scenarios.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Target scripts provide queried camera detection and temporary turret allegiance modes, with HackingService eligibility/cost/cooldown handling. Timed effects are runtime-only pending HACK-05. See [report](../reports/HACK-03.md).
 
 ### HACK-04: Implement distraction and implant disruption
 
-- [ ] **HACK-04 — deliverable complete** (Stage 1).
+- [x] **HACK-04 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** HACK-01, AI-02. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/features/hacking/targets/hackable_distraction.gd`; `game/features/hacking/targets/hackable_implant.gd`; `game/tests/hacking/test_combat_hacks.gd`.
+**Files / ownership:** `game/features/hacking/targets/hackable_distraction.gd`; `game/features/hacking/targets/hackable_implant.gd`; `game/features/npcs/perception.gd`; `game/features/npcs/tactical_agent.gd`; `game/tests/hacking/test_combat_hacks.gd`.
 
 **Interfaces:** TRIGGER_DISTRACTION emits AI-01 sound/investigation events; DISRUPT_IMPLANT invokes AI stun and normal damage services.
 
-- [ ] **Acceptance:** Distraction affects eligible listeners at target location. Implant disruption applies the specified 3-second stun and configurable minor damage; interruptions cannot duplicate damage or allow attacks during stun.
+**Supporting scope recorded before implementation, 23 October 2026:** Register `NpcPerception` instances in the `npc_perception` runtime group so a distraction target can broadcast to nearby listeners without owning their Nodes. Add a small `TacticalAgent.can_accept_implant_disruption()` query so the target can reject dead, unloaded, or already-stunned agents before any mutation. Preserve AI-01's distance-only sound radius (walls do not block it) and AI-02's normal health/stun ownership. Damage source faction and sound radius are per-target authored tuning; no persistent Node references are added.
 
-- [ ] **Test expectations:** Test guard behind cover investigates distraction, exact 3-second stun duration with a controlled clock, dead/immune target rejection, repeated callbacks and interruption of an attack/reload.
+- [x] **Acceptance:** Distraction affects eligible listeners at target location. Implant disruption applies the specified 3-second stun and configurable minor damage; interruptions cannot duplicate damage or allow attacks during stun.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Tested a guard behind cover investigating at the distraction source, sound radius gating, cooldown/repeated callback, active attack interrupted by implant disruption, exact 3-second stun under a controlled clock, damage deduplication, and dead target rejection. Reload interruption is not applicable because AI-02 has no reload substate.
+
+- [x] **Evidence recorded:** [HACK-04 report](../reports/HACK-04.md); focused combat19/19, AI states32/32, AI perception20/20, HACK energy30/30, door25/25, security23/23, all790/790; import exit0. Full integrated suite retains the known ObjectDB and physics-body RID shutdown warnings. See report for exact commands and results.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Distraction broadcasts are decoupled through the runtime listener group and preserve AI-01 distance-only sound semantics. Implant disruption delegates damage and timed stun to AI-02, rejecting invalid targets before mutation. See [report](../reports/HACK-04.md).
 
 ### HACK-05: Persist effects and present target feedback
 
@@ -122,3 +130,19 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `HackableDoor` commits unlo
 - [ ] **Test expectations:** Save mid-effect, unload/destroy target, reload and advance the agreed clock; verify energy, effect expiry and cleanup. Playtest readable feedback during combat and provider failure.
 
 - [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+
+### HACK-06: Author representative hacking encounter scenarios
+
+- [ ] **HACK-06 — deliverable complete** (Stage 1; added at the user's request on 23 October 2026).
+
+**Dependencies / sequencing:** HACK-02, HACK-03, HACK-04, HACK-05, AI-03, WORLD-03, ASSET-03. Prerequisite IDs resolve through the master progress task index.
+
+**Files / ownership:** `game/world/fixtures/hacking/{stealth_route,security_corridor}.{tscn,gd}`; `game/tests/world/test_hacking_scenarios.gd`; coordinated test-runner registration.
+
+**Interfaces:** Compose existing target, AI, player, navigation and asset contracts. Do not add a second source of gameplay truth or persistent Node references. These are Stage 1 representative scenarios, not the final district/city content.
+
+- [ ] **Acceptance:** Provide at least two visually distinct cyberpunk security encounters. The stealth route uses camera surveillance and an eligible locked-door shortcut with a viable un-hacked route; the security corridor uses a turret-covered crossing with nearby cover/flanking and an enemy implant/distraction opportunity. Targets are reachable and visible from natural approach points, hacking each has a clear tactical consequence, and a no-hack/resource-depleted route remains possible. Preserve room for later distinct districts and larger continuous-city content.
+
+- [ ] **Test expectations:** Load both scenes and verify target IDs/tags/range/line-of-sight, route reachability, guard response to distraction/implant disruption, and timed camera/turret effect consequences. Human layout/playability review may be recorded as deferred if only automated scene checks are available.
+
+- [ ] **Evidence recorded:** Add focused commands/results and applicable captures/report links before checking the deliverable.

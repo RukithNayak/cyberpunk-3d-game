@@ -225,6 +225,15 @@ func apply_stun(duration_seconds: float) -> bool:
 	return true
 
 
+func can_accept_implant_disruption() -> bool:
+	return _configured and not _unloaded and health_state != null and not health_state.is_dead() \
+		and state != AIState.DEAD and _stun_remaining <= 0.0
+
+
+func get_stun_remaining_seconds() -> float:
+	return _stun_remaining
+
+
 func apply_damage(amount: int, source_faction: String, attacker: Node3D = null) -> void:
 	if not _configured or state == AIState.DEAD or amount <= 0:
 		return
