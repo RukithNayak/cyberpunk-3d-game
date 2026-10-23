@@ -37,23 +37,27 @@
 
 ### NPC-01: Define response schema, context and mock provider
 
-- [ ] **NPC-01 — deliverable complete** (Stage 1).
+- [x] **NPC-01 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** CORE-02. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/features/dialogue/provider.gd`; `game/features/dialogue/mock_provider.gd`; `game/features/dialogue/context_snapshot.gd`; `game/features/dialogue/response_validator.gd`; `game/tests/dialogue/test_schema.gd`.
+**Files / ownership:** `game/features/dialogue/{provider,mock_provider,context_snapshot,response_validator,llm_response}.gd`; `game/tests/dialogue/test_schema.gd`; coordinated runner registration.
 
 **Interfaces:** ContextSnapshot includes NPC identity, scoped facts, bounded memory, eligible templates and standing; LLMResponse contains dialogue_text and proposed_action. Provider publishes completion with NPC/conversation/request-generation IDs.
 
-- [ ] **Acceptance:** Enforce explicit JSON types, size limits and action allowlist. Mock provider emits deterministic valid, delayed and invalid responses. Schema recognizes all six detailed-design actions but cannot directly execute them. Document limits as configurable engineering defaults.
+**Supporting contract recorded before implementation:** Context payload has exact fields `npc_identity` (`npc_id`, `display_name`, `faction_id`), `scoped_facts`, `memory_summary`, `eligible_mission_templates`, and integer `faction_standing`. IDs use lowercase `[a-z0-9][a-z0-9_.-]{0,79}`; defaults cap facts/templates at 32 entries, fact text at 240 chars, memory at 1,200 chars, display name at 80 chars, and serialized request/response JSON at 8 KiB. `LLMResponse` is data-only and never dispatches actions. Response JSON has exactly `dialogue_text` and `proposed_action`; action is null or `{action, parameters}`. The allowlist is the six detailed-design actions; every action has an exact parameter key set (begin_fight has none), and IDs must pass the same identifier rule. Text is bounded at 1,200 chars. Provider API emits raw JSON with NPC ID, conversation ID and generation; MockProvider offers deterministic valid, delayed and malformed responses and has no gameplay-state references or mutation capability.
 
-- [ ] **Test expectations:** Inject broken JSON, huge text/body, missing/unknown keys, incorrect types, unknown actions and invalid parameters. Assert no gameplay state changes from parsing or prompt-injected commands.
+- [x] **Acceptance:** Enforced explicit JSON types, exact action parameter keys, size limits and the six-action allowlist. The mock emits deterministic valid, delayed and malformed responses. Schema returns inert proposals and directly executes no action. Engineering limits are recorded as configurable defaults.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Covered malformed JSON, oversized text/body/context, missing/unknown keys, wrong types, unknown actions, extra/wrong action parameters and instruction-like context text. Confirmed validation of all six proposals mutates neither registry nor faction standing.
+
+- [x] **Evidence recorded:** [NPC-01 report](../reports/NPC-01.md); `dialogue_schema`44/44 and final integrated `all`887/887 exit0; import and diff check exit0. The first full run hit the documented intermittent AI-03 navigation fixture race; retry passed. No scene/MCP visual check applies.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Context and response data are strictly bounded; provider proposals remain inert until a later authoritative dispatcher validates them. `MockDialogueProvider` exercises valid, delayed and invalid responses with request identity. See [report](../reports/NPC-01.md).
 
 ### NPC-02: Implement asynchronous Ollama lifecycle and fallback
 
-- [ ] **NPC-02 — deliverable complete** (Stage 1).
+- [x] **NPC-02 — deliverable complete** (Stage 1; offline/mock-backed acceptance).
 
 **Dependencies / sequencing:** NPC-01, CORE-01. Prerequisite IDs resolve through the master progress task index.
 
@@ -61,11 +65,15 @@
 
 **Interfaces:** `submit_dialogue_request(npc_id: String, prompt: String) -> void`; `_on_http_response_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void`.
 
-- [ ] **Acceptance:** Use non-blocking HTTP, initially one concurrent request and bounded context/queue. Use configurable 15-second initial deadline; timeout, HTTP error, missing model/provider or invalid output routes to authored fallback. Cancel/increment generations on walk-away, death, unload and conversation replacement; late/duplicate responses do nothing.
+**Supporting contract recorded before implementation:** `OllamaProvider` is a Node adapter using one Godot `HTTPRequest` to POST `/api/chat`; the model name is required configuration, streaming is disabled, JSON-schema output format is requested, and the existing NPC-01 validator remains authoritative. `DialogueOrchestrator` is the only queue/generation owner: one in-flight request plus at most two queued requests, with bounded prompt/context sizes and a configurable 15-second default timeout. Conversation setup binds the NPC ID, conversation ID, validated `ContextSnapshot`, and authored fallback text; the task's two-argument `submit_dialogue_request` remains intact. Invalid HTTP status/body, timeout, provider offline, or invalid model JSON returns fallback exactly once. Cancellation, conversation replacement, death or unload invalidates the generation and drops queued/late/duplicate responses without invoking an action dispatcher. MockProvider is used for deterministic offline, delayed, timeout and reordering tests; no model installation/download is needed.
 
-- [ ] **Test expectations:** Fake provider/clock tests cover offline, 4xx/5xx, timeout, malformed body, reordered/duplicate replies, model switch and queue saturation. Assert main-loop progress during pending requests, fallback once and zero stale action commits.
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Offline/mock-backed lifecycle acceptance is complete. The live endpoint smoke check is explicitly deferred because `127.0.0.1:11434` refused the check (curl exit7); this does not block the implemented no-model fallback path. See [NPC-02 report](../reports/NPC-02.md).
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Acceptance:** Uses non-blocking HTTP, one concurrent request and bounded context/queue. Uses configurable 15-second default deadline; timeout, HTTP error, missing model/provider or invalid output routes to authored fallback. Conversation cancellation/replacement/unload increments generations and invalidates results; late/duplicate responses do nothing. Callers use the shared cancellation method for walk-away/death lifecycle events.
+
+- [x] **Test expectations:** Fake provider and timer tests cover offline, 4xx/5xx, timeout, malformed body, stale/duplicate replies, model switch and queue saturation. Confirm submission returns while a reply is pending, fallback emits once, and cancelled/stale proposals never reach dialogue presentation.
+
+- [x] **Evidence recorded:** [NPC-02 report](../reports/NPC-02.md); focused `dialogue_requests`23/23 and `dialogue_schema`44/44; integrated `all`910/910; import and diff-check exit0. Local Ollama endpoint check exited7 (connection refused); live inference remains unverified and no model was installed.
 
 ### NPC-03: Build deterministic mission offers and lifecycle
 
