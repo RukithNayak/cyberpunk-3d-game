@@ -1,7 +1,7 @@
 # Master Progress
 
 **Updated:** 23 October 2026 (Asia/Kolkata)  
-**Overall status:** Stage 0/1 implementation in progress. CORE-01/02/03/04, WORLD-01/02/03/04, PLAYER-01/02/03/04/07, INV-01/02/03/04/05, AI-01/02/03, HACK-01/02 and ASSET-01/02 accepted. PLAYER-05's visual/HUD slice is implemented but the task remains in progress because its audio and pause/settings acceptance conflicts with the approved UI design. ASSET-03 remains a partial eligible handoff. No worker is left running. Blender/Godot MCP tools are available.
+**Overall status:** Stage 0/1 implementation in progress. CORE-01/02/03/04, WORLD-01/02/03/04/05, PLAYER-01/02/03/04/07, INV-01/02/03/04/05, AI-01/02/03/04, HACK-01/02 and ASSET-01/02 accepted. PLAYER-05's visual/HUD slice is implemented but the task remains in progress because its audio and pause/settings acceptance conflicts with the approved UI design. ASSET-03 remains a partial eligible handoff. No worker is left running. Blender/Godot MCP tools are available.
 **Evidence:** [CORE-01 report](reports/CORE-01.md), [PLAYER-04 report](reports/PLAYER-04.md), [Cyberpunk UI overhaul report](reports/CYBERPUNK-UI-OVERHAUL.md) and [toolchain checks](toolchain.md). Gameplay and integrated milestone gates remain incomplete.
 
 ## Source and scope
@@ -25,7 +25,7 @@ The proposal’s confirmed requirements remain in scope. Candidate city/weapon/r
 - [ ] **[Core State & Persistence Registry](tasks/core-state-persistence.md) — entire module complete.** Status: in progress. Stage 0/1: 4/5 tasks; deferred: 1 outline(s).
   Task IDs: CORE-01, CORE-02, CORE-03, CORE-04, CORE-05, CORE-06.
 
-- [ ] **[World & Scene Manager](tasks/world-scene-manager.md) — entire module complete.** Status: in progress. Stage 0/1: 4/6 tasks; deferred: 1 outline(s).
+- [ ] **[World & Scene Manager](tasks/world-scene-manager.md) — entire module complete.** Status: in progress. Stage 0/1: 5/6 tasks; deferred: 1 outline(s).
   Task IDs: WORLD-01, WORLD-02, WORLD-03, WORLD-04, WORLD-05, WORLD-06, WORLD-07.
 
 - [ ] **[Player, Health & Combat Core](tasks/player-health-combat.md) — entire module complete.** Status: in progress. Stage 0/1: 5/6 tasks; deferred: 1 outline(s). PLAYER-05 is in progress; approved UI design excludes audio and pause/settings screen work required by its original acceptance.
@@ -84,6 +84,7 @@ The proposal’s confirmed requirements remain in scope. Candidate city/weapon/r
 | WORLD-02 | 1 / WORLD-01, CORE-01 | complete | Main Agent / session model; bounded reviewer world02_review / gpt-6-luna medium | game/world/chunk_loader.gd, game/tests/world/test_chunk_loader.gd; coordinated runtime fixture, runner integration and contracts | commit 282facb | Accepted 23 October 2026; callback red6 and native-token red2 fixed; focused42/all184, physics7, rendered10; reports/WORLD-02.md |
 | WORLD-03 | 1 / WORLD-02, CORE-04 | complete | Main Agent integration; entity_hydrator worker and world03_review; dispatch requested gpt-6-luna medium | worker hydrator/tests/projection; Main manifest/loader/registry hooks, tests, contracts, runner/runtime fixture | commit 282facb (includes base f71404e) | Accepted 23 October 2026; red/green including callback re-entry; focused54/all258, headless12/rendered14; reports/WORLD-03.md |
 | WORLD-04 | 1 / WORLD-03 | complete | Main Agent / gpt-6-luna | game/world/interior_transition.gd; game/world/fixtures/{interior,exterior,transition_player}; game/tests/world/test_interiors.gd; autoload/runner/contracts | commit 282facb | Accepted 23 October 2026; focused21/21, import exit 0; no rendered capture; reports/WORLD-04.md |
+| WORLD-05 | 1 / WORLD-03, AI-03, AI-04 | complete | Main Agent / current session | game/world/navigation_handoff.gd; game/features/npcs/npc_simulation_record.gd transfer API; test navigation chunks/scene/suite; runner; world contract/report | accepted in working tree | Accepted 23 Oct 2026; navigation_handoff40/40, ai_unload38/38, import/diff-check exit0, integrated all727/727 exit0; reports/WORLD-05.md; shutdown ObjectDB/RID warnings |
 | WORLD-01 | 1 / CORE-02 | complete | world_manifest / gpt-6-luna medium | game/world/{chunk_manifest,world_manager}.gd, game/world/fixtures/chunk_{a,b}.tscn, game/tests/world/test_manifest.gd | commit 282facb | Accepted 37/37 after red6 review fixes; reports/WORLD-01-worker.md |
 | CORE-04 | 1 / CORE-03 | complete | Main Agent / session model; historical worker metadata unverified | save_migrations.gd, snapshot_adapters.gd, test_migrations.gd, state-contracts migration section; coordinated registry/faction snapshot APIs, save migration hook and runner integration | commit 282facb | Accepted 23 October 2026; rejected-migration false success fixed red→green; migrations 22/22, all 142/142, import/sample exit 0; reports/CORE-04.md |
 | CORE-03 | 1 / CORE-02 | complete | save_store / gpt-6-luna medium | game/persistence/save_store.gd, game/tests/persistence/test_save_store.gd, docs/state-contracts.md save envelope | commit 282facb | Accepted 23/23; independent review clean; reports/CORE-03-worker.md |
@@ -104,7 +105,7 @@ Main Agent exclusively owns shared toolchain/tracker/configuration and acceptanc
 | 4 — checkpoint and feasibility | CORE-05 → WORLD-06 | Cross-system context is confined to checkpoint restoration, navigation handoff and the combined feasibility gate. All direct prerequisites in WORLD-06 must pass first. |
 | Later — scope dependent | CORE-06, WORLD-07, PLAYER-06, INV-06, AI-06, NPC-07, ASSET-05/06 | Approve content/targets, decompose each outline into small tickets, then execute. Do not create an entire city before feasibility evidence. |
 
-INV-05, HACK-01/02 and AI-01/02/03/04 are accepted. WORLD-03 and WORLD-04 are accepted; PLAYER-01/02/03/04/07 and INV-01/02/03/04/05 are accepted. Latest integrated all: 672/674 (exit 1); AI-03's isolated navigation fixture intermittently returns an empty route at map iteration 2, while standalone ai_navigation passes 15/15. The integrated process also logs ObjectDB/RID shutdown leaks. PLAYER-05 remains in progress because its existing acceptance conflicts with the approved design. WORLD-05, HACK-03/04, NPC-01 and partial ASSET-03 are eligible under exact dependencies. Preserve unaccepted asset work until its bounded review or resumption.
+INV-05, HACK-01/02 and AI-01/02/03/04 are accepted. WORLD-03/04/05 are accepted; PLAYER-01/02/03/04/07 and INV-01/02/03/04/05 are accepted. Latest integrated all: 727/727 (exit 0), including AI-03 navigation15/15 and WORLD-05 navigation handoff40/40. Shutdown still logs one ObjectDB and one `GodotBody3D` RID leak. The AI-03 empty-route synchronization race observed in earlier runs did not recur in this integration run. PLAYER-05 remains in progress because its existing acceptance conflicts with the approved design. AI-05, HACK-03/04, NPC-01 and partial ASSET-03 are eligible under exact dependencies. Preserve unaccepted asset work until its bounded review or resumption.
 
 UI visual revision (23 October 2026): Following user feedback, updated INV-05/PLAYER-05 presentation to use Avenir system typography, brighter graphite surfaces, larger card layouts and clearer detail/action grouping. Import0, inventory_ui46/46, player_hud9/9, diff check0; Godot MCP runtime errors empty; new fullscreen inventory/HUD captures inspected. [Report and evidence](reports/CYBERPUNK-UI-OVERHAUL.md). No gameplay/service ownership changed. PLAYER-05 stays in progress for its pre-existing audio and pause/settings scope conflict.
 
@@ -132,7 +133,7 @@ UI visual revision (23 October 2026): Following user feedback, updated INV-05/PL
 
 ## Next recommended task
 
-**WORLD-05 — Verify navigation handoff across chunk boundaries** in [World & Scene Manager](tasks/world-scene-manager.md) is next; WORLD-03, AI-03 and AI-04 are accepted. Keep the known all-suite AI-03 navigation-fixture race visible and verify WORLD-05 against its direct focused/runtime acceptance. HACK-03/04, NPC-01 and partial ASSET-03 are also eligible. PLAYER-05's remaining audio/pause-settings scope needs a recorded resolution before completion. CORE-05 remains blocked by unfinished PLAYER-05, NPC-05 and HACK-05. Do not install tools or download models implicitly.
+**AI-05 — Add ambient behavior and encounter validation** in [Faction & Tactical AI](tasks/faction-tactical-ai.md) is next; AI-04 and WORLD-05 are now accepted. HACK-03/04, NPC-01 and partial ASSET-03 are also eligible under their direct dependencies. PLAYER-05's remaining audio/pause-settings scope needs a recorded resolution before completion. CORE-05 remains blocked by unfinished PLAYER-05, NPC-05 and HACK-05. Do not install tools or download models implicitly.
 
 ## Session decisions and active next steps
 

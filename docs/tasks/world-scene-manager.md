@@ -115,19 +115,23 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Focused suite verifies two 
 
 ### WORLD-05: Verify navigation handoff across chunk boundaries
 
-- [ ] **WORLD-05 — deliverable complete** (Stage 1).
+Supporting scope recorded before implementation (23 October 2026): add a world-owned `NavigationHandoff` coordinator that tracks active chunk navigation regions by lifecycle generation, provides AI readiness only after every desired chunk map/region synchronizes, and deterministically assigns exact-boundary ownership to the lexicographically first containing manifest ID. Connect actor attachment and crossing to AI-04's UUID registry owner; on a ready destination, reparent the single actor to a persistent runtime root and atomically transfer its chunk/generation ownership, so source unload cannot retire it. On final owner unload, AI-04 captures state before the persistent projection is freed; re-entry attaches/restores a fresh actor. Add test-only navigation chunk fixtures plus a real threaded two-chunk boundary scene/suite, runner integration, and the shared navigation contract. This is feasibility content only: no production city navmesh, player integration, custom pathfinding, or performance budget is added.
+
+- [x] **WORLD-05 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** WORLD-03, AI-03, AI-04. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/world/navigation_handoff.gd`; `game/tests/scenes/navigation_boundary.tscn`; `game/tests/world/test_navigation_handoff.gd`.
+**Files / ownership:** `game/world/navigation_handoff.gd`; supporting transfer API in `game/features/npcs/npc_simulation_record.gd`; `game/tests/scenes/navigation_boundary.tscn`; `game/tests/world/{test_navigation_handoff.gd,fixtures/navigation_chunk*.tscn,fixtures/navigation_chunk.gd}`; Main Agent-owned runner, shared contract, task/report and tracker.
 
 **Interfaces:** Publish navigation readiness before AI resumes; transfer each NPC UUID once using WORLD-01 lifecycle events and AI-04 records.
 
-- [ ] **Acceptance:** AI waits for synchronized navigation maps, follows the player across the two-chunk seam and is not duplicated or stranded during backtracking. Define ownership at the exact boundary.
+- [x] **Acceptance:** AI waits for synchronized navigation maps, follows the player across the two-chunk seam and is not duplicated or stranded during backtracking. Define ownership at the exact boundary.
 
-- [ ] **Test expectations:** Run repeated seam pursuits, unload a destination and reverse direction during synchronization. Check one owner per NPC, valid path recovery and no frame of navigation against an unavailable map. AI-04 is required before the unload scenario is accepted.
+- [x] **Test expectations:** Run repeated seam pursuits, unload a destination and reverse direction during synchronization. Check one owner per NPC, valid path recovery and no frame of navigation against an unavailable map. AI-04 is required before the unload scenario is accepted.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Evidence recorded:** [WORLD-05 report](../reports/WORLD-05.md) records headless streamed physics/navigation evidence, exact commands/exits, Godot MCP version/project metadata, and remaining visual/production-world limits.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `navigation_handoff` 40/40, `ai_unload` 38/38, import exit 0, integrated `all` 727/727 (exit 0), and `git diff --check` exit 0. Navigation readiness uses all desired chunk generations and synchronized regions; real pursuit transfers UUID ownership once, reverses successfully after cancelling a stale generation, then saves/restores under a new generation. Exact boundary chooses the lexicographically first containing manifest ID. The integrated run logged one ObjectDB and one body RID teardown warning. See [report](../reports/WORLD-05.md); production district navmesh and player/world composition remain later work.
 
 ### WORLD-06: Assemble and measure the integrated feasibility build
 

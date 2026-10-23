@@ -70,6 +70,25 @@ func get_active_actor_count() -> int:
 	return _active_actors.size()
 
 
+func get_actor_chunk_id(uuid: String) -> String:
+	var entry: Dictionary = _active_actors.get(uuid, {})
+	return String(entry.get("chunk_id", ""))
+
+
+func transfer_actor(uuid: String, source_chunk_id: String, source_generation: int, destination_chunk_id: String, destination_generation: int, actor: TacticalAgent) -> bool:
+	if not _configured or uuid.is_empty() or source_chunk_id == destination_chunk_id:
+		return false
+	if not _active_actors.has(uuid) or not _is_current_chunk(source_chunk_id, source_generation) or not _is_current_chunk(destination_chunk_id, destination_generation):
+		return false
+	var entry: Dictionary = _active_actors[uuid]
+	if entry.get("chunk_id") != source_chunk_id or int(entry.get("generation", -1)) != source_generation or entry.get("actor") != actor:
+		return false
+	if actor == null or not is_instance_valid(actor) or actor.is_queued_for_deletion() or not actor.is_inside_tree() or not _is_navigation_ready(actor):
+		return false
+	_active_actors[uuid] = {"chunk_id": destination_chunk_id, "generation": destination_generation, "actor": actor}
+	return true
+
+
 func get_record(uuid: String) -> Dictionary:
 	if not _configured or not _registry.has_entity(uuid):
 		return {}

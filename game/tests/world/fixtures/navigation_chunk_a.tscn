@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/world/fixtures/navigation_chunk.gd" id="1_chunk"]
+
+[node name="NavigationChunkA" type="Node3D"]
+script = ExtResource("1_chunk")
+min_x = -10.0
+max_x = 0.0

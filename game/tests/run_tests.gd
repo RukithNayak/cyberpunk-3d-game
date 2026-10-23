@@ -8,7 +8,7 @@ var _failures: int = 0
 func _initialize() -> void:
 	var args: PackedStringArray = OS.get_cmdline_user_args()
 	if args.size() != 2 or args[0] != "--suite":
-		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|hitscan|weapon_transactions|player_hud|inventory_items|inventory_grid|inventory_equipment|inventory_persistence|inventory_ui|hacking_energy|hacking_door|ai_perception|ai_states|ai_navigation|ai_unload|interiors|deliberate_failure>")
+		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|hitscan|weapon_transactions|player_hud|inventory_items|inventory_grid|inventory_equipment|inventory_persistence|inventory_ui|hacking_energy|hacking_door|ai_perception|ai_states|ai_navigation|ai_unload|navigation_handoff|interiors|deliberate_failure>")
 		quit(2)
 		return
 	var suite: String = args[1]
@@ -65,6 +65,11 @@ func _initialize() -> void:
 				await ai_states_test.run(_check)
 				var ai_unload_test: RefCounted = load("res://tests/ai/test_unload.gd").new()
 				await ai_unload_test.run(_check)
+				await process_frame
+				var navigation_handoff_test: Node3D = (load("res://tests/scenes/navigation_boundary.tscn") as PackedScene).instantiate() as Node3D
+				root.add_child(navigation_handoff_test)
+				await process_frame
+				await navigation_handoff_test.call("run", _check)
 		"registry":
 			var registry_test: RefCounted = load("res://tests/persistence/test_registry.gd").new()
 			registry_test.run(_check)
@@ -136,6 +141,12 @@ func _initialize() -> void:
 		"ai_unload":
 			var ai_unload_test: RefCounted = load("res://tests/ai/test_unload.gd").new()
 			await ai_unload_test.run(_check)
+		"navigation_handoff":
+			await process_frame
+			var navigation_handoff_test: Node3D = (load("res://tests/scenes/navigation_boundary.tscn") as PackedScene).instantiate() as Node3D
+			root.add_child(navigation_handoff_test)
+			await process_frame
+			await navigation_handoff_test.call("run", _check)
 		"deliberate_failure":
 			_check(false, "intentional failing fixture")
 		_:
