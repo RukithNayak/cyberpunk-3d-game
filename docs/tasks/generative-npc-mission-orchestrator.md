@@ -118,7 +118,7 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `ActionDispatcher` validate
 
 ### NPC-05: Persist scoped knowledge and bounded memory
 
-- [ ] **NPC-05 — deliverable complete** (Stage 1).
+- [x] **NPC-05 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** NPC-03, NPC-04, CORE-04, WORLD-03. Prerequisite IDs resolve through the master progress task index.
 
@@ -126,11 +126,15 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `ActionDispatcher` validate
 
 **Interfaces:** Store factual events separately from derived summaries; registry holds stable NPC, conversation, mission and action transaction IDs.
 
-- [ ] **Acceptance:** Only witnessed/legitimately disclosed facts enter context. Summaries cannot overwrite missions or world truth; bound history/context size and log auditable commits. Restore knowledge, relationships, offers and memories after unload/relaunch without re-executing actions.
+**Supporting contract recorded before implementation:** `NpcMemory` is a runtime-only data owner keyed by stable NPC IDs (never Node references). Its v1 `domains.npc_memory` snapshot stores exact authored fact IDs plus source (`witnessed`/`disclosed`) and stable evidence ID, a bounded transcript of player/NPC/system lines keyed by stable conversation ID, and a separate bounded derived summary. `record_fact` accepts a fact only when it exists in the authored fact catalog and a game-owned `authorize_fact_evidence(npc_id, fact_id, source, evidence_id)` callback returns boolean true; model text and summaries cannot call this commit path. Transcript and summary content are never promoted to facts. Snapshot capture returns copies; prepare validates the exact schema and current authored fact IDs without mutation; commit only swaps prepared data and executes no actions. `DialogueSnapshot` coordinates only `npc_memory` and `missions`, preserves unknown domain records opaquely, and builds the existing `ContextSnapshot` from verified fact text, current faction standing in `FactionState`, and an upstream game-validated eligible template list. Mission/faction truth remains with MissionDirector/FactionState and their existing CORE-04 snapshot participants. Restoring memory never replays disclosure, action, reward or faction callbacks. Initial bounds: 64 NPC records, 32 facts/NPC, 32 recent dialogue lines/NPC, 500 characters/line, 1,200 summary characters/NPC; existing ContextSnapshot limits the final provider payload to 8 KiB.
 
-- [ ] **Test expectations:** Assert unseen player actions stay unknown, hostile prompt text cannot become a fact, oversized history is bounded, summaries cannot complete missions and loading history never replays rewards or faction changes.
+- [x] **Acceptance:** Only witnessed/legitimately disclosed facts enter context. Summaries cannot overwrite missions or world truth; bound history/context size and log auditable commits. Restore knowledge, relationships, offers and memories after unload/relaunch without re-executing actions.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Assert unseen player actions stay unknown, hostile prompt text cannot become a fact, oversized history is bounded, summaries cannot complete missions and loading history never replays rewards or faction changes.
+
+- [x] **Evidence recorded:** Import exit 0; focused `dialogue_memory` 30 cases/0 failures exit 0; integrated `all` 1,022 cases/0 failures exit 0; SaveStore disk reload into recreated memory/faction/mission owners; `git diff --check` exit 0. Integrated suite emitted one ObjectDB and one `GodotBody3D` RID shutdown warning. See [NPC-05 report](../reports/NPC-05.md); no visual capture applies.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Authored fact IDs can enter memory only with live authorized evidence; transcript and derived summary remain separate data. `DialogueSnapshot` restores the NPC-memory and mission domains without replaying effects and builds bounded context with current authoritative faction standing. SaveStore reload and integrated evidence are in [NPC-05 report](../reports/NPC-05.md).
 
 ### NPC-06: Build text dialogue, mission interaction and local-provider evaluation
 

@@ -8,7 +8,7 @@ var _failures: int = 0
 func _initialize() -> void:
 	var args: PackedStringArray = OS.get_cmdline_user_args()
 	if args.size() != 2 or args[0] != "--suite":
-		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|hitscan|weapon_transactions|player_hud|inventory_items|inventory_grid|inventory_equipment|inventory_persistence|inventory_ui|hacking_energy|hacking_door|hacking_security|hacking_combat|hacking_effects|ai_perception|ai_states|ai_navigation|ai_unload|navigation_handoff|ai_encounter|hacking_scenarios|dialogue_schema|dialogue_requests|dialogue_actions|missions|interiors|deliberate_failure>")
+		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|hitscan|weapon_transactions|player_hud|inventory_items|inventory_grid|inventory_equipment|inventory_persistence|inventory_ui|hacking_energy|hacking_door|hacking_security|hacking_combat|hacking_effects|ai_perception|ai_states|ai_navigation|ai_unload|navigation_handoff|ai_encounter|hacking_scenarios|dialogue_schema|dialogue_requests|dialogue_actions|dialogue_memory|missions|interiors|deliberate_failure>")
 		quit(2)
 		return
 	var suite: String = args[1]
@@ -82,6 +82,8 @@ func _initialize() -> void:
 				await dialogue_requests_test.run(_check)
 				var dialogue_actions_test: RefCounted = load("res://tests/dialogue/test_actions.gd").new()
 				await dialogue_actions_test.run(_check)
+				var dialogue_memory_test: RefCounted = load("res://tests/dialogue/test_memory.gd").new()
+				await dialogue_memory_test.run(_check)
 				var mission_lifecycle_test: RefCounted = load("res://tests/missions/test_lifecycle.gd").new()
 				mission_lifecycle_test.run(_check)
 		"registry":
@@ -185,6 +187,9 @@ func _initialize() -> void:
 		"dialogue_actions":
 			var dialogue_actions_test: RefCounted = load("res://tests/dialogue/test_actions.gd").new()
 			await dialogue_actions_test.run(_check)
+		"dialogue_memory":
+			var dialogue_memory_test: RefCounted = load("res://tests/dialogue/test_memory.gd").new()
+			await dialogue_memory_test.run(_check)
 		"missions":
 			var mission_lifecycle_test: RefCounted = load("res://tests/missions/test_lifecycle.gd").new()
 			mission_lifecycle_test.run(_check)
