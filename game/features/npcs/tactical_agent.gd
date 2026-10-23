@@ -58,6 +58,7 @@ var _attack_remaining: float = 0.0
 var _stun_remaining: float = 0.0
 var _search_remaining: float = 0.0
 var _movement_speed_intent: float = 0.0
+var _unloaded: bool = false
 
 
 func _ready() -> void:
@@ -102,6 +103,100 @@ func configure(faction_state: FactionState, faction_id: String, patrol_points: A
 	return true
 
 
+func is_configured() -> bool:
+	return _configured
+
+
+func capture_simulation_data() -> Dictionary:
+	if not _configured or health_state == null:
+		return {}
+	return {
+		"faction_id": _faction_id,
+		"current_health": health_state.current_hp,
+		"maximum_health": health_state.max_hp,
+		"position": global_position,
+		"rotation": global_basis.get_rotation_quaternion().normalized(),
+		"dead": state == AIState.DEAD or health_state.is_dead(),
+	}
+
+
+func restore_simulation_state(faction_state: FactionState, faction_id: String, current_health: int, maximum: int, world_position: Vector3, world_rotation: Quaternion, dead: bool) -> bool:
+	if _configured or _unloaded or faction_state == null or faction_id.is_empty() or faction_id != faction_id.strip_edges():
+		return false
+	if maximum <= 0 or maximum > 10000 or current_health < 0 or current_health > maximum:
+		return false
+	if dead != (current_health == 0) or not _is_finite_vector(world_position):
+		return false
+	if not is_finite(world_rotation.x) or not is_finite(world_rotation.y) or not is_finite(world_rotation.z) or not is_finite(world_rotation.w):
+		return false
+	if world_rotation.length_squared() <= 0.000001:
+		return false
+	if not configure(faction_state, faction_id):
+		return false
+	if not health_state.restore(current_health, maximum):
+		return false
+	global_position = world_position
+	global_basis = Basis(world_rotation.normalized())
+	_candidate_target = null
+	_candidate_faction = ""
+	_combat_target = null
+	_combat_faction = ""
+	_last_hostile_position = Vector3.ZERO
+	_has_last_hostile_position = false
+	_attack_remaining = 0.0
+	_stun_remaining = 0.0
+	_search_remaining = 0.0
+	_authored_hostility.clear()
+	if dead:
+		state = AIState.DEAD
+		substate = Substate.DEAD
+		has_movement_intent = false
+		process_ai = false
+	else:
+		state = AIState.IDLE
+		substate = Substate.IDLE
+		has_movement_intent = false
+		process_ai = true
+	_unloaded = false
+	return true
+
+
+func prepare_for_unload() -> void:
+	if _unloaded:
+		return
+	_unloaded = true
+	process_ai = false
+	_candidate_target = null
+	_candidate_faction = ""
+	_combat_target = null
+	_combat_faction = ""
+	_last_hostile_position = Vector3.ZERO
+	_has_last_hostile_position = false
+	_attack_remaining = 0.0
+	_stun_remaining = 0.0
+	_search_remaining = 0.0
+	_authored_hostility.clear()
+	if _perception != null:
+		if _perception.sound_event_heard.is_connected(_on_sound_event_heard):
+			_perception.sound_event_heard.disconnect(_on_sound_event_heard)
+		_perception.data.has_visual_contact = false
+		_perception.data.seen_position = Vector3.ZERO
+		_perception.data.has_seen_position = false
+		_perception.data.last_known_position = Vector3.ZERO
+		_perception.data.has_last_known_position = false
+		_perception.data.heard_events.clear()
+	var driver: Node = get_node_or_null("NavigationDriver")
+	if driver != null:
+		driver.set("process_navigation", false)
+	if state != AIState.DEAD:
+		state = AIState.IDLE
+		substate = Substate.IDLE
+		movement_destination = Vector3.ZERO
+		has_movement_intent = false
+		_movement_speed_intent = 0.0
+		movement_intent_changed.emit(Vector3.ZERO, 0.0, false)
+
+
 func set_candidate_target(target: Node3D, target_faction: String) -> bool:
 	if not _configured or (target != null and (not _is_live_node(target) or target_faction.is_empty() or target_faction != target_faction.strip_edges())):
 		return false
@@ -142,7 +237,7 @@ func apply_damage(amount: int, source_faction: String, attacker: Node3D = null) 
 
 
 func tick(delta: float) -> bool:
-	if not _configured or not is_finite(delta) or delta < 0.0 or delta > MAX_TICK_SECONDS:
+	if not _configured or _unloaded or not is_finite(delta) or delta < 0.0 or delta > MAX_TICK_SECONDS:
 		return false
 	if state == AIState.DEAD or health_state.is_dead():
 		_on_death()

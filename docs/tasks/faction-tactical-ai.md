@@ -97,19 +97,23 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `NavigationDriver` consumes
 
 ### AI-04: Serialize simplified simulation on unload
 
-- [ ] **AI-04 — deliverable complete** (Stage 1).
+- **Supporting scope recorded before implementation (23 October 2026):** Implement `NpcSimulationRecord` as a transient registry/lifecycle coordinator plus a bounded data-only record stored under each NPC's existing `EntityRegistry` UUID. Record schema v1 contains chunk ID, faction ID, current/max health, world position, normalized world rotation quaternion, and a durable `dead` flag; pursuit/attack/stun timers, target Nodes, perception targets and movement callbacks are volatile and are cleared on unload. Consume `WorldManager.chunk_pre_unload` synchronously, prepare a complete registry replacement, and commit before deactivating actors. Add capture/invalidate/restore methods to `TacticalAgent`; restoration is gated on nav readiness and per-UUID runtime ownership prevents duplicate actors. Add an `ai_unload` focused suite, runner registration and a short report. No edits to `game/world/` or persistence core, no save schema/root changes, and no NPC model production are included.
+
+- [x] **AI-04 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** AI-03, WORLD-03. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/features/npcs/npc_simulation_record.gd`; `game/tests/ai/test_unload.gd`.
+**Files / ownership:** `game/features/npcs/npc_simulation_record.gd`; supporting actor API in `game/features/npcs/tactical_agent.gd`; `game/tests/ai/test_unload.gd`; Main Agent-owned runner registration and tracker/report updates.
 
 **Interfaces:** Consume WORLD-01 pre-unload events and CORE-04 adapters; store UUID, faction, health, pose and durable AI flags without Nodes.
 
-- [ ] **Acceptance:** Downgrade distant/unloaded NPCs to data records, invalidate targets and restore exactly one actor after navigation is ready. Dead actors remain dead; volatile combat callbacks cannot run after unload.
+- [x] **Acceptance:** Downgrade distant/unloaded NPCs to data records, invalidate targets and restore exactly one actor after navigation is ready. Dead actors remain dead; volatile combat callbacks cannot run after unload.
 
-- [ ] **Test expectations:** Unload during pursuit, attack and stun; restore in a different chunk order. Assert preserved durable state, one actor per UUID, no post-unload damage and no retained node references.
+- [x] **Test expectations:** Unload during pursuit, attack and stun; restore in a different chunk order. Assert preserved durable state, one actor per UUID, no post-unload damage and no retained node references.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Evidence recorded:** [AI-04 report](../reports/AI-04.md) records focused/regression checks and the unrelated intermittent `ai_navigation` failure in the integrated suite.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `ai_unload` 38/38, `ai_states` 32/32, standalone `ai_navigation` 15/15, import and diff-check exit 0. Integrated `all` remains 672/674 passing because the isolated AI-03 navigation child intermittently reports an empty route at map iteration 2; standalone navigation passes. See [report](../reports/AI-04.md). WORLD-05 is now eligible; its navigation-boundary integration must account for the known fixture race.
 
 ### AI-05: Add ambient behavior and encounter validation
 

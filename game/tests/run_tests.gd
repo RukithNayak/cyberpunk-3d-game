@@ -8,7 +8,7 @@ var _failures: int = 0
 func _initialize() -> void:
 	var args: PackedStringArray = OS.get_cmdline_user_args()
 	if args.size() != 2 or args[0] != "--suite":
-		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|hitscan|weapon_transactions|player_hud|inventory_items|inventory_grid|inventory_equipment|inventory_persistence|inventory_ui|hacking_energy|hacking_door|ai_perception|ai_states|ai_navigation|interiors|deliberate_failure>")
+		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|hitscan|weapon_transactions|player_hud|inventory_items|inventory_grid|inventory_equipment|inventory_persistence|inventory_ui|hacking_energy|hacking_door|ai_perception|ai_states|ai_navigation|ai_unload|interiors|deliberate_failure>")
 		quit(2)
 		return
 	var suite: String = args[1]
@@ -63,6 +63,8 @@ func _initialize() -> void:
 				await ai_perception_test.run(_check)
 				var ai_states_test: RefCounted = load("res://tests/ai/test_states.gd").new()
 				await ai_states_test.run(_check)
+				var ai_unload_test: RefCounted = load("res://tests/ai/test_unload.gd").new()
+				await ai_unload_test.run(_check)
 		"registry":
 			var registry_test: RefCounted = load("res://tests/persistence/test_registry.gd").new()
 			registry_test.run(_check)
@@ -131,6 +133,9 @@ func _initialize() -> void:
 			ai_navigation_test.set("launch_demo", false)
 			root.add_child(_create_isolated_navigation_viewport(ai_navigation_test))
 			await ai_navigation_test.call("run", _check)
+		"ai_unload":
+			var ai_unload_test: RefCounted = load("res://tests/ai/test_unload.gd").new()
+			await ai_unload_test.run(_check)
 		"deliberate_failure":
 			_check(false, "intentional failing fixture")
 		_:
