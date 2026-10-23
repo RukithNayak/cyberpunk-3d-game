@@ -92,7 +92,15 @@ func _physics_process(delta: float) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not can_act or not is_mouse_captured or not event is InputEventMouseMotion:
+	if not can_act or not _focused or not _control_locks.is_empty():
+		return
+	if event is InputEventMouseButton:
+		var mouse_button: InputEventMouseButton = event as InputEventMouseButton
+		if not is_mouse_captured and mouse_button.pressed and mouse_button.button_index == MOUSE_BUTTON_LEFT:
+			set_mouse_capture_enabled(true)
+			get_viewport().set_input_as_handled()
+		return
+	if not is_mouse_captured or not event is InputEventMouseMotion:
 		return
 	var motion: InputEventMouseMotion = event as InputEventMouseMotion
 	var invert_sign: float = 1.0 if invert_look else -1.0

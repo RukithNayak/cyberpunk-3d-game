@@ -135,7 +135,17 @@ func _exercise_movement(fixture_scene: PackedScene, check: Callable) -> void:
 	check.call(not player.get("is_mouse_captured"), "focus loss releases mouse capture")
 	player.call("simulate_focus_gained")
 	check.call(not player.get("is_mouse_captured"), "focus return does not recapture mouse")
-	check.call(player.call("resume_mouse_capture"), "explicit safe resume captures mouse")
+	var recapture_click: InputEventMouseButton = InputEventMouseButton.new()
+	recapture_click.button_index = MOUSE_BUTTON_LEFT
+	recapture_click.pressed = true
+	player.call("_unhandled_input", recapture_click)
+	check.call(player.get("is_mouse_captured"), "left-click after focus return recaptures mouse for look")
+	var look_motion: InputEventMouseMotion = InputEventMouseMotion.new()
+	look_motion.relative = Vector2(24.0, 12.0)
+	var yaw_before_look: float = player.rotation.y
+	var pitch_before_look: float = head.rotation.x
+	player.call("_unhandled_input", look_motion)
+	check.call(not is_equal_approx(player.rotation.y, yaw_before_look) and not is_equal_approx(head.rotation.x, pitch_before_look), "mouse motion after recapture rotates player and camera")
 	player.call("simulate_focus_lost")
 	check.call(not player.call("resume_mouse_capture"), "resume is rejected while unfocused")
 

@@ -25,4 +25,8 @@
 
 The player's pause/settings scope is accepted. Audio remains explicitly deferred to [PLAYER-08](../tasks/player-health-combat.md#player-08-add-synchronized-combat-audio-deferred). No alternate-resolution work or broader UI redesign was done. Human playtesting of pause interaction and visible pause-screen art direction was not performed. The latest full-suite run is not green because of the known intermittent AI-03 route race; this failure is outside PLAYER-05 and is retained as an integration risk.
 
+### Mouse-look focus recovery follow-up
+
+24 October 2026: Regression reproduced in `player_controller`: after the game window regained focus, the controller intentionally left the mouse uncaptured and had no click-to-recapture path. Added a left-click recapture path when the player can act, has no control locks, and the window is focused. A synthetic mouse-motion check verifies yaw and pitch change after recapture. `player_controller` suite: red 44 cases / 2 expected failures before the fix; green 44 / 44 after. Godot import exit 0. The game window can now recover mouse-look after focus returns without changing pause/inventory/dialogue locks.
+
 **Next eligible task:** WORLD-06, the integrated feasibility build. Its direct task dependencies are satisfied after PLAYER-05 acceptance; measure and report its remaining runtime, inference, traversal, save/relaunch and human-playtest criteria there.
