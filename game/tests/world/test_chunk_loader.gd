@@ -28,6 +28,7 @@ func run(check: Callable) -> void:
 	await _test_threaded_resource_progress(check, loader_script)
 	await _test_native_backend_coalesces_loaded_retry(check)
 	await _test_cancelled_native_request_cleanup(check, loader_script)
+	_test_entity_lifecycle_hooks(check, loader_script)
 
 
 func _test_delayed_duplicate_budget_and_cleanup(check: Callable, loader_script: Script) -> void:
@@ -315,7 +316,62 @@ func _test_cancelled_native_request_cleanup(check: Callable, loader_script: Scri
 	_free_context(context)
 
 
-func _make_context(loader_script: Script, backend: Object, activation_budget: int, timeout_msec: int) -> Dictionary:
+func _test_entity_lifecycle_hooks(check: Callable, loader_script: Script) -> void:
+	var inspect_loader: Node = loader_script.new()
+	var supports_hook: bool = false
+	for method: Dictionary in inspect_loader.get_method_list():
+		if method["name"] == "configure":
+			supports_hook = method["args"].size() >= 8
+	inspect_loader.free()
+	check.call(supports_hook, "loader supports an optional entity hydration lifecycle")
+	if not supports_hook:
+		return
+	var lifecycle: LifecycleProbe = LifecycleProbe.new()
+	var backend: FakeBackend = FakeBackend.new()
+	var context: Dictionary = _make_context(loader_script, backend, 1, 500, lifecycle)
+	var manager: Object = context["manager"]
+	var loader: Node = context["loader"]
+	manager.call("update_player_position", Vector3(-5, 0, 0))
+	loader.call("pump_frame")
+	backend.complete(CHUNK_A)
+	loader.call("pump_frame")
+	check.call(lifecycle.calls == ["prepare:off_tree", "activate:in_tree"], "entity preparation occurs before tree entry and activation after entry")
+	manager.call("update_player_position", Vector3(40, 0, 0))
+	manager.call("update_player_position", Vector3(-5, 0, 0))
+	loader.call("pump_frame")
+	check.call(lifecycle.calls == ["prepare:off_tree", "activate:in_tree", "prepare:in_tree", "activate:in_tree"], "retained re-entry hydrates again before renewing entity interactions")
+	manager.call("update_player_position", Vector3(40, 0, 0))
+	loader.call("pump_frame")
+	check.call(lifecycle.calls.back() == "retire", "entity retirement runs before transient terrain teardown")
+	_free_context(context)
+	lifecycle = LifecycleProbe.new()
+	lifecycle.allow_prepare = false
+	backend = FakeBackend.new()
+	context = _make_context(loader_script, backend, 1, 500, lifecycle)
+	manager = context["manager"]
+	loader = context["loader"]
+	manager.call("update_player_position", Vector3(-5, 0, 0))
+	loader.call("pump_frame")
+	backend.complete(CHUNK_A)
+	loader.call("pump_frame")
+	check.call(loader.call("get_active_instance", "chunk_a") == null and lifecycle.calls == ["prepare:off_tree", "retire"], "rejected entity preparation cannot enter or activate the scene")
+	lifecycle.allow_prepare = true
+	lifecycle.allow_activate = false
+	loader.call("retry_chunk", "chunk_a")
+	loader.call("pump_frame")
+	backend.complete(CHUNK_A)
+	loader.call("pump_frame")
+	check.call(loader.call("get_active_instance", "chunk_a") == null and manager.call("get_load_state", "chunk_a") == 1, "rejected entity activation keeps manager retryable instead of falsely active")
+	lifecycle.allow_activate = true
+	loader.call("retry_chunk", "chunk_a")
+	loader.call("pump_frame")
+	backend.complete(CHUNK_A)
+	loader.call("pump_frame")
+	check.call(loader.call("get_active_instance", "chunk_a") != null and manager.call("get_load_state", "chunk_a") == 2, "entity activation failure recovers through an explicit retry")
+	_free_context(context)
+
+
+func _make_context(loader_script: Script, backend: Object, activation_budget: int, timeout_msec: int, lifecycle: Object = null) -> Dictionary:
 	var manifest_script: Script = load(MANIFEST_PATH) as Script
 	var manager_script: Script = load(MANAGER_PATH) as Script
 	var manifest: Object = manifest_script.new()
@@ -332,7 +388,11 @@ func _make_context(loader_script: Script, backend: Object, activation_budget: in
 	var loader: Node = loader_script.new()
 	root.add_child(loader)
 	var clock: Callable = Callable(self, "_read_clock")
-	var configured: bool = loader.call("configure", manager, manifest, root, backend, activation_budget, timeout_msec, clock)
+	var configured: bool
+	if lifecycle == null:
+		configured = loader.call("configure", manager, manifest, root, backend, activation_budget, timeout_msec, clock)
+	else:
+		configured = loader.call("configure", manager, manifest, root, backend, activation_budget, timeout_msec, clock, lifecycle)
 	assert(configured)
 	return {"manager": manager, "manifest": manifest, "root": root, "loader": loader, "backend": backend}
 
@@ -345,6 +405,23 @@ func _free_context(context: Dictionary) -> void:
 
 func _read_clock() -> int:
 	return clock_msec
+
+
+class LifecycleProbe extends RefCounted:
+	var calls: Array[String] = []
+	var allow_prepare: bool = true
+	var allow_activate: bool = true
+
+	func prepare_chunk(_id: String, _generation: int, instance: Node3D) -> bool:
+		calls.append("prepare:in_tree" if instance.is_inside_tree() else "prepare:off_tree")
+		return allow_prepare
+
+	func activate_chunk(_id: String, _generation: int, instance: Node3D) -> bool:
+		calls.append("activate:in_tree" if instance.is_inside_tree() else "activate:off_tree")
+		return allow_activate
+
+	func retire_chunk(_id: String, _generation: int, _instance: Node3D) -> void:
+		calls.append("retire")
 
 
 class FakeBackend extends RefCounted:

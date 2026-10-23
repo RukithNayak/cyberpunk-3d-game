@@ -21,6 +21,7 @@ func run(check: Callable) -> void:
 		{"id": "chunk_a", "bounds": AABB(Vector3(-10.0, -2.0, -10.0), Vector3(10.0, 8.0, 20.0)), "scene_path": "res://world/fixtures/chunk_a.tscn", "adjacent": ["chunk_b"]},
 		{"id": "chunk_b", "bounds": AABB(Vector3(0.0, -2.0, -10.0), Vector3(10.0, 8.0, 20.0)), "scene_path": "res://world/fixtures/chunk_b.tscn", "adjacent": ["chunk_a"]}
 	]
+	_test_entity_descriptors(check, entries)
 	check.call(not manifest.call("configure", [{"id": "../bad", "bounds": AABB(), "scene_path": "res://world/fixtures/chunk_a.tscn", "adjacent": []}]), "malformed chunk IDs are rejected")
 	check.call(not manifest.call("configure", [entries[0], entries[0].duplicate(true)]), "duplicate chunk IDs are rejected")
 	check.call(not manifest.call("configure", [{"id": "missing_neighbor", "bounds": AABB(Vector3.ZERO, Vector3.ONE), "scene_path": "res://world/fixtures/chunk_a.tscn", "adjacent": ["unknown"]}]), "unknown adjacent chunk IDs are rejected")
@@ -114,3 +115,38 @@ func run(check: Callable) -> void:
 	check.call(manager.call("get_load_state", "chunk_a") == 0, "deactivation returns lifecycle state to unloaded")
 	check.call(deactivation_payloads.size() == 1 and deactivation_payloads[0] == {"chunk_id": "chunk_a", "lifecycle_generation": retired_generation}, "deactivation event publishes chunk ID and generation")
 	manager.disconnect("chunk_pre_unload", observation_callback)
+
+
+func _test_entity_descriptors(check: Callable, entries: Array[Dictionary]) -> void:
+	var descriptor: Dictionary = {"uuid": "123e4567-e89b-42d3-a456-426614174000", "node_path": "SeamMarker", "initial_state": {"locked": true}}
+	var authored: Array[Dictionary] = entries.duplicate(true)
+	authored[0]["entities"] = [descriptor.duplicate(true)]
+	var manifest: ChunkManifest = ChunkManifest.new()
+	var accepted: bool = manifest.configure(authored)
+	check.call(accepted and manifest.get_chunk("chunk_a").get("entities") == [descriptor], "manifest preserves authored stable-identity descriptors")
+	var copied: Dictionary = manifest.get_chunk("chunk_a")
+	if copied.has("entities"):
+		copied["entities"][0]["initial_state"]["locked"] = false
+	check.call(manifest.get_chunk("chunk_a").get("entities") == [descriptor], "authored entity default data is copy isolated")
+	var invalid: Array[Dictionary] = authored.duplicate(true)
+	invalid[0]["entities"][0]["uuid"] = "bad-id"
+	check.call(not ChunkManifest.new().configure(invalid), "manifest rejects malformed entity UUIDs")
+	invalid = authored.duplicate(true)
+	invalid[1]["entities"] = [descriptor.duplicate(true)]
+	check.call(not ChunkManifest.new().configure(invalid), "manifest rejects duplicate UUID ownership across chunks")
+	invalid = authored.duplicate(true)
+	invalid[0]["entities"][0]["node_path"] = "../Outside"
+	check.call(not ChunkManifest.new().configure(invalid), "manifest entity node paths cannot escape their chunk")
+	invalid = authored.duplicate(true)
+	var duplicate_path: Dictionary = descriptor.duplicate(true)
+	duplicate_path["uuid"] = "123e4567-e89b-42d3-a456-426614174001"
+	invalid[0]["entities"].append(duplicate_path)
+	check.call(not ChunkManifest.new().configure(invalid), "manifest rejects two persistent identities for one node path")
+	invalid = authored.duplicate(true)
+	var node: Node = Node.new()
+	invalid[0]["entities"][0]["initial_state"]["unsafe"] = node
+	check.call(not ChunkManifest.new().configure(invalid), "manifest initial entity data rejects engine Objects")
+	node.free()
+	invalid = authored.duplicate(true)
+	invalid[0]["entities"] = "bad container"
+	check.call(not ChunkManifest.new().configure(invalid), "manifest rejects malformed entity descriptor containers")

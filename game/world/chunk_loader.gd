@@ -21,6 +21,7 @@ var _manifest: ChunkManifest
 var _activation_root: Node
 var _backend: Object
 var _clock: Callable
+var _entity_lifecycle: Object
 var _configured: bool = false
 var _pumping: bool = false
 var _requests: Dictionary = {}
@@ -37,12 +38,18 @@ func configure(
 	backend: Object = null,
 	configured_activation_budget: int = 1,
 	configured_timeout_msec: int = DEFAULT_TIMEOUT_MSEC,
-	configured_clock: Callable = Callable()
+	configured_clock: Callable = Callable(),
+	entity_lifecycle: Object = null
 ) -> bool:
 	if _configured or manager == null or manifest == null or activation_root == null:
 		return false
 	if configured_activation_budget < 1 or configured_timeout_msec < 1:
 		return false
+	if entity_lifecycle != null:
+		for method: String in ["prepare_chunk", "activate_chunk", "retire_chunk"]:
+			if not entity_lifecycle.has_method(method):
+				return false
+	_entity_lifecycle = entity_lifecycle
 	_manager = manager
 	_manifest = manifest
 	_activation_root = activation_root
@@ -109,6 +116,10 @@ func _sync_lifecycle() -> void:
 			if _instances.has(chunk_id):
 				if int(_instance_generations.get(chunk_id, -1)) != generation:
 					_instance_generations[chunk_id] = generation
+					if not _prepare_entities(chunk_id, generation, _instances[chunk_id]):
+						_retire_invalid_activation(chunk_id, generation)
+						_fail_request(chunk_id, generation, "entity_preparation_failed")
+						continue
 					_finish_activation(chunk_id, generation, _instances[chunk_id])
 				continue
 			if _failed_generation.get(chunk_id, -1) == generation:
@@ -191,6 +202,14 @@ func _activate_ready() -> void:
 			_fail_request(chunk_id, generation, "invalid_scene_root")
 			continue
 		activated_count += 1
+		if not _prepare_entities(chunk_id, generation, instance):
+			if _entity_lifecycle != null and is_instance_valid(instance):
+				_entity_lifecycle.call("retire_chunk", chunk_id, generation, instance)
+			if is_instance_valid(instance):
+				instance.free()
+			_requests.erase(chunk_id)
+			_fail_request(chunk_id, generation, "entity_preparation_failed")
+			continue
 		_activation_root.add_child(instance)
 		_instances[chunk_id] = instance
 		_instance_generations[chunk_id] = generation
@@ -204,6 +223,15 @@ func _finish_activation(chunk_id: String, generation: int, instance: Node3D) -> 
 	if not _is_currently_desired(chunk_id, generation) or not is_instance_valid(instance) or instance.is_queued_for_deletion():
 		_retire_invalid_activation(chunk_id, generation)
 		return
+	if _entity_lifecycle != null:
+		var activated: Variant = _entity_lifecycle.call("activate_chunk", chunk_id, generation, instance)
+		if typeof(activated) != TYPE_BOOL or not activated:
+			_retire_invalid_activation(chunk_id, generation)
+			_fail_request(chunk_id, generation, "entity_activation_failed")
+			return
+		if not _is_currently_desired(chunk_id, generation) or not is_instance_valid(instance) or instance.is_queued_for_deletion():
+			_retire_invalid_activation(chunk_id, generation)
+			return
 	var acknowledged: bool = _manager.acknowledge_activated(chunk_id, generation)
 	if not acknowledged or not _is_currently_desired(chunk_id, generation) or not is_instance_valid(instance) or instance.is_queued_for_deletion():
 		_retire_invalid_activation(chunk_id, generation)
@@ -211,6 +239,14 @@ func _finish_activation(chunk_id: String, generation: int, instance: Node3D) -> 
 	chunk_activated.emit(_payload(chunk_id, generation), instance)
 	if not _is_currently_desired(chunk_id, generation):
 		_retire_invalid_activation(chunk_id, generation)
+
+
+func _prepare_entities(chunk_id: String, generation: int, instance: Node3D) -> bool:
+	if _entity_lifecycle == null:
+		return true
+	var prepared: Variant = _entity_lifecycle.call("prepare_chunk", chunk_id, generation, instance)
+	return typeof(prepared) == TYPE_BOOL and prepared and _is_currently_desired(chunk_id, generation) \
+		and is_instance_valid(instance) and not instance.is_queued_for_deletion()
 
 
 func _retire_invalid_activation(chunk_id: String, generation: int) -> void:
@@ -224,6 +260,8 @@ func _unload_chunk(chunk_id: String, generation: int) -> void:
 	var instance: Node3D = _instances[chunk_id]
 	_instances.erase(chunk_id)
 	_instance_generations.erase(chunk_id)
+	if _entity_lifecycle != null and is_instance_valid(instance):
+		_entity_lifecycle.call("retire_chunk", chunk_id, generation, instance)
 	if is_instance_valid(instance):
 		instance.queue_free()
 	_manager.acknowledge_deactivated(chunk_id, generation)

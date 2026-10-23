@@ -1,0 +1,97 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: entity registry script is available
+FAIL: registry reports authority commit acceptance for projection consumers
+PASS: registry exposes registration
+PASS: registry exposes state deltas
+PASS: registry exposes copied state lookup
+PASS: delta replaces scalar values
+PASS: delta recursively merges nested dictionaries
+PASS: delta replaces arrays as complete values
+WARNING: EntityRegistry ignored duplicate entity UUID: 123e4567-e89b-42d3-a456-426614174000
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] register_entity (res://persistence/entity_registry.gd:25)
+         [1] run (res://tests/persistence/test_registry.gd:42)
+         [2] _initialize (res://tests/run_tests.gd:37)
+PASS: duplicate registration preserves modified state
+PASS: returned state is deeply isolated from registry truth
+WARNING: EntityRegistry rejected non-canonical UUID: invalid-id
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] register_entity (res://persistence/entity_registry.gd:22)
+         [1] run (res://tests/persistence/test_registry.gd:48)
+         [2] _initialize (res://tests/run_tests.gd:37)
+WARNING: EntityRegistry rejected non-canonical UUID: 123E4567-E89B-42D3-A456-426614174000
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] register_entity (res://persistence/entity_registry.gd:22)
+         [1] run (res://tests/persistence/test_registry.gd:49)
+         [2] _initialize (res://tests/run_tests.gd:37)
+PASS: invalid UUID registration is rejected
+PASS: UUIDs must use canonical lowercase form
+WARNING: EntityRegistry rejected non-serializable or oversized state for UUID: 123e4567-e89b-42d3-a456-426614174001
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] register_entity (res://persistence/entity_registry.gd:28)
+         [1] run (res://tests/persistence/test_registry.gd:53)
+         [2] _initialize (res://tests/run_tests.gd:37)
+PASS: Node values are rejected from persistent state
+WARNING: EntityRegistry rejected non-serializable or oversized state for UUID: 123e4567-e89b-42d3-a456-426614174002
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] register_entity (res://persistence/entity_registry.gd:28)
+         [1] run (res://tests/persistence/test_registry.gd:59)
+         [2] _initialize (res://tests/run_tests.gd:37)
+PASS: over-depth records are rejected
+WARNING: EntityRegistry rejected non-serializable or oversized delta for UUID: 123e4567-e89b-42d3-a456-426614174003
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] commit_state_delta (res://persistence/entity_registry.gd:41)
+         [1] run (res://tests/persistence/test_registry.gd:63)
+         [2] _initialize (res://tests/run_tests.gd:37)
+PASS: invalid delta is rejected atomically
+WARNING: EntityRegistry rejected non-serializable or oversized delta for UUID: 123e4567-e89b-42d3-a456-426614174003
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] commit_state_delta (res://persistence/entity_registry.gd:41)
+         [1] run (res://tests/persistence/test_registry.gd:66)
+         [2] _initialize (res://tests/run_tests.gd:37)
+PASS: non-finite numeric delta is rejected
+WARNING: EntityRegistry rejected delta whose merged state exceeds limits for UUID: 123e4567-e89b-42d3-a456-426614174004
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] commit_state_delta (res://persistence/entity_registry.gd:45)
+         [1] run (res://tests/persistence/test_registry.gd:74)
+         [2] _initialize (res://tests/run_tests.gd:37)
+PASS: merged state exceeding container bounds is rejected atomically
+WARNING: EntityRegistry ignored delta for unknown UUID: 123e4567-e89b-42d3-a456-426614174099
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] commit_state_delta (res://persistence/entity_registry.gd:38)
+         [1] run (res://tests/persistence/test_registry.gd:76)
+         [2] _initialize (res://tests/run_tests.gd:37)
+PASS: unknown entity delta does not create a record
+PASS: faction state script is available
+PASS: faction standing lookup is available
+PASS: faction mutation contracts are available
+PASS: threshold queries are available
+PASS: standing clamps to -100
+PASS: hostility threshold classifies lower bound as hostile
+PASS: standing clamps to 100
+PASS: alliance threshold classifies upper bound as allied
+PASS: hostility threshold is inclusive
+PASS: alliance threshold is inclusive
+PASS: standing on opposite sides does not cross faction thresholds
+PASS: unknown faction lookup returns neutral zero
+PASS: unknown faction mutation is rejected
+PASS: unknown faction assignment is rejected
+PASS: known faction accepts bounded integer adjustment
+PASS: adjustment preserves standing bounds
+PASS: maximum integer adjustment clamps without overflow
+PASS: minimum integer adjustment clamps without overflow
+PASS: valid configurable faction thresholds are accepted
+PASS: overlapping faction thresholds are rejected
+PASS: configured hostile threshold is applied
+PASS: configured allied threshold is applied
+Suite registry: 40 cases, 1 failures

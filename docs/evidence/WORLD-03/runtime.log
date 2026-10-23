@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+WORLD-03 PASS: loader hydrates before ready and enables interactions only after entry
+WORLD-03 PASS: door unlock commits through current-generation authority
+WORLD-03 PASS: collected loot immediately loses its runtime projection
+WORLD-03 PASS: pre-unload boundary save sees already-committed door and loot records
+WORLD-03 PASS: NPC record changes preserve unrelated authoritative data
+WORLD-03 PASS: all entity records save through CORE-04 snapshot adapters
+WORLD-03 PASS: unload revokes both chunks and notifies stale-work consumers
+WORLD-03 PASS: saved entity data restores after all runtime scenes are gone
+WORLD-03 PASS: reverse-order NPC re-entry restores saved state before ready
+WORLD-03 PASS: reverse-order door re-entry preserves unlock and suppresses collected loot
+WORLD-03 PASS: old asynchronous interaction cannot mutate a reloaded generation
+WORLD-03 PASS: two runtime projections and one tombstone retain exactly three stable identities
+WORLD-03 runtime PASS: 12 checks; headless

@@ -21,8 +21,8 @@
 
 - Read the linked source sections, this file and the prerequisite tasks only; mock adjacent services until integration tasks require them. Proposed implementation paths below do not exist yet.
 - Each task is a single bounded deliverable intended for one focused worker. If a deferred expansion task is selected, first split its content batches into separately reviewable tickets; it is not permission for an open-ended production pass.
-- For logic tasks, add the named regression cases, demonstrate failure for the new behavior, implement it, then run the focused suite. CORE-01 establishes the runner; use `godot --headless --path game --script res://tests/run_tests.gd -- --suite <suite>` with the module suite registered there. Blender/visual/performance tasks use the stated evidence rather than artificial unit tests.
-- Check a task only after its implementation, acceptance criteria and test evidence pass. Record exact commands, results and visual/performance evidence alongside the task, plus any follow-up issue. Use a small focused change/commit; preserve unrelated work.
+- Follow the fast prototype verification policy in [AGENTS.md](../../AGENTS.md): focused checks and a quick gameplay/asset smoke check; routine red-first testing, exhaustive edge cases and separate review are optional. Task test expectations guide risk coverage; deferred checks must be recorded honestly.
+- Accept working task behavior under the fast prototype policy; record minor bugs and deferred checks without marking those checks passed. Crashes, save corruption, blocked progression and unauthorized model actions remain blockers. Keep a short report with exact commands/exits and preserve unrelated work.
 - All implementation boxes start unchecked. Checking off planning documentation does not indicate game implementation is complete. Deferred Stage 2–5 work is outside the currently approved Stage 0/1 scope.
 
 ## Review focus
@@ -37,7 +37,7 @@
 
 ### AI-01: Implement faction-aware perception
 
-- [ ] **AI-01 — deliverable complete** (Stage 1).
+- [x] **AI-01 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** CORE-02. Prerequisite IDs resolve through the master progress task index.
 
@@ -45,15 +45,19 @@
 
 **Interfaces:** `notify_sound_event(position: Vector3, radius: float, faction_id: String) -> void`; `evaluate_target_hostility(target_faction: String) -> bool` reads CORE-02 standing thresholds.
 
-- [ ] **Acceptance:** PerceptionData distinguishes seen position, last-known position and heard events. Range/LOS gates visual knowledge; sound can trigger investigation through a wall without granting visual knowledge. Unknown factions follow documented safe defaults.
+**Supporting contract (recorded before implementation):** The perception component keeps runtime-only `PerceptionData` with separate current visual contact/seen position, last-known position, and a bounded array of heard event records. The configurable default sight range is 20 m, physics query mask is layer 1, and the retained sound-event cap is 16 per observer; these are engineering defaults, not approved balance. Visual knowledge updates only when a live target is within range and no world collider blocks the ray. Losing sight clears current visual contact but preserves the last-known position; unseen movement never updates either position. Sound radius is inclusive and uses distance only, so walls do not block it. Sound records include source position and faction ID. `FactionRules` reads the live `FactionState` on every query, uses its published inclusive thresholds, and treats unknown IDs as non-hostile; it stores no standing copy.
 
-- [ ] **Test expectations:** Test occluded/visible targets, sound radius edges, friendly/hostile thresholds and reputation changes while a target is present. Unseen movement cannot update last-seen position.
+- [x] **Acceptance:** PerceptionData distinguishes seen position, last-known position and heard events. Range/LOS gates visual knowledge; sound can trigger investigation through a wall without granting visual knowledge. Unknown factions follow documented safe defaults.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Test occluded/visible targets, sound radius edges, friendly/hostile thresholds and reputation changes while a target is present. Unseen movement cannot update last-seen position.
+
+- [x] **Evidence recorded:** [AI-01 report](../reports/AI-01.md); focused20/20, all601, import and diff-check exit0. Godot MCP version4.7.2. Real headless physics ray checks passed; no rendered capture/human playtest recorded.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Runtime perception separates current sight, last-known location and nearby sound records; faction hostility/alliance queries read current CORE-02 standings and unknown IDs default safely. See [report](../reports/AI-01.md).
 
 ### AI-02: Build the deterministic goon state machine
 
-- [ ] **AI-02 — deliverable complete** (Stage 1).
+- [x] **AI-02 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** AI-01, PLAYER-02. Prerequisite IDs resolve through the master progress task index.
 
@@ -61,15 +65,21 @@
 
 **Interfaces:** AIState includes IDLE/INVESTIGATE/COMBAT/FLEE; accept perception, damage, stun and authored hostility events.
 
-- [ ] **Acceptance:** Patrol/investigate/search, pursue/attack/reposition and flee are deterministic substates/actions. Damage and attack intervals are bounded; dead/stunned actors cannot attack. Conventional events drive distractions and security reactions.
+**Supporting contract (recorded before implementation):** `TacticalAgent` owns a transient `HealthState` and consumes its child `NpcPerception`; no persistent records or target Nodes are stored in save data. Its deterministic states are IDLE, INVESTIGATE, COMBAT, FLEE and terminal DEAD. Substates are PATROL, INVESTIGATE, SEARCH, PURSUE, ATTACK, REPOSITION, FLEE and STUNNED. `tick(delta)` is the explicit deterministic update (also called by `_physics_process` in play); movement is emitted as destination/speed intent for AI-03 navigation to consume. Authored patrol points advance in listed order and wrap. Last-known-position investigation never reads an unseen target's live transform and enters SEARCH after reaching that point, then returns to patrol/idle after the configured search time. Combat keeps target identity only as a transient Node reference, checks live `FactionState` hostility each tick, pursues beyond 1.75 m, attacks inside 1.75 m and backs off inside 0.9 m. Damage per attack defaults to 10 and cadence to 1.25 s; health defaults to 80; flee threshold defaults to 25% health; movement speed defaults to 2.5 m/s; investigation search to 3 s; stun is capped at 30 s. These are configurable engineering defaults, not approved balance. Cooldown stops while stunned, and death/stun suppress attacks. Authored hostility overrides are transient target-faction flags and never mutate `FactionState`. Attack damage calls the target's validated `apply_damage(amount, source_faction)` method once per elapsed cadence; one tick cannot emit multiple attacks after a long frame. Invalid/non-finite or negative time and invalid config reject without advancing state.
 
-- [ ] **Test expectations:** Use a fixed clock/seed to assert state transitions and attack cadence; cover lost sight, expired investigation, stun during attack, lethal damage and a change to allied standing.
+- [x] **Acceptance:** Patrol/investigate/search, pursue/attack/reposition and flee are deterministic substates/actions. Damage and attack intervals are bounded; dead/stunned actors cannot attack. Conventional events drive distractions and security reactions.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Use a fixed clock/seed to assert state transitions and attack cadence; cover lost sight, expired investigation, stun during attack, lethal damage and a change to allied standing.
+
+- [x] **Evidence recorded:** [AI-02 report](../reports/AI-02.md); focused32/32, all633, import and diff-check exit0. Godot MCP version4.7.2. Fixed-clock scene-tree checks passed; no navigation/rendered capture/human playtest recorded.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Deterministic tactical states emit movement intents for AI-03; bounded combat and authored events use HealthState and live faction authority. The goon scene is an NPC blockout, not a completed model or navigable enemy. See [report](../reports/AI-02.md).
 
 ### AI-03: Add navigation and recovery in an isolated scene
 
-- [ ] **AI-03 — deliverable complete** (Stage 1).
+- **Supporting scope recorded before implementation (23 October 2026):** Attach the AI-owned `NavigationDriver` to the existing goon scene so real tactical movement works, add `game/tests/ai/test_navigation.gd` and register the focused `ai_navigation` suite in the shared runner, and add a small isolated navigable scene fixture plus an AI debug overlay. Run the fixture in a dedicated SubViewport/World3D and on a fixture-owned NavigationServer map so integrated suite state cannot contaminate readiness. Update the prior AI-02 decision-only fixture to disable the locomotion child. Navigation readiness is injected through an optional provider callable; absent WORLD-05 integration, local readiness requires a valid synchronized NavigationServer map. Driver uses built-in `NavigationAgent3D`, caps stuck/unreachable recovery, returns to last valid nav point or queues safe despawn when none exists. No edits to `game/world/`, no custom pathfinding, and no cross-chunk behavior are included.
+
+- [x] **AI-03 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** AI-02, WORLD-01. Prerequisite IDs resolve through the master progress task index.
 
@@ -77,11 +87,13 @@
 
 **Interfaces:** Use engine navigation with readiness input from WORLD-05; expose current state, destination, perception and last-valid point for debugging.
 
-- [ ] **Acceptance:** Goon reaches heard events and combat positions with bounded stuck recovery. If navmap drops or actor leaves mesh, recover to a valid point or safely despawn. Do not implement a custom A* system.
+- [x] **Acceptance:** Goon reaches heard events and combat positions with bounded stuck recovery. If navmap drops or actor leaves mesh, recover to a valid point or safely despawn. Do not implement a custom A* system.
 
-- [ ] **Test expectations:** Sound behind a wall produces a navigable investigation; test unreachable targets, stuck corners, map removal and off-mesh spawn. Review debug overlays and recovery in-engine.
+- [x] **Test expectations:** Sound behind a wall produces a navigable investigation; test unreachable targets, stuck corners, map removal and off-mesh spawn. Review debug overlays and recovery in-engine.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Evidence recorded:** [AI-03 report](../reports/AI-03.md); focused suite 15/15 and integrated suite 649/649, import and diff check exit 0. Godot MCP confirms 4.7.2; in-engine debug overlay capture at [navigation preview](../evidence/AI-03/navigation-preview.png). The blockout fixture is smoke evidence, not final NPC art or human playtest acceptance.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `NavigationDriver` consumes AI-02 movement intent through built-in navigation and exposes readiness, state, destination, perception, and last valid position. Bounded recovery handles stuck motion, unreachable destinations, off-mesh spawn, and navmap removal. WORLD-05 readiness can be injected; cross-chunk handoff remains deferred to WORLD-05. See [report](../reports/AI-03.md).
 
 ### AI-04: Serialize simplified simulation on unload
 

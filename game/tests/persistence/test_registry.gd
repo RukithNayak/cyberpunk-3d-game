@@ -5,12 +5,27 @@ const FACTION_PATH: String = "res://persistence/faction_state.gd"
 const VALID_ENTITY_ID: String = "123e4567-e89b-42d3-a456-426614174000"
 
 
+func _test_checked_delta(check: Callable, registry_script: Script) -> void:
+	var registry: Object = registry_script.new()
+	check.call(registry.has_method("try_commit_state_delta"), "registry reports authority commit acceptance for projection consumers")
+	if not registry.has_method("try_commit_state_delta"):
+		return
+	registry.call("register_entity", VALID_ENTITY_ID, {"flags": {"locked": true}, "opaque": 7})
+	check.call(registry.call("try_commit_state_delta", VALID_ENTITY_ID, {"flags": {"locked": false}}) and registry.call("get_entity_state", VALID_ENTITY_ID) == {"flags": {"locked": false}, "opaque": 7}, "checked delta commits through the registry merge and preserves unrelated data")
+	check.call(registry.call("try_commit_state_delta", VALID_ENTITY_ID, {}), "checked valid no-op is an accepted commit")
+	check.call(not registry.call("try_commit_state_delta", "123e4567-e89b-42d3-a456-426614174099", {}), "checked commit rejects unknown identity")
+	var node: Node = Node.new()
+	check.call(not registry.call("try_commit_state_delta", VALID_ENTITY_ID, {"unsafe": node}) and registry.call("get_entity_state", VALID_ENTITY_ID) == {"flags": {"locked": false}, "opaque": 7}, "checked unsafe delta rejects without changing truth")
+	node.free()
+
+
 func run(check: Callable) -> void:
 	var registry_script: Script = load(REGISTRY_PATH) as Script
 	check.call(registry_script != null, "entity registry script is available")
 	if registry_script == null:
 		return
 	var registry: Object = registry_script.new()
+	_test_checked_delta(check, registry_script)
 	check.call(registry.has_method("register_entity"), "registry exposes registration")
 	check.call(registry.has_method("commit_state_delta"), "registry exposes state deltas")
 	check.call(registry.has_method("get_entity_state"), "registry exposes copied state lookup")

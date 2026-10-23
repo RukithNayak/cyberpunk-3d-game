@@ -3,12 +3,19 @@ config_version=5
 
 [application]
 config/name="Cyberpunk 3D — Feasibility"
-run/main_scene="res://tests/scenes/startup.tscn"
+run/main_scene="res://tests/scenes/combat_feedback.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[autoload]
+InteriorTransition="*res://world/interior_transition.gd"
 
 [display]
 window/size/viewport_width=960
 window/size/viewport_height=540
+window/size/mode=3
+
+[gui]
+theme/custom="res://ui/cyberpunk_theme.tres"
 
 [rendering]
 renderer/rendering_method="gl_compatibility"

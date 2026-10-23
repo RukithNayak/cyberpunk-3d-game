@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://features/npcs/tactical_agent.gd" id="1_agent"]
+[ext_resource type="Script" path="res://features/npcs/perception.gd" id="2_perception"]
+[ext_resource type="Script" path="res://features/npcs/navigation_driver.gd" id="3_navigation"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_goon"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_goon"]
+albedo_color = Color(0.12, 0.72, 0.78, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_goon"]
+material = SubResource("StandardMaterial3D_goon")
+radius = 0.35
+height = 1.7
+
+[node name="Goon" type="CharacterBody3D"]
+script = ExtResource("1_agent")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_goon")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.9, 0)
+mesh = SubResource("CapsuleMesh_goon")
+
+[node name="Perception" type="Node3D" parent="."]
+script = ExtResource("2_perception")
+
+[node name="NavigationDriver" type="Node3D" parent="."]
+script = ExtResource("3_navigation")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="NavigationDriver"]
+path_desired_distance = 0.35
+target_desired_distance = 0.55
+radius = 0.4
+avoidance_enabled = false

@@ -11,6 +11,7 @@ func configure(records: Array) -> bool:
 	if _configured:
 		return false
 	var candidate: Dictionary = {}
+	var entity_ids: Dictionary = {}
 	for raw_record: Variant in records:
 		if not raw_record is Dictionary:
 			return false
@@ -37,11 +38,15 @@ func configure(records: Array) -> bool:
 			if not neighbor is String or not _is_valid_id(neighbor) or neighbors.has(neighbor):
 				return false
 			neighbors.append(neighbor)
+		var entity_result: Dictionary = _validated_entities(record.get("entities", []), entity_ids)
+		if not entity_result["ok"]:
+			return false
 		candidate[chunk_id] = {
 			"id": chunk_id,
 			"bounds": bounds,
 			"scene_path": scene_path,
-			"adjacent": neighbors
+			"adjacent": neighbors,
+			"entities": entity_result["entities"]
 		}
 	if candidate.is_empty():
 		return false
@@ -62,6 +67,33 @@ func get_chunk_ids() -> Array[String]:
 		ids.append(chunk_id)
 	ids.sort()
 	return ids
+
+
+func _validated_entities(raw_entities: Variant, entity_ids: Dictionary) -> Dictionary:
+	if typeof(raw_entities) != TYPE_ARRAY or raw_entities.size() > EntityRegistry.MAX_CONTAINER_ENTRIES:
+		return {"ok": false}
+	var entities: Array[Dictionary] = []
+	var paths: Dictionary = {}
+	var validator: EntityRegistry = EntityRegistry.new()
+	for raw: Variant in raw_entities:
+		if typeof(raw) != TYPE_DICTIONARY or raw.size() != 3:
+			return {"ok": false}
+		var uuid: Variant = raw.get("uuid")
+		var path: Variant = raw.get("node_path")
+		var state: Variant = raw.get("initial_state")
+		if typeof(uuid) != TYPE_STRING or typeof(path) != TYPE_STRING or typeof(state) != TYPE_DICTIONARY:
+			return {"ok": false}
+		if entity_ids.has(uuid) or paths.has(path) or path.is_empty() or path.contains(":"):
+			return {"ok": false}
+		for part: String in path.split("/", true):
+			if part.is_empty() or part == "." or part == "..":
+				return {"ok": false}
+		if not validator.validate_snapshot_records([{"uuid": uuid, "state": state}]):
+			return {"ok": false}
+		entity_ids[uuid] = true
+		paths[path] = true
+		entities.append(raw.duplicate(true))
+	return {"ok": true, "entities": entities}
 
 
 func get_chunk(chunk_id: String) -> Dictionary:

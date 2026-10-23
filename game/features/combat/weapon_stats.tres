@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WeaponStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://features/combat/weapon_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+resource_name = "Street Pistol"
+damage = 24
+fire_rate_per_second = 5.0
+range_m = 40.0
+spread_degrees = 0.65
+recoil_degrees = 0.7
+falloff_start_m = 20.0
+minimum_damage = 12.0
+source_faction = &"player"

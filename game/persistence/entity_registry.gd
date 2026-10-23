@@ -31,20 +31,25 @@ func register_entity(uuid: String, initial_state: Dictionary) -> void:
 
 
 func commit_state_delta(uuid: String, delta: Dictionary) -> void:
+	try_commit_state_delta(uuid, delta)
+
+
+func try_commit_state_delta(uuid: String, delta: Dictionary) -> bool:
 	if not _is_valid_uuid(uuid):
 		push_warning("EntityRegistry rejected delta for non-canonical UUID: %s" % uuid)
-		return
+		return false
 	if not _entities.has(uuid):
 		push_warning("EntityRegistry ignored delta for unknown UUID: %s" % uuid)
-		return
+		return false
 	if not _is_valid_data(delta):
 		push_warning("EntityRegistry rejected non-serializable or oversized delta for UUID: %s" % uuid)
-		return
+		return false
 	var merged: Dictionary = _deep_merge(_entities[uuid], delta)
 	if not _is_valid_data(merged):
 		push_warning("EntityRegistry rejected delta whose merged state exceeds limits for UUID: %s" % uuid)
-		return
+		return false
 	_entities[uuid] = merged
+	return true
 
 
 func get_entity_state(uuid: String) -> Dictionary:

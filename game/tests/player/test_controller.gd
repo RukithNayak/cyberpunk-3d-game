@@ -37,6 +37,7 @@ func _exercise_settings(settings_script: Script, check: Callable) -> void:
 	var restored: RefCounted = settings_script.new(SETTINGS_PATH)
 	check.call(restored.load_settings(), "saved settings restore")
 	check.call(is_equal_approx(restored.get_fov(), 103.0), "FOV survives settings restoration")
+	check.call(is_equal_approx(restored.get_sensitivity(), 0.002), "look sensitivity survives settings restoration")
 	check.call(restored.get_invert_look(), "invert-look survives settings restoration")
 	check.call(_has_key_binding("jump", KEY_K), "rebound action survives settings restoration")
 	check.call(restored.restore_defaults(), "test settings can reset to defaults")
@@ -45,16 +46,44 @@ func _exercise_settings(settings_script: Script, check: Callable) -> void:
 
 func _exercise_movement(fixture_scene: PackedScene, check: Callable) -> void:
 	var root: Node3D = fixture_scene.instantiate()
-	get_tree().root.add_child(root)
+	_scene_tree().root.add_child(root)
 	var player: CharacterBody3D = root.get_node("Player")
 	player.call("set_mouse_capture_enabled", false)
 	await _settle_physics(2)
+	player.call("add_control_lock", &"inventory_ui")
+	check.call(player.call("can_use_inventory_action") and not player.call("can_fire"), "inventory lock permits a consumable transaction but blocks combat input")
+	player.call("add_control_lock", &"pause")
+	check.call(not player.call("can_use_inventory_action"), "pause lock blocks inventory healing")
+	player.call("remove_control_lock", &"pause")
+	check.call(player.call("can_use_inventory_action"), "inventory healing resumes when only the inventory lock remains")
+	player.call("remove_control_lock", &"inventory_ui")
+	var head: Node3D = player.get_node("Head") as Node3D
+	check.call(player.has_method("set_reduced_camera_shake"), "player exposes the HUD camera comfort control")
+	if player.has_method("set_reduced_camera_shake"):
+		var recoil_start: float = head.rotation.x
+		player.call("set_reduced_camera_shake", true)
+		player.call("apply_recoil", 10.0)
+		check.call(absf(absf(head.rotation.x - recoil_start) - deg_to_rad(3.5)) < EPSILON, "reduced camera feedback scales recoil to a gentler level")
+		recoil_start = head.rotation.x
+		player.call("set_reduced_camera_shake", false)
+		player.call("apply_recoil", 10.0)
+		check.call(absf(absf(head.rotation.x - recoil_start) - deg_to_rad(10.0)) < EPSILON, "standard camera feedback restores full recoil")
+		head.rotation.x = 0.0
 
 	var origin: Vector3 = player.global_position
 	Input.action_press("move_forward")
 	await _settle_physics(20)
 	Input.action_release("move_forward")
-	check.call(player.global_position.distance_to(origin) > 0.1, "named forward action moves the character")
+	var walk_distance: float = player.global_position.distance_to(origin)
+	check.call(walk_distance > 0.1, "named forward action moves the character (%s, velocity=%s)" % [str(walk_distance), str(player.velocity)])
+	var run_origin: Vector3 = player.global_position
+	Input.action_press("move_forward")
+	Input.action_press("run")
+	await _settle_physics(20)
+	Input.action_release("move_forward")
+	Input.action_release("run")
+	var run_distance: float = player.global_position.distance_to(run_origin)
+	check.call(run_distance > walk_distance * 1.15, "run action increases movement speed (%s > %s)" % [str(run_distance), str(walk_distance)])
 
 	var pre_lock: Vector3 = player.global_position
 	player.call("add_control_lock", "dialogue")
@@ -64,21 +93,43 @@ func _exercise_movement(fixture_scene: PackedScene, check: Callable) -> void:
 	Input.action_press("jump")
 	await _settle_physics(1)
 	Input.action_release("jump")
+	await _settle_physics(1)
 	check.call(player.velocity.y <= 0.0, "dialogue lock prevents jump action")
 	player.call("remove_control_lock", "dialogue")
 	check.call(player.get("can_act"), "removing final lock restores actions")
+	check.call(player.call("resume_mouse_capture"), "mouse capture can resume after a control lock")
+	player.call("set_mouse_capture_enabled", false)
 
 	var feet_before_crouch: float = player.global_position.y
 	Input.action_press("crouch")
 	await _settle_physics(2)
 	Input.action_release("crouch")
 	check.call(player.get("is_crouched"), "crouch action enters crouch state")
-	check.call(absf(player.global_position.y - feet_before_crouch) <= EPSILON, "crouch preserves foot height")
-	check.call(_standing_blocked_by_test_ceiling(root), "fixture includes a standing-height obstruction")
+	check.call(absf(player.global_position.y - feet_before_crouch) <= EPSILON, "crouch preserves foot height (%s -> %s)" % [str(feet_before_crouch), str(player.global_position.y)])
+	check.call(absf(player.get_node("Head").position.y - 1.05) < EPSILON, "crouch lowers first-person camera")
+	player.global_position = Vector3(0.0, feet_before_crouch, 0.0)
+	player.velocity = Vector3.ZERO
+	await _settle_physics(20)
+	check.call(player.is_on_floor(), "player settles on floor beneath the low ceiling")
+	check.call(_standing_blocked_by_test_ceiling(root), "real physics query detects a standing-height obstruction")
 	Input.action_press("jump")
 	await _settle_physics(1)
 	Input.action_release("jump")
-	check.call(player.velocity.y <= 0.0, "low headroom prevents jump")
+	check.call(player.velocity.y <= 0.0, "low headroom prevents jump (%s, crouched=%s)" % [str(player.velocity.y), str(player.get("is_crouched"))])
+	root.get_node("LowCeiling").queue_free()
+	await _settle_physics(2)
+	Input.action_press("crouch")
+	await _settle_physics(1)
+	Input.action_release("crouch")
+	await _settle_physics(4)
+	check.call(not player.get("is_crouched"), "player can stand after obstruction removal")
+	check.call(player.is_on_floor(), "player remains grounded before jumping (%s)" % str(player.velocity.y))
+	Input.action_press("jump")
+	await _settle_physics(1)
+	Input.action_release("jump")
+	check.call(player.velocity.y > 0.0, "jump action launches when headroom is clear (%s)" % str(player.velocity.y))
+	await _settle_physics(60)
+	check.call(player.is_on_floor(), "jump lands on the collision floor")
 
 	player.call("simulate_focus_lost")
 	check.call(not player.get("is_mouse_captured"), "focus loss releases mouse capture")
@@ -92,12 +143,12 @@ func _exercise_movement(fixture_scene: PackedScene, check: Callable) -> void:
 	Input.action_release("jump")
 	Input.action_release("crouch")
 	root.queue_free()
-	await get_tree().process_frame
+	await _scene_tree().process_frame
 
 
 func _settle_physics(frames: int) -> void:
 	for _frame in frames:
-		await get_tree().physics_frame
+		await _scene_tree().physics_frame
 
 
 func _has_key_binding(action_name: StringName, key: Key) -> bool:
@@ -109,5 +160,10 @@ func _has_key_binding(action_name: StringName, key: Key) -> bool:
 	return false
 
 
-func _standing_blocked_by_test_ceiling(_root: Node3D) -> bool:
-	return true
+func _standing_blocked_by_test_ceiling(root: Node3D) -> bool:
+	var player: Node = root.get_node_or_null("Player")
+	return player != null and not bool(player.call("can_stand"))
+
+
+func _scene_tree() -> SceneTree:
+	return Engine.get_main_loop() as SceneTree
