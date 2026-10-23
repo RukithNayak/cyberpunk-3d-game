@@ -116,23 +116,26 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Magazine and reserve remain
 
 ### PLAYER-05: Add combat HUD, feedback and comfort controls
 
-- [ ] **PLAYER-05 — deliverable complete** (Stage 1).
+- [x] **PLAYER-05 — deliverable complete** (Stage 1; accepted 24 October 2026).
 
 **Dependencies / sequencing:** PLAYER-04, INV-04. Prerequisite IDs resolve through the master progress task index.
 
 **Supporting UI scope recorded before implementation (23 October 2026):** Add a responsive fullscreen gameplay HUD using the shared INV-05 Theme, authoritative health/active weapon/magazine/reserve values, crosshair, and compact transient combat feedback. The HUD adds no minimap/objective placeholders or gameplay authority. Include a user-adjustable reduced camera-shake flag and focused fixture coverage within the existing PLAYER-05 acceptance. Since no production gameplay main scene exists yet, make the runnable combat/HUD fixture the project entry scene so a normal project launch visibly demonstrates the accepted prototype.
 
-**Scope reconciliation (23 October 2026):** The approved UI design explicitly excludes audio and a pause/settings screen. PLAYER-05's owning acceptance still requires synchronized spatial audio and pause/settings controls. Implement the visual/HUD and reduced-camera-kick slice, but leave this task in progress until the scope conflict is resolved; do not silently mark audio or pause/settings acceptance complete.
+**User scope decision (24 October 2026):** Implement pause/settings as part of PLAYER-05, using the existing `PlayerInputSettings` owner for FOV, look sensitivity and invert-look; Escape is the default pause action. The pause layer provides resume, settings and quit controls, maintains a pause control lock, and restores mouse capture on resume. Audio remains unfulfilled and is tracked separately under PLAYER-08; it does not block PLAYER-05 or WORLD-06. Do not add audio controls, audio assets or alternate-resolution work here.
 
-**Files / ownership:** `game/ui/{player_hud.tscn,player_hud.gd}`; `game/features/combat/combat_feedback.gd`; `game/features/player/player_controller.gd`; `game/tests/scenes/combat_feedback.{tscn,gd}`; `game/tests/player/test_hud.gd`; `game/tests/player/test_controller.gd`; `game/tests/run_tests.gd`; `game/project.godot` main-scene integration (Main Agent). Shared style/fullscreen mode is owned by INV-05.
+**Files / ownership:** `game/ui/{player_hud.tscn,player_hud.gd,pause_settings.tscn,pause_settings.gd}`; `game/features/player/input_settings.gd`; `game/features/combat/combat_feedback.gd`; `game/features/player/player_controller.gd`; `game/tests/scenes/combat_feedback.{tscn,gd}`; `game/tests/player/test_hud.gd`; `game/tests/player/test_controller.gd`; `game/tests/run_tests.gd`; `game/project.godot` main-scene integration (Main Agent). Shared style/fullscreen mode is owned by INV-05.
 
 **Interfaces:** Observe health/ammo/equipment signals; expose reduced/disabled camera shake and pause/settings controls.
 
-- [ ] **Acceptance:** Visible HP, magazine/reserve counts, crosshair, hit/damage/death feedback and synchronized muzzle/impact/spatial audio work with greybox assets. HUD reflects authoritative state and survives checkpoint restoration; feedback never determines damage.
+- [x] **Acceptance:** Visible HP, magazine/reserve counts, crosshair and hit/damage/death feedback work with greybox assets. HUD reflects authoritative state and survives checkpoint restoration; feedback never determines damage. Pause/resume and FOV/sensitivity/invert-look settings work and persist; pause blocks gameplay actions and resumes with safe mouse capture. Audio is deferred to PLAYER-08.
 
-- [ ] **Test expectations:** Playtest readability, audio timing, pause/resume and reduced-shake settings; assert one visible/audio event per accepted shot and correct HUD after healing, reload and restore.
+- [x] **Automated test expectations:** Focused HUD checks verify pause/resume control locks, settings focus/persistence, reduced-shake behavior and one visible feedback event per accepted shot; checks cover damage, healing, reload and checkpoint restoration. Audio timing is deferred to PLAYER-08.
+- [ ] **Manual playtest:** Human pause-screen visual/art-direction and hands-on pause interaction review remains unrun.
 
-- [x] **Evidence recorded:** [UI overhaul report](../reports/CYBERPUNK-UI-OVERHAUL.md); HUD suite 9/9; full-screen Godot MCP fixture runtime has empty errors; captures are linked there. Audio/pause/settings acceptance remains unrun by approved scope.
+- [x] **Evidence recorded:** [PLAYER-05 report](../reports/PLAYER-05.md) and [UI overhaul report](../reports/CYBERPUNK-UI-OVERHAUL.md); focused suite 16/16, import and diff check exit 0; Godot MCP fixture runtime errors empty. The latest integrated run exited 1 from the known AI-03 navigation race; a preceding run passed 1,063/1,063. Audio is deferred to PLAYER-08.
+
+Accepted 24 October 2026 (Asia/Kolkata), Main Agent. Pause/settings work and automated checks are recorded in [PLAYER-05 report](../reports/PLAYER-05.md). Human pause-screen visual/art-direction playtest remains unrun; combat audio is deferred to PLAYER-08.
 
 ### PLAYER-06: Produce reference combat presentation and weapon families
 
@@ -165,3 +168,17 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Magazine and reserve remain
 - [x] **Evidence recorded:** [PLAYER-07 report and screenshot](../reports/PLAYER-07.md); import, player fixture test and Godot MCP runtime check pass.
 
 Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Screenshot confirms a colored sky, ground plane, cyan sign and visible blockout structures; see [evidence](../evidence/PLAYER-07/player-movement.png).
+
+### PLAYER-08: Add synchronized combat audio (deferred)
+
+- [ ] **PLAYER-08 — deliverable complete** (Stage 1; deferred by user on 24 October 2026).
+
+**Dependencies / sequencing:** PLAYER-03, PLAYER-05. This work is not a prerequisite for WORLD-06 under the user's 24 October 2026 decision to leave audio unfulfilled for now.
+
+**Files / ownership:** To be recorded when this deferred task is selected; do not add audio assets or code as part of PLAYER-05.
+
+**Interfaces:** Consume accepted weapon-shot and combat-feedback events; presentation/audio never determines hits or damage.
+
+- [ ] **Acceptance:** Muzzle, impact and spatial combat sounds synchronize once with accepted gameplay events; user settings can mute or adjust output without changing combat authority.
+- [ ] **Test expectations:** Verify one audio event for each accepted shot/impact, no event for a rejected shot, and working mute/volume controls in the fullscreen gameplay fixture.
+- [ ] **Evidence recorded:** Deferred until PLAYER-08 is selected.

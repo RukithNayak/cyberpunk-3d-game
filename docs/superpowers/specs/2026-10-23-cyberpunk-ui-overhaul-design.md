@@ -15,7 +15,7 @@ Give the existing inventory screen and the planned first-person HUD one consiste
 
 ## Non-goals
 
-- No minimap, objectives, map data, new combat rules, audio, pause/settings screen, or placeholder gameplay values.
+- No minimap, objectives, map data, new combat rules, audio, or placeholder gameplay values. Pause/settings was initially excluded by this spec; the user's 24 October 2026 decision restores pause/settings to PLAYER-05 and defers audio to PLAYER-08.
 - No changes to inventory, health, combat, or persistence ownership contracts except the PLAYER-04 work already required before PLAYER-05.
 - No new fonts, assets, engine plugins, downloads, or Stage 2–5 work.
 

@@ -18,6 +18,7 @@ const DEFAULT_KEYS: Dictionary = {
 	&"crouch": KEY_CTRL,
 	&"interact": KEY_E,
 	&"fire": KEY_ENTER,
+	&"pause": KEY_ESCAPE,
 }
 
 var settings_path: String
@@ -126,9 +127,17 @@ func load_settings() -> bool:
 	var decoded: Dictionary = {}
 	var bindings: Dictionary = payload["bindings"]
 	for action: StringName in DEFAULT_KEYS:
-		if not bindings.has(String(action)):
+		var event: InputEvent
+		if bindings.has(String(action)):
+			event = _decode_event(bindings[String(action)])
+		elif action == &"pause":
+			var default_pause: InputEventKey = InputEventKey.new()
+			default_pause.physical_keycode = KEY_ESCAPE
+			event = default_pause
+		else:
 			return false
-		var event: InputEvent = _decode_event(bindings[String(action)])
+		if event == null:
+			return false
 		if event == null or not _is_supported_binding(event):
 			return false
 		for other: StringName in decoded:

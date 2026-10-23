@@ -1,0 +1,87 @@
+{
+  "measured_at_utc": "2026-10-23T19:42:01.648237+00:00",
+  "mode": "local Ollama request while Godot feasibility scene is running; single sample",
+  "host": {
+    "os": "macOS-26.5.1-arm64-arm-64bit",
+    "macos": "ProductName:\t\tmacOS\nProductVersion:\t\t26.5.1\nBuildVersion:\t\t25F80",
+    "cpu": "Apple M5",
+    "memory_bytes": "17179869184"
+  },
+  "godot": {
+    "version": "4.7.2.stable.official.ed1daf0bf",
+    "running_processes": [
+      {
+        "pid": 33229,
+        "process": "Godot",
+        "rss_kb": 59872
+      },
+      {
+        "pid": 33918,
+        "process": "godot",
+        "rss_kb": 221424
+      }
+    ]
+  },
+  "model": {
+    "name": "llama3:willowbrook",
+    "parameters": "8.0B",
+    "quantization": "Q4_0",
+    "context_length_from_model_metadata": [
+      8192
+    ],
+    "installed_model_record": [
+      {
+        "name": "llama3:willowbrook",
+        "model": "llama3:willowbrook",
+        "modified_at": "2026-10-20T11:13:35.191993269+05:30",
+        "size": 4661224319,
+        "digest": "f0b3ffc1f6aabddbd01767cb7d7ccd9ed4ce7354cf75f20b5ead4a8269c04d87",
+        "details": {
+          "parent_model": "llama3:latest",
+          "format": "gguf",
+          "family": "llama",
+          "families": [
+            "llama"
+          ],
+          "parameter_size": "8.0B",
+          "quantization_level": "Q4_0",
+          "context_length": 8192,
+          "embedding_length": 4096,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "completion"
+        ]
+      }
+    ],
+    "ollama_ps": "NAME                  ID              SIZE      PROCESSOR    CONTEXT    RUNNER      UNTIL              \nllama3:willowbrook    f0b3ffc1f6aa    5.6 GB    100% GPU     8192       llamacpp    4 minutes from now",
+    "ollama_processes": [
+      {
+        "pid": 31293,
+        "process": "Ollama",
+        "rss_kb": 42560
+      },
+      {
+        "pid": 31325,
+        "process": "ollama",
+        "rss_kb": 25616
+      }
+    ],
+    "model_runner_processes": [
+      {
+        "pid": 33605,
+        "process": "llama-server",
+        "rss_kb": 5421280
+      }
+    ]
+  },
+  "request": {
+    "prompt": "Use only this fact: a signal cache was stashed beneath the transit underpass. State what is beneath the underpass in one short sentence.",
+    "first_content_ms": 192.722083,
+    "full_response_ms": 633.5255,
+    "prompt_tokens": 50,
+    "response_tokens": 13,
+    "response": "A signal cache was stashed beneath the transit underpass.",
+    "done_reason": "stop"
+  }
+}

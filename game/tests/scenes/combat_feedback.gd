@@ -35,4 +35,4 @@ func _ready() -> void:
 	_health = HealthState.new(100)
 	_health.apply_damage(18, "fixture")
 	_actions.configure(_player, _weapon, _equipment, ConsumableService.new(_inventory, {"fixture_pistol": definition}, _health), _health)
-	_hud.configure(_health, _actions, _equipment)
+	_hud.configure(_health, _actions, _equipment, _player)

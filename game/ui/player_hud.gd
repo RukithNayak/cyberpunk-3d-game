@@ -3,11 +3,14 @@ class_name PlayerHUD
 ## Compact fullscreen presentation over authoritative player/combat services.
 
 const SCANLINE_SHADER: Shader = preload("res://ui/scanline.gdshader")
+const PAUSE_SCENE: PackedScene = preload("res://ui/pause_settings.tscn")
 
 var health_state: HealthState
 var actions: WeaponStateMachine
 var equipment: EquipmentService
 var combat_feedback: CombatFeedback
+var _player: Node
+var pause_menu: PauseSettings
 
 var _health_label: Label
 var _health_bar: ProgressBar
@@ -23,17 +26,22 @@ var reduced_camera_shake: bool = false
 
 func _ready() -> void:
 	_build_interface()
+	pause_menu = PAUSE_SCENE.instantiate() as PauseSettings
+	add_child(pause_menu)
 
 
 func _exit_tree() -> void:
 	_disconnect_sources()
 
 
-func configure(health: HealthState, action_machine: WeaponStateMachine, equipment_service: EquipmentService) -> void:
+func configure(health: HealthState, action_machine: WeaponStateMachine, equipment_service: EquipmentService, player: Node = null) -> void:
 	_disconnect_sources()
 	health_state = health
 	actions = action_machine
 	equipment = equipment_service
+	_player = player
+	if pause_menu != null:
+		pause_menu.configure(_player)
 	combat_feedback = CombatFeedback.new()
 	combat_feedback.feedback_event.connect(_on_feedback_event)
 	if health_state != null:

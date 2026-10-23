@@ -1,0 +1,30 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 4.1 Metal - 90.5 - Compatibility - Using Device: Apple - Apple M5
+
+WORLD-06 benchmark baseline started: tree_paused=false
+WORLD-06 benchmark inference started: tree_paused=false active_frames=3792
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 benchmark request submitted
+WORLD-06 sustained benchmark: 23 responses, 5 boundary crossings, game-only 29.8s, concurrent 61.1s
+EXIT=0

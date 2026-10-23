@@ -1,0 +1,38 @@
+# WORLD-06 — Integrated Feasibility Build
+
+**Status:** In progress; integration smoke accepted as evidence, task acceptance incomplete.
+**Owner:** Main Agent.
+**Date:** 24 October 2026 (Asia/Kolkata).
+
+## Scope and implementation
+
+Added the test-only fullscreen scene `game/tests/scenes/feasibility.{tscn,gd}` and local benchmark driver/output under `benchmarks/feasibility/`. The fixture composes already accepted modules and leaves production modules, the main-scene setting, and export configuration untouched. It contains two-streamed-chunk traversal/backtracking, player pistol and enemy damage, authored Mara Vega mission offer, a persistent door hack, dropped loot pickup, grid inventory, healing, disk checkpoint save/restore and fresh-process reload. Local dialogue uses the installed Ollama model, with a separate offline-provider fallback check. Dialogue is hidden initially.
+
+## Verification record
+
+- `godot --headless --path game --editor --import` — exit 0.
+- `godot --headless --path game res://tests/scenes/feasibility.tscn -- --smoke` — exit 0; latest run 24/24 checks passed. In addition to traversal/backtracking, combat, mission, hack, loot, healing, checkpoint and relaunch, it verifies that delayed responses are rejected after walking away, chunk unload and player death. The real local Ollama exchange completed during traversal. A child process restored player position/health, inventory, mission and door state after relaunch (child exit 0). The child printed one ObjectDB leak warning at shutdown. Exact latest output: [`headless_smoke.log`](../../benchmarks/feasibility/headless_smoke.log).
+- `godot --path game res://tests/scenes/feasibility.tscn -- --benchmark` — latest run exit 0; 29.90 seconds game-only and 60.60 seconds with concurrent inference, plus five seam crossings. 22/22 in-game requests completed, with no failures or offline fallbacks; all five target chunks activated. Frame interval median/p95/max was 6.896/6.981/100.499 ms game-only and 6.896/6.944/9.593 ms concurrent. Full-response latency median/p95 was 2,015.018/2,233.442 ms. Godot static-memory median/max was 57,944,732/58,314,024 bytes game-only and 59,130,593/59,867,606 bytes concurrent. Boundary load was 7.367–14.073 ms; settled frame interval max was 6.896 ms; observed static-memory changes were -44 to 6,472 bytes. Raw structured output: [`sustained_load.json`](../../benchmarks/feasibility/sustained_load.json); command output: [`sustained_load.log`](../../benchmarks/feasibility/sustained_load.log).
+- During the concurrent phase, `python3 benchmarks/feasibility/model_probe.py` — exit 0. At that time the 16 GiB Mac reported game RSS 221,424 KB, a separate Godot desktop process RSS 59,872 KB, and model-runner RSS 5,421,280 KB; Ollama reported the 5.6 GB model fully on GPU. Probe latency was 192.722 ms to first content and 633.526 ms full response for 50 prompt/13 response tokens. Raw result: [`concurrent_model_probe.json`](../../benchmarks/feasibility/concurrent_model_probe.json). The desktop Godot process had been running 35 minutes and used about 1% CPU; its contribution remains in the host sample. This did not measure free-memory headroom.
+- The first benchmark observed nine stale headless Godot project processes (31 minutes to over 7 hours); that raw run is preserved as [`sustained_load_contended.json`](../../benchmarks/feasibility/sustained_load_contended.json). I stopped those processes and verified no stale lowercase headless/project Godot process remained. The follow-up model probe revealed a separate capitalized desktop Godot process, which remains represented in the host sample. The no-extra-probe run is preserved as [`sustained_load_no_probe.json`](../../benchmarks/feasibility/sustained_load_no_probe.json). The latest run still had game-only maxima of 100.499 ms frame interval and 169.849 ms process time. There are combined-load OS/game/model RSS observations, but no free-memory measurement or numeric thresholds; these single-run observations do not establish a performance pass.
+- Stale-process cleanup command: `kill -TERM 24405 25504 27185 28039 28457 30491 30501 31793 33130; sleep 2; ps -Ao pid,etime,stat,command | rg 'godot --headless --path game|godot --path game' || true` — exit 0; output contained only the cleanup shell and `rg`, no stale lowercase project Godot process. The capitalized Godot application process remained.
+- `godot --headless --path game --script res://tests/run_tests.gd -- --suite sample` — exit 0; 2/2.
+- `godot --headless --path game --script res://tests/run_tests.gd -- --suite all` — first run exit 0; 1,064/1,064. Suite shutdown printed three ObjectDB leaks and one `P11GodotBody3D` RID leak. A final rerun exited 1 at 1,051 cases with 2 failures: `ai_navigation` failed “navigation map returns a routed path around the wall”, then its isolated-suite wrapper failed. This is the previously recorded intermittent AI-03 route issue, outside WORLD-06 file ownership. Teardown again printed three ObjectDB leaks and one `P11GodotBody3D` RID leak. See [`all_suite_final.log`](../../benchmarks/feasibility/all_suite_final.log).
+- `python3 benchmarks/feasibility/model_probe.py` while the fullscreen scene was running — exit 0. Captured OS, machine memory, game process RSS, model metadata, runner RSS and Ollama's loaded model report.
+- `godot --path game res://tests/scenes/feasibility.tscn` — app opened on macOS/OpenGL 4.1 Metal at fullscreen 2940×1846. It ran for 76.37 seconds and exited cleanly after SIGINT. Runtime and image were written to [`benchmarks/feasibility/`](../../benchmarks/feasibility/).
+- Godot MCP `run_project` → `get_debug_output` → `stop_project` — start/read/stop succeeded. Output had GDScript warnings from existing dialogue, perception, tactical-agent and test scripts, with no runtime errors.
+- `git diff --check` — exit 0 after report/tracker edits.
+- `find game -name export_presets.cfg -print` — exit 0, no output. `ls -la "$HOME/Library/Application Support/Godot/export_templates"` — exit 0, directory empty.
+- `godot --headless --path game --export-release "macOS" /tmp/world06_feasibility.zip` — exit 1: no root `export_presets.cfg`. No install or export config change was made.
+
+## Measured observations
+
+The runs were macOS 26.5.1, Apple M5, 16 GiB unified memory, Godot 4.7.2, compatibility renderer, fullscreen 2940×1846. The separate same-window model probe during concurrent phase above recorded 5.6 GB model memory at 100% GPU and process RSS. The earlier probe sample remains summarized in the feasibility measurements below. The actual non-streaming NPC exchange in the latest headless smoke took about 4 seconds. Total host memory and process RSS are captured, but free-memory headroom and performance/headroom thresholds have not been ratified.
+
+The inspected screenshot proves only that the fullscreen fixture renders its greybox, HUD and centered test geometry. It does not establish the art quality or density of the planned cyberpunk city.
+
+## Open acceptance items
+
+WORLD-06 stays in progress. The fixture now has a 90-second concurrent measurement and smoke evidence for active-dialogue cancellation on walking away, unload and death. Required follow-up evidence includes ratified performance thresholds, an isolated repeat of performance measurement with OS/model RSS during sustained load, human playtest findings, and a packaged macOS result. Packaging is presently blocked by the missing preset and empty template directory. None of the acceptance/test/evidence checkboxes in the owning task are marked complete.
+
+Details and raw files: [feasibility report](../feasibility-report.md), [metrics and capture](../../benchmarks/feasibility/).
