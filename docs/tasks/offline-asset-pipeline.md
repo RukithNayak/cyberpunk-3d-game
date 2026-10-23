@@ -93,19 +93,23 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Fixture validates imported 
 
 ### ASSET-04: Measure repeated asset use and set initial budgets
 
-- [ ] **ASSET-04 — deliverable complete** (Stage 1).
+- [x] **ASSET-04 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** ASSET-03. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/tests/scenes/asset_stress.tscn`; `benchmarks/assets/`; `docs/asset-budgets.md`.
+**Files / ownership:** `game/tests/scenes/asset_stress.tscn`; `game/tests/scenes/asset_stress.gd` (runtime sample driver); `benchmarks/assets/`; `docs/asset-budgets.md`.
 
 **Interfaces:** Provide measured triangle/material/texture/draw-call and memory budgets consumed by WORLD-06; budgets are evidence-backed configuration, not invented source requirements.
 
-- [ ] **Acceptance:** Profile repeated reference modules and props at a recorded count/renderer/resolution. Review instancing, simplified collision and LOD choices. Record candidate renderer and asset limits for the combined test; final selection depends on WORLD-06.
+**Supporting scope recorded by Main Agent, 23 October 2026:** Add a fixture-owned GDScript sample driver that creates repeatable counts of the existing ASSET-03 visual/collision scenes, samples Godot performance monitors, checks collision proxy counts, and writes benchmark JSON/capture under the listed `benchmarks/assets/` path. It implements this task's prescribed scene profile; it does not create or cap production city content.
 
-- [ ] **Test expectations:** Compare isolated versus repeated use and inspect LOD/collision artifacts. Record frame-time and memory evidence; document unacceptable results and required reductions before bulk export.
+- [x] **Acceptance:** Profiled repeated reference modules and props at recorded counts, `gl_compatibility`, and fullscreen resolution. Reviewed shared material/texture resources and draw-call scaling, four/two-shape simple collision proxies, and Godot import LOD generation. Recorded a candidate fullscreen renderer/segment baseline for WORLD-06; final selection remains WORLD-06's responsibility. LOD transitions themselves were not distance-forced or visually assessed.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Compared isolated and repeated references, checked proxy counts, inspected LOD import settings, and recorded frame-time/memory evidence. No unacceptable blocker was found in this small sample; linear draw-call scaling warrants batching/culling/LOD evaluation as the world grows.
+
+- [x] **Evidence recorded:** [ASSET-04 report](../reports/ASSET-04.md), [candidate budget notes](../asset-budgets.md), [raw fullscreen profile](../../benchmarks/assets/asset_stress.json), and [fixture capture](../../benchmarks/assets/asset_stress.png).
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Godot import and fullscreen MCP fixture completed without runtime errors; dummy-renderer invocation explicitly skipped visual metrics. This sample establishes comparison values only and does not cap the large continuous cyberpunk city; WORLD-06 must measure the integrated world before ratifying budgets.
 
 ### ASSET-05: Validate a humanoid rig and first-person animation reference
 
