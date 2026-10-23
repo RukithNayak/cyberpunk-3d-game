@@ -2,7 +2,7 @@ extends DialogueProvider
 class_name MockDialogueProvider
 ## Deterministic test provider for valid, delayed and malformed response paths.
 
-enum ResponseMode { VALID, DELAYED, INVALID }
+enum ResponseMode { VALID, DELAYED, INVALID, OFFLINE }
 
 const VALID_RESPONSE: String = "{\"dialogue_text\":\"The transit gate is clear.\",\"proposed_action\":null}"
 const INVALID_RESPONSE: String = "{mock-invalid-json"
@@ -19,7 +19,7 @@ func _init() -> void:
 
 
 func set_response_mode(mode: ResponseMode) -> bool:
-	if mode < ResponseMode.VALID or mode > ResponseMode.INVALID:
+	if mode < ResponseMode.VALID or mode > ResponseMode.OFFLINE:
 		return false
 	response_mode = mode
 	return true
@@ -36,6 +36,8 @@ func submit_dialogue_request(npc_id: String, conversation_id: String, request_ge
 		return false
 	var encoded_context: String = JSON.stringify(context_payload)
 	if encoded_context.to_utf8_buffer().size() > ContextSnapshot.MAX_JSON_BYTES:
+		return false
+	if response_mode == ResponseMode.OFFLINE:
 		return false
 	var response_json: String = invalid_response_json if response_mode == ResponseMode.INVALID else valid_response_json
 	var should_delay: bool = response_mode == ResponseMode.DELAYED

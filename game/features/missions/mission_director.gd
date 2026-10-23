@@ -2,6 +2,8 @@ extends RefCounted
 class_name MissionDirector
 ## Owns deterministic mission lifecycle and its data-only CORE-04 domain snapshot.
 
+signal mission_changed(mission_id: String, state: String, credits: int)
+
 const SNAPSHOT_VERSION: int = 1
 const MAX_MISSIONS: int = 128
 const MAX_CREDITS: int = 100000
@@ -65,6 +67,7 @@ func offer_mission(template_id: String) -> Dictionary:
 		"failed_reason": "",
 	}
 	_missions[mission_id] = mission
+	mission_changed.emit(mission_id, "offered", _credits)
 	return {"ok": true, "mission_id": mission_id, "fallback_text": template.authored_fallback_offer, "mission": mission.duplicate(true), "existing": false}
 
 
@@ -84,6 +87,7 @@ func accept_mission(mission_id: String) -> bool:
 			return false
 		mission["state"] = "accepted"
 		_missions[mission_id] = mission
+		mission_changed.emit(mission_id, "accepted", _credits)
 		return true
 	return mission["state"] == "accepted" or mission["state"] == "active" or mission["state"] == "completed"
 
@@ -98,6 +102,7 @@ func activate_mission(mission_id: String) -> bool:
 			return false
 		mission["state"] = "active"
 		_missions[mission_id] = mission
+		mission_changed.emit(mission_id, "active", _credits)
 		return true
 	return mission["state"] == "active"
 
@@ -120,6 +125,7 @@ func complete_mission(mission_id: String) -> bool:
 	mission["state"] = "completed"
 	mission["reward_claimed"] = true
 	_missions[mission_id] = mission
+	mission_changed.emit(mission_id, "completed", _credits)
 	return true
 
 
@@ -134,6 +140,7 @@ func fail_mission(mission_id: String, reason: String) -> bool:
 	mission["state"] = "failed"
 	mission["failed_reason"] = reason
 	_missions[mission_id] = mission
+	mission_changed.emit(mission_id, "failed", _credits)
 	return true
 
 

@@ -4,15 +4,48 @@ const RETRIEVAL_TARGET_UUID: String = "00000000-0000-4000-8000-000000000032"
 
 var _save_director: MissionDirector
 var _save_player: Dictionary = {"fixture": "npc03"}
+var _mission_signal_count: int = 0
+var _last_mission_signal: Array = []
 
 
 func run(check: Callable) -> void:
+	_test_lifecycle_signals(check)
 	_test_offer_eligibility(check)
 	_test_lifecycle_and_reward_idempotence(check)
 	_test_failed_objective(check)
 	_test_persisted_states_and_unload(check)
 	_test_snapshot_validation(check)
 	_test_save_store_domain_round_trip(check)
+
+
+func _test_lifecycle_signals(check: Callable) -> void:
+	var fixture: Dictionary = _fixture(true, 0, true)
+	var director: MissionDirector = fixture["director"]
+	_mission_signal_count = 0
+	_last_mission_signal.clear()
+	director.mission_changed.connect(_on_mission_changed)
+	var offer: Dictionary = director.offer_mission("retrieve_signal_cache")
+	var mission_id: String = String(offer.get("mission_id", ""))
+	check.call(_mission_signal_count == 1 and _last_mission_signal == [mission_id, "offered", 0], "new mission offer publishes one lifecycle event after commit")
+	director.offer_mission("retrieve_signal_cache")
+	check.call(_mission_signal_count == 1, "idempotent repeated offer publishes no duplicate lifecycle event")
+	director.accept_mission(mission_id)
+	director.accept_mission(mission_id)
+	director.activate_mission(mission_id)
+	check.call(_mission_signal_count == 3 and _last_mission_signal == [mission_id, "active", 0], "mission emits only actual accepted and active transitions")
+	(fixture["registry"] as EntityRegistry).try_commit_state_delta(RETRIEVAL_TARGET_UUID, {"collected": true})
+	director.complete_mission(mission_id)
+	check.call(_mission_signal_count == 4 and _last_mission_signal == [mission_id, "completed", 125], "completion event includes credits committed with the reward")
+	var restored: MissionDirector = MissionDirector.new()
+	restored.configure([fixture["template"]], fixture["registry"], fixture["factions"], func(_uuid: String) -> bool: return true)
+	_mission_signal_count = 0
+	restored.commit_prepared_snapshot(restored.prepare_snapshot(director.capture_snapshot())["prepared"])
+	check.call(_mission_signal_count == 0, "snapshot hydration emits no user-facing lifecycle notifications")
+
+
+func _on_mission_changed(mission_id: String, state: String, credits: int) -> void:
+	_mission_signal_count += 1
+	_last_mission_signal = [mission_id, state, credits]
 
 
 func _test_offer_eligibility(check: Callable) -> void:

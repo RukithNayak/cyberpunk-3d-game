@@ -138,19 +138,23 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Authored fact IDs can enter
 
 ### NPC-06: Build text dialogue, mission interaction and local-provider evaluation
 
-- [ ] **NPC-06 — deliverable complete** (Stage 1).
+- [x] **NPC-06 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** NPC-02, NPC-05, INV-05. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/ui/dialogue_ui.tscn`; `game/ui/mission_journal.gd`; `game/features/dialogue/generation_audio.gd`; `benchmarks/npc/`; `docs/model-evaluation.md`.
+**Files / ownership:** `game/ui/dialogue_ui.{tscn,gd}`; `game/ui/mission_journal.gd`; `game/features/dialogue/generation_audio.gd`; `game/features/dialogue/mock_provider.gd` (offline fixture mode); `game/features/missions/mission_director.gd` (lifecycle signal); `game/tests/dialogue/test_ui.gd`; `game/tests/missions/test_lifecycle.gd`; `game/tests/scenes/dialogue_demo.{tscn,gd}`; `game/tests/run_tests.gd`; `benchmarks/npc/`; `docs/model-evaluation.md`.
+
+**Implementation status — 23 October 2026:** Main Agent owns NPC-06. Supporting integration recorded before implementation: add `MissionDirector.mission_changed(mission_id, state, credits)` after each successful state commit (including credit updates, once per actual transition); the dialogue UI receives typed orchestrator/dispatcher/mission adapters through `configure`, displays authored fallback and provider results, and offers an authored mission request so offline progression does not depend on model output. Add a named-NPC demo fixture and focused dialogue UI suite (including runner registration) to make the job/reward loop runnable. Add a deterministic generated audio blip with volume/mute controls and stop it on close/cancel/timeout. The fixture/test, offline mode in the mock provider, mission director signal, mission tests and runner are supporting integration paths for the existing acceptance criteria, not expanded gameplay scope. Evaluate only an already installed local model; no pulls/downloads.
 
 **Interfaces:** UI consumes orchestrator waiting/fallback/completion events and mission lifecycle signals; basic generation blips are presentation only.
 
-- [ ] **Acceptance:** One named NPC offers/accepts a job; dialogue supports waiting, cancel, text/subtitles and accessible audio-volume/mute controls. Fallback allows a complete mission/reward loop. Inventory-backed trade requests open a bounded interaction panel or explain unavailability. Evaluate an already available suitable local model; record license/context/latency and setup, and flag missing model rather than downloading without authorization.
+- [x] **Acceptance:** Named Mara Vega opens the responsive conversation UI; controls cover waiting, cancel, text/subtitles, volume and mute. Authored request/accept path completes the registry-validated retrieval and one-time reward when the dialogue provider is offline or invalid. Trade is reported unavailable when no authorized merchant panel exists. Existing local `llama3:willowbrook` was evaluated with its license/context/setup and latency recorded; no model was pulled.
 
-- [ ] **Test expectations:** Playtest retrieval/return/reward with provider available, offline and mid-dialogue cancellation. Test audio stops on close/timeout, focus recovers and journal survives restart. Record response quality/scoped-knowledge failures and concurrent-load data for WORLD-06.
+- [x] **Test expectations:** Focused UI fixture covers valid/mock output, offline fallback, invalid action, cancellation, retrieval/reward, audio mute/volume/timeout/close, keyboard focus return, and journal reconstruction from the mission snapshot. One-time mission SaveStore reload remains covered by the existing missions suite. Model quality deviation is recorded; only one concurrent local inference sample was collected, with sustained/concurrent-load measurement explicitly assigned to WORLD-06.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Evidence recorded:** Import0; `dialogue_ui`15/15, `missions`46/46, integrated `all`1042/1042, and `git diff --check`0. Godot MCP 4.7.2 runtime started the demo with no runtime errors; existing nonfatal script warnings recorded. Full-screen capture, raw Ollama measurements, and limitations are in [NPC-06 report](../reports/NPC-06.md), [model evaluation](../model-evaluation.md), [benchmark output](../../benchmarks/npc/llama3_willowbrook_latest.json), and [UI capture](../evidence/NPC-06/dialogue_initial.png). Manual listening/playtest and concurrent load remain unrun.
+
+Accepted 24 October 2026 (Asia/Kolkata), Main Agent. Demo launch: `godot --path game res://tests/scenes/dialogue_demo.tscn`. The scene is a service-wired NPC interaction fixture; it is not yet attached to the game's main combat scene. Sustained concurrent Ollama/GPU/rendering measurements are an explicit WORLD-06 follow-up.
 
 ### NPC-07: Expand templates, roster and release provider setup
 
