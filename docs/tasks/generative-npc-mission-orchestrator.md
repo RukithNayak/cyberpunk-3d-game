@@ -98,7 +98,7 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. The sample retrieval offer 
 
 ### NPC-04: Add guarded deterministic action dispatch
 
-- [ ] **NPC-04 — deliverable complete** (Stage 1).
+- [x] **NPC-04 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** NPC-02, NPC-03, INV-04, AI-02. Prerequisite IDs resolve through the master progress task index.
 
@@ -106,11 +106,15 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. The sample retrieval offer 
 
 **Interfaces:** Handle `offer_mission(template_id)`, `initiate_trade(inventory_id)`, `accept_into_faction(faction_id)`, `begin_fight()`, `disclose_fact(fact_id)`, `give_item(item_id)` using current-state eligibility and idempotent transaction IDs.
 
-- [ ] **Acceptance:** Authoritative code rechecks actor validity, permission and preconditions immediately before commit. Trades reference allowed merchant stock; faction acceptance needs an authored eligibility rule; fighting requires a permitted live NPC transition; facts must be known/disclosable; items require a preauthorized quest/reward entitlement. Unsupported/unconfigured actions reject safely. Model cannot invent items, rewards, factions or executable code.
+**Supporting contract recorded before implementation:** `ActionDispatcher` binds the active NPC/conversation, resolves the current live actor for every dispatch, revalidates model output through NPC-01's `ResponseValidator`, accepts only increasing request generations, and derives a stable transaction ID from NPC/conversation/generation. It receives narrow authority adapters: MissionDirector plus NPC→template allowlists; inventory→merchant mapping plus current stock validator and open-trade callback; faction state plus per-faction allowed-NPC/min-standing/join-standing rule; NPC fight allowlist plus a live TacticalAgent and player resolver; current fact-availability and commit callbacks; ItemGrants plus a current preauthorized ItemInstance resolver. Each service rechecks eligibility at commit. Missing or unsupported adapters reject safely. Duplicate responses return their cached result without repeating side effects; item grants use the same stable transaction ID and ItemGrants' persisted entitlement on replay/full inventory. No Node is stored in persistent data. The full owner-written rule table is `docs/npc-action-policy.md`.
 
-- [ ] **Test expectations:** Inject invented IDs, reward inflation, unauthorized faction acceptance/hostility, stale eligibility and duplicated responses. Assert zero unauthorized mutations and one reward on replay; full inventory preserves entitlement. Exercise allowed and rejected cases for each of the six actions.
+- [x] **Acceptance:** Authoritative code rechecks actor validity, permission and preconditions immediately before commit. Trades reference allowed merchant stock; faction acceptance needs an authored eligibility rule; fighting requires a permitted live NPC transition; facts must be known/disclosable; items require a preauthorized quest/reward entitlement. Unsupported/unconfigured actions reject safely. Model cannot invent items, rewards, factions or executable code.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Inject invented IDs, reward inflation, unauthorized faction acceptance/hostility, stale eligibility and duplicated responses. Assert zero unauthorized mutations and one reward on replay; full inventory preserves entitlement. Exercise allowed and rejected cases for each of the six actions.
+
+- [x] **Evidence recorded:** Import exit 0; focused `dialogue_actions` 41 cases/0 failures exit 0; integrated `all` 992 cases/0 failures exit 0; `git diff --check` exit 0. Integrated suite emitted the existing one ObjectDB instance and one `GodotBody3D` RID shutdown leak warnings. See [NPC-04 report](../reports/NPC-04.md); no visual capture applies to this logic task.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `ActionDispatcher` validates model output and live conversation authority before executing the six allowlisted actions. Explicit adapters enforce mission permissions, merchant ownership/current stock, authored faction admission, live permitted combat transitions, known disclosures, and preauthorized ItemGrants; stable transaction IDs and duplicate caching prevent replay effects. Full inventory retains pending reward entitlement. Focused and integrated evidence is in [NPC-04 report](../reports/NPC-04.md).
 
 ### NPC-05: Persist scoped knowledge and bounded memory
 
