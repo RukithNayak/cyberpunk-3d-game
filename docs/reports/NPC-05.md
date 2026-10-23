@@ -3,6 +3,7 @@
 **Status:** Accepted, Stage 1
 **Date:** 23 October 2026 (Asia/Kolkata)
 **Owner:** Main Agent
+**Commit:** `fdf8ae0` (`Persist scoped NPC dialogue memory`)
 **Scope:** Data-only NPC memory, dialogue-domain persistence/projection, focused tests, and coordinated test-runner registration.
 
 ## Implementation
