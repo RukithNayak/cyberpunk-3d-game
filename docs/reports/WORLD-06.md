@@ -33,6 +33,6 @@ The inspected screenshot proves only that the fullscreen fixture renders its gre
 
 ## Open acceptance items
 
-WORLD-06 stays in progress. The fixture now has a 90-second concurrent measurement and smoke evidence for active-dialogue cancellation on walking away, unload and death. Required follow-up evidence includes ratified performance thresholds, an isolated repeat of performance measurement with OS/model RSS during sustained load, human playtest findings, and a packaged macOS result. Packaging is presently blocked by the missing preset and empty template directory. None of the acceptance/test/evidence checkboxes in the owning task are marked complete.
+WORLD-06 stays in progress. The fixture now has a 90-second concurrent measurement and smoke evidence for active-dialogue cancellation on walking away, unload and death. A concurrent probe captured OS capacity plus game and model-runner RSS, but free-memory headroom was not measured. Required follow-up evidence includes ratified performance/headroom thresholds, human playtest findings, and a packaged macOS result. Packaging is presently blocked by the missing preset and empty template directory. None of the acceptance/test/evidence checkboxes in the owning task are marked complete.
 
 Details and raw files: [feasibility report](../feasibility-report.md), [metrics and capture](../../benchmarks/feasibility/).
