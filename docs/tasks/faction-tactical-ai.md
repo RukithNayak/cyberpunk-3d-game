@@ -117,19 +117,23 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `ai_unload` 38/38, `ai_stat
 
 ### AI-05: Add ambient behavior and encounter validation
 
-- [ ] **AI-05 — deliverable complete** (Stage 1).
+- **Supporting scope recorded before implementation (23 October 2026):** Add a focused `ai_encounter` suite and its test script/runner registration so the new ambient behavior and existing real threaded two-chunk seam encounter can be reproduced together. Extend the seam fixture with a configured low-frequency ambient actor/population and readable event/debug presentation. Cover faction changes, sound distractions, inactive update bounds, stable goon pursuit/backtracking, and ambient crowd unload. Keep all actors deterministic and authored; do not add inference, persistence schema, new shared runtime contracts, or production population content.
+
+- [x] **AI-05 — deliverable complete** (Stage 1).
 
 **Dependencies / sequencing:** AI-04, WORLD-05. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/features/npcs/ambient_agent.gd`; `game/tests/scenes/encounter_fixture.tscn`; `docs/ai-playtests.md`.
+**Files / ownership:** `game/features/npcs/ambient_agent.gd`; `game/tests/scenes/encounter_fixture.{tscn,gd}`; `game/tests/ai/test_encounter.gd`; coordinated suite registration in `game/tests/run_tests.gd`; `docs/ai-playtests.md`.
 
-**Interfaces:** Use shared faction/perception events with reduced update frequency for ambient NPCs; no inference requests for background pedestrians.
+**Interfaces:** `AmbientAgent.configure(faction_state, faction_id, area_id, update_interval)`, `notify_sound_event(...)`, `tick(delta)`, and `set_simulation_active(active)`. It uses shared perception/faction events, schedules active updates on a low-frequency `Timer`, stops that timer when inactive, and has no inference request path.
 
-- [ ] **Acceptance:** One goon encounter and lightweight ambient actor operate across the seam. Factions populate configured areas; alerts and distractions are readable. Debug switches expose update counts for concurrent-load profiling.
+- [x] **Acceptance:** The real threaded two-chunk encounter retains one pursuing goon across seam/backtracking while authored ambient populations attach to streamed areas. Labels distinguish alerts/distractions, F3 exposes live/peak population and per-actor update counts, and inactive ambient actors stop their update timer.
 
-- [ ] **Test expectations:** Playtest pursuit/backtracking, faction change, sound distraction and crowd unload; verify no friendly-fire target selection errors and bounded processing when inactive.
+- [x] **Test expectations:** The in-engine automated playthrough covers pursuit/backtracking, live faction changes, sound distractions and chunk crowd unload. AI-02's focused suite verifies the goon stops attacking when the target becomes allied. Ambient timer cadence is checked at runtime; inactive actors stop the timer and deterministic ticks. A human encounter-balance/feel review remains part of the WORLD-06 integration gate.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Evidence recorded:** [AI-05 report](../reports/AI-05.md); `ai_encounter`61/61, `ai_states`32/32, import and diff-check exit0. Integrated `all` exited1 (735 cases, 2 failures) due the previously recorded AI-03 empty-route synchronization race, reproduced by standalone `ai_navigation` (2 cases, 1 failure). Godot MCP ran the retained preview on Godot4.7.2. No screenshot or human balance playtest is claimed.
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Ambient pedestrians use runtime-only `NpcPerception`, a 0.75-second default update interval, in-world status labels, and chunk-owned lifetime. No production actor modeling, crowd performance threshold, screenshot or human encounter-balance acceptance is claimed. See [report](../reports/AI-05.md).
 
 ### AI-06: Expand roles and gang encounters
 
