@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Condition "ret != noErr" is true. Returning: ""
+   at: get_system_ca_certificates (platform/macos/os_macos.mm:1035)
+PASS: ordered save migration service is available
+PASS: previous schema migration is deterministic and idempotent at the current version
+PASS: migration preserves stable IDs and unknown recoverable domain records
+PASS: missing migration step is rejected
+PASS: unsupported future save version is rejected
+PASS: unsafe migration rejects without overwriting source bytes or live state
+PASS: rejected migration with an OK error returns failure without changing live state or source bytes
+PASS: snapshot adapter and authoritative owners are available without scenes
+PASS: snapshot adapters preserve owned and extension data with numeric types and no runtime scenes
+PASS: mutating captured snapshot copies cannot mutate live owners
+PASS: extension capture rejects collisions with adapter-owned root keys
+PASS: unknown root records reject before mutation when no extension owner is configured
+PASS: adapter validates all candidate owners before replacement
+PASS: adapter rejects engine Objects from player and domain state
+PASS: adapter rejects duplicate stable entity IDs
+PASS: prepared adapter replacement commits all owners through their existing instances
+PASS: participant prepare failure leaves every live owner unchanged
+PASS: failed participant preparation rejects migrated load before any owner commit
+PASS: SaveStore migrates an older file before validated owner preparation and atomic apply
+PASS: successful migrated load retains unknown root and domain records on recapture
+PASS: successful old-save load leaves original source bytes intact
+PASS: explicit save after migration retains unknown root and domain records
+Suite migrations: 22 cases, 0 failures

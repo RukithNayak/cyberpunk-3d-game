@@ -1,0 +1,643 @@
+--- before/docs/master-progress.md
++++ after/docs/master-progress.md
+@@ -1,7 +1,7 @@
+ # Master Progress
+ 
+ **Updated:** 23 October 2026 (Asia/Kolkata)  
+-**Overall status:** Stage 0/1 implementation in progress. CORE-01/02/03/04, WORLD-01, PLAYER-02 and ASSET-01/02 accepted. WORLD-02 awaits validation; ASSET-03 and PLAYER-01 have unassigned partial handoffs. No workers are active.  
++**Overall status:** Stage 0/1 implementation in progress. CORE-01/02/03/04, WORLD-01/02, PLAYER-02 and ASSET-01/02 accepted. WORLD-03 is next eligible; ASSET-03 and PLAYER-01 retain unassigned partial handoffs. Blender/Godot MCP tools are active; no worker is left running.  
+ **Evidence:** [CORE-01 report](reports/CORE-01.md) and [fresh toolchain checks](toolchain.md). Minimal Godot scaffold and test harness now exist; gameplay and integrated gates remain incomplete.
+ 
+ ## Source and scope
+@@ -23,7 +23,7 @@
+ - [ ] **[Core State & Persistence Registry](tasks/core-state-persistence.md) — entire module complete.** Status: in progress. Stage 0/1: 4/5 tasks; deferred: 1 outline(s).
+   Task IDs: CORE-01, CORE-02, CORE-03, CORE-04, CORE-05, CORE-06.
+ 
+-- [ ] **[World & Scene Manager](tasks/world-scene-manager.md) — entire module complete.** Status: in progress. Stage 0/1: 1/6 tasks; deferred: 1 outline(s).
++- [ ] **[World & Scene Manager](tasks/world-scene-manager.md) — entire module complete.** Status: in progress. Stage 0/1: 2/6 tasks; deferred: 1 outline(s).
+   Task IDs: WORLD-01, WORLD-02, WORLD-03, WORLD-04, WORLD-05, WORLD-06, WORLD-07.
+ 
+ - [ ] **[Player, Health & Combat Core](tasks/player-health-combat.md) — entire module complete.** Status: in progress. Stage 0/1: 1/5 tasks; deferred: 1 outline(s).
+@@ -52,25 +52,26 @@
+ - [x] Validate local links, unique task IDs, per-task acceptance/test/evidence fields, unchecked implementation/module status and an acyclic dependency graph.
+ - [x] CORE-01 accepted: Godot pin, typed test harness, native launch and toolchain evidence; no gameplay/performance acceptance.
+ - [x] CORE-04 accepted: data-only migration/adapters, opaque-record preservation and clock policy; Main Agent regression fix red→green, migrations 22/22 and integrated all 142/142. [Report](reports/CORE-04.md).
++- [x] WORLD-02 accepted: callback invalidation/budget and native request-token fixes, focused 42/42, integrated 184/184, real physics and Godot MCP rendered traversal/captures. [Report](reports/WORLD-02.md).
+ 
+ ## Task ledger
+ 
+ | Task | Stage / dependencies | Status | Owner / model | Owned paths | Change reference | Evidence / blocker / next action |
+ |---|---|---|---|---|---|---|
+-| TOOL-01 | 0 / explicit user connection repair | setup complete; session activation pending | Main Agent / session model | user Codex Blender MCP entry, isolated MCP environment, docs/tasks/tooling-connections.md, docs/reports/TOOL-01.md | working tree / user configuration | Saved STDIO launch verified: 26 tools, live Blender 5.2.3 query, scene preserved; daemon reload probe timed out before request; restart/resume Codex for native exposure |
++| TOOL-01 | 0 / explicit user connection repair | complete; native activation verified | Main Agent / session model | user Codex Blender MCP entry, isolated MCP environment, docs/tasks/tooling-connections.md, docs/reports/TOOL-01.md | working tree / user configuration | Native Blender MCP call succeeded 23 October 2026: 5.2.3 LTS, scene preserved; evidence/WORLD-02/blender-mcp-probe.json; Godot MCP also active at 4.7.2 |
+ | CORE-01 | 0 / none | complete | Main Agent / session model | AGENTS.md, .gitignore, game/project.godot, game/tests/, docs/toolchain.md | working tree | Accepted; sample/all 2/2, intentional fail 1, unknown 2, import/native launch 0; reports/CORE-01.md |
+ | CORE-02 | 1 / CORE-01 | complete | registry / gpt-6-luna medium | game/persistence/{entity_registry,faction_state}.gd, game/tests/persistence/test_registry.gd, docs/state-contracts.md | working tree | Accepted 39/39; independent review clean; reports/CORE-02-worker.md |
+ | PLAYER-01 | 1 / CORE-01 | partial; unassigned | historical player_controller assignment; no live worker | game/features/player/{player_controller,input_settings}.gd, player.tscn, game/tests/scenes/player_movement.tscn, game/tests/player/test_controller.gd | working tree | test_controller.gd exists; controller/settings/player scene and movement fixture absent; preserve test and resume later |
+ | PLAYER-02 | 1 / CORE-02 | complete | Main Agent / session model | game/features/player/health_state.gd, game/tests/player/test_health.gd | working tree | Accepted 19/19 focused, all 60/60; reports/PLAYER-02.md |
+-| WORLD-02 | 1 / WORLD-01, CORE-01 | awaiting validation; unassigned | historical chunk_loader assignment; no live worker | game/world/chunk_loader.gd, game/tests/world/test_chunk_loader.gd, world manager integration | working tree | implementation and reports/WORLD-02-worker.md exist; focused reproduction and review pending; no prerequisite blocker identified |
++| WORLD-02 | 1 / WORLD-01, CORE-01 | complete | Main Agent / session model; bounded reviewer world02_review / gpt-6-luna medium | game/world/chunk_loader.gd, game/tests/world/test_chunk_loader.gd; coordinated runtime fixture, runner integration and contracts | working tree on codex/stage-0-readiness | Accepted 23 October 2026; callback red6 and native-token red2 fixed; focused42/all184, physics7, rendered10; reports/WORLD-02.md |
+ | WORLD-01 | 1 / CORE-02 | complete | world_manifest / gpt-6-luna medium | game/world/{chunk_manifest,world_manager}.gd, game/world/fixtures/chunk_{a,b}.tscn, game/tests/world/test_manifest.gd | working tree | Accepted 37/37 after red6 review fixes; reports/WORLD-01-worker.md |
+ | CORE-04 | 1 / CORE-03 | complete | Main Agent / session model; historical worker metadata unverified | save_migrations.gd, snapshot_adapters.gd, test_migrations.gd, state-contracts migration section; coordinated registry/faction snapshot APIs, save migration hook and runner integration | working tree on codex/stage-0-readiness | Accepted 23 October 2026; rejected-migration false success fixed red→green; migrations 22/22, all 142/142, import/sample exit 0; reports/CORE-04.md |
+ | CORE-03 | 1 / CORE-02 | complete | save_store / gpt-6-luna medium | game/persistence/save_store.gd, game/tests/persistence/test_save_store.gd, docs/state-contracts.md save envelope | working tree | Accepted 23/23; independent review clean; reports/CORE-03-worker.md |
+-| ASSET-03 | 0 / ASSET-02, CORE-01 | partial; unassigned | historical asset_export assignment; no live worker | tools/blender/export_modular_kit.py, game/assets/reference/, game/tests/scenes/asset_roundtrip.tscn, docs/asset-roundtrip.md | working tree | exporter, GLBs, maps and metadata exist; fixture and roundtrip report absent; repeatability/visual acceptance unverified; no Blender MCP tools exposed in this session |
++| ASSET-03 | 0 / ASSET-02, CORE-01 | partial; unassigned | historical asset_export assignment; no live worker | tools/blender/export_modular_kit.py, game/assets/reference/, game/tests/scenes/asset_roundtrip.tscn, docs/asset-roundtrip.md | working tree | exporter, GLBs, maps and metadata exist; fixture/report absent; repeatability/visual acceptance unverified; native Blender MCP now available; sources untouched during WORLD-02 |
+ | ASSET-02 | 0 / ASSET-01 | complete | reference_assets / gpt-6-luna medium | art/reference/{wall_doorway,mechanical_prop}.blend, tools/blender/build_reference.py, docs/art-reference.md, docs/evidence/ASSET-02/ | working tree | Accepted all four QA checks exit 0, visual review; reports/ASSET-02-worker.md |
+ | ASSET-01 | 0 / none | complete | asset_readiness / gpt-6-luna medium | docs/asset-pipeline.md, tools/blender/check_environment.py, art/reference/, docs/asset-provenance.md | working tree | Accepted; export, QA, structural Godot import exit 0; reports/ASSET-01-worker.md |
+ 
+-Main Agent exclusively owns shared toolchain/tracker/configuration and acceptance updates. Repository has no commits; existing untracked source documents are preserved. Integrated all now passes 142 checks, including accepted migrations. WORLD-02 and PLAYER-01 suites remain outside all pending their task acceptance. Work occurs in the supplied workspace; no initial commit or unrelated file staging is required.
++Main Agent exclusively owns shared toolchain/tracker/configuration and acceptance updates. Repository has no commits; existing untracked source documents are preserved. Integrated all now passes 184 checks, including accepted migrations and chunk loading. PLAYER-01 remains outside all pending its task acceptance. Work occurs in the supplied workspace; no initial commit or unrelated file staging is required.
+ 
+ ## Dependencies and recommended sequence
+ 
+@@ -83,7 +84,7 @@
+ | 4 — checkpoint and feasibility | CORE-05 → WORLD-06 | Cross-system context is confined to checkpoint restoration, navigation handoff and the combined feasibility gate. All direct prerequisites in WORLD-06 must pass first. |
+ | Later — scope dependent | CORE-06, WORLD-07, PLAYER-06, INV-06, AI-06, NPC-07, ASSET-05/06 | Approve content/targets, decompose each outline into small tickets, then execute. Do not create an entire city before feasibility evidence. |
+ 
+-CORE-04 is accepted; no task or worker is left active at this handoff. Prior worker names identify historical assignments. Exact dependencies in each task take precedence over this wave summary. Preserve unaccepted world/player/asset files until their bounded review or resumption.
++WORLD-02 is accepted; its read-only reviewer has finished, and no task/worker is left active at this handoff. Other prior worker names identify historical assignments. Exact dependencies in each task take precedence over this wave summary. Preserve unaccepted player/asset files until their bounded review or resumption.
+ 
+ ## Milestone checklists
+ 
+@@ -109,9 +110,9 @@
+ 
+ ## Next recommended task
+ 
+-**WORLD-02 — review asynchronous preload and bounded activation** in [World & Scene Manager](tasks/world-scene-manager.md). WORLD-01/CORE-01 are accepted; implementation and worker report exist. Reproduce focused checks and review required runtime evidence before accepting it. WORLD-03 then has both prerequisites (WORLD-02 and the now-accepted CORE-04).
++**WORLD-03 — Hydrate and unload persistent entities** in [World & Scene Manager](tasks/world-scene-manager.md). WORLD-02 and CORE-04 are accepted. Start with bounded ownership of `game/world/entity_hydrator.gd` and `game/tests/world/test_chunk_persistence.gd`; consume the registry/snapshot and generation-tagged lifecycle contracts. Observe failing door/loot/NPC unload/reload regressions before implementation; register any suite with Main Agent coordination.
+ 
+-ASSET-03 is an alternative eligible partial task: preserve the existing exporter/assets, complete repeatability and in-engine fixture/evidence under the applicable Blender skills. TOOL-01 repaired the Blender MCP configuration and verified a live query; this existing Codex session still needs reload/restart for native tool exposure. CORE-05 is blocked by unfinished PLAYER-04, INV-04, NPC-05 and HACK-05, so it is not yet eligible. Do not install tools or download models implicitly.
++ASSET-03 remains an alternative eligible partial task: preserve the existing exporter/assets, complete repeatability and in-engine fixture/evidence under the applicable Blender skills. Native Blender 5.2.3 and Godot 4.7.2 MCP calls now succeed. CORE-05 is blocked by unfinished PLAYER-04, INV-04, NPC-05 and HACK-05. Do not install tools or download models implicitly.
+ 
+ ## Session decisions and active next steps
+ 
+@@ -137,3 +138,6 @@
+ 
+ - Resume reconciliation, 23 October 2026 (Asia/Kolkata): historical worker assignments are inactive. WORLD-02 has implementation/tests/report awaiting review; ASSET-03 has exporter/generated assets but no round-trip fixture/report; PLAYER-01 has a test but lacks implementation and fixture. Preserved all partial source files; no delegation or scope expansion.
+ - CORE-04 accepted 23 October 2026, Main Agent / session model. Existing handoff verified at 21/21; new false-success regression failed at 22 checks/one failure (exit 1), then passed 22/22 after SaveStore rejected `ok: false, error: OK`. Unknown-root ownership contract documented; migration suite included in all (142/142, exit 0). Import and sample exit 0. [Report and review](reports/CORE-04.md), [command/exit manifest](evidence/CORE-04/verification.json). Next: WORLD-02 review; WORLD-03 remains blocked until that acceptance. No visual/performance or real gameplay-domain integration claimed.
++
++- WORLD-02 accepted 23 October 2026 (Asia/Kolkata), Main Agent with bounded reviewer gpt-6-luna / medium. Preserved baseline 33/33; callback generation/recursive-budget regressions red6→green, native retry/cancel token regressions red2→green. Final focused42/all184, import/sample/physics exit0; expected unknown/malformed2 and deliberate1. Real capsule support/traversal verified headless7 and rendered10 at 960×540 Compatibility via Godot MCP; three captures inspected. [Report](reports/WORLD-02.md), [review](reports/WORLD-02-review.md), [commands/exits](evidence/WORLD-02/verification.json). WORLD-03 is now eligible. No sustained performance, navigation/hydration, production player feel or human playtest gate accepted.
++- TOOL-01 activation follow-up: native Blender MCP environment query succeeded (5.2.3 LTS, current scene unchanged). Godot MCP version/project/runtime calls also succeeded. Existing asset/player partial files were preserved, and no new dependency or software installation occurred in this implementation task.
+--- before/docs/tasks/world-scene-manager.md
++++ after/docs/tasks/world-scene-manager.md
+@@ -55,7 +55,9 @@
+ 
+ ### WORLD-02: Add asynchronous preload and bounded activation
+ 
+-- [ ] **WORLD-02 — deliverable complete** (Stage 1).
++Resumed 23 October 2026, Main Agent. Supporting acceptance work recorded before edits: add callback-invalidation regressions and a small test-only `game/tests/world/fixtures/activation_redirect.gd`; add `game/tests/scenes/chunk_streaming.{gd,tscn}` for real physics traversal/rendered evidence; integrate the accepted suite in `game/tests/run_tests.gd` and publish corrections in `docs/world-contracts.md`. These serve WORLD-02's existing stale-work/no-fall-through acceptance; no player-controller, hydration, navigation or asset-production scope is added. Unborn branch session baseline preserved under `/private/tmp/cyberpunk-world02-before/` for actual diff review.
++
++- [x] **WORLD-02 — deliverable complete** (Stage 1).
+ 
+ **Dependencies / sequencing:** WORLD-01, CORE-01. Prerequisite IDs resolve through the master progress task index.
+ 
+@@ -63,11 +65,13 @@
+ 
+ **Interfaces:** WorldManager consumes ChunkLoader completion/failure events tagged with chunk ID and lifecycle generation.
+ 
+-- [ ] **Acceptance:** Background resource loading never blocks street movement. Activation work is budgeted over frames; duplicate requests coalesce and stale completions cannot reactivate unwanted chunks. Timeout/missing-resource failures preserve valid current terrain and allow retry.
++- [x] **Acceptance:** Background resource loading never blocks street movement. Activation work is budgeted over frames; duplicate requests coalesce and stale completions cannot reactivate unwanted chunks. Timeout/missing-resource failures preserve valid current terrain and allow retry.
+ 
+-- [ ] **Test expectations:** Inject delayed, duplicate, missing, timed-out and out-of-order load completions. Assert bounded activation work, one scene per chunk, cleanup of pending work and no fall-through while a neighbor is unavailable.
++- [x] **Test expectations:** Inject delayed, duplicate, missing, timed-out and out-of-order load completions. Assert bounded activation work, one scene per chunk, cleanup of pending work and no fall-through while a neighbor is unavailable.
+ 
+-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
++- [x] **Evidence recorded:** [Main Agent acceptance report](../reports/WORLD-02.md), [bounded review](../reports/WORLD-02-review.md), [exact final commands/exits](../evidence/WORLD-02/verification.json), [focused 42/42](../evidence/WORLD-02/chunk_loader.log), [integrated 184/184](../evidence/WORLD-02/all.log), [runtime data](../evidence/WORLD-02/runtime-rendered.json), [blocked](../evidence/WORLD-02/blocked-seam.png), [crossed](../evidence/WORLD-02/crossed-seam.png), [returned](../evidence/WORLD-02/returned-seam.png).
++
++Accepted 23 October 2026 (Asia/Kolkata), Main Agent / session model; reviewer gpt-6-luna / medium. Callback regressions reproduced red (40 checks/six failures) and green, native retry/cancellation cleanup red (42 checks/two failures) then green 42/42. Import/sample/all and standalone physics exits 0; unknown/malformed arguments exit 2 and deliberate failure exits 1 as expected. Godot MCP rendered fixture passed ten checks with zero errors; Main Agent inspected all three overview captures. Activation count and two-chunk collision/support are verified; large-scene frame-time/memory, production player feel and human playtest remain later gates. WORLD-03 now has its WORLD-02/CORE-04 prerequisites accepted.
+ 
+ ### WORLD-03: Hydrate and unload persistent entities
+ 
+--- before/docs/world-contracts.md
++++ after/docs/world-contracts.md
+@@ -40,4 +40,8 @@
+ 
+ Repeated desired-state observations coalesce to one in-flight request per chunk. `chunk_activated`, `chunk_failed`, and `chunk_unloaded` each publish a `{chunk_id, lifecycle_generation}` payload; activation also supplies the transient `Node3D`, and failure supplies a reason. Before activation the loader rechecks both desired membership and the current generation. Work that finishes after unload is discarded. A stale active instance remains available through rapid re-entry and is acknowledged for the fresh desired generation rather than duplicated. Leaving the desired set clears pending activation and unloads the transient instance. Timeout and resource failures publish one failure per generation and stop automatic retries; `retry_chunk(chunk_id)` restarts work only while that chunk is desired.
+ 
+-For authored adjacent chunks with touching X/Z bounds, the loader places a temporary collision wall at the shared edge while the neighbor has no active instance. This keeps the currently active floor intact and prevents crossing into unavailable space. The wall is removed after the neighbor activates. This is a collision availability barrier, not visual seam treatment, navigation synchronization, entity hydration or a player traversal acceptance test; those remain separate work.
++Scene entry (`_ready`) and the manager's activation acknowledgement can synchronously invalidate the request. The loader rechecks desired membership, generation and instance validity after both boundaries before publishing its own activation. Invalidated terrain is retired; if the manager already acknowledged it active, its current retirement generation is acknowledged deactivated. Retained-instance re-entry uses the same checks. Recursive pumps from callbacks return without work, preserving the outer pump's activation budget.
++
++The production backend owns one native threaded-load token per requested path. A retry coalesces with its own in-progress or completed-but-unconsumed request instead of acquiring another token. Successful retrieval consumes that token. On subsequent pumps, the optional backend hook `release_unused(pending_paths)` consumes completed requests no longer needed by any pending chunk. It never calls `load_threaded_get` while work is in progress. Godot background work itself is not cancelable here: cancellation invalidates activation immediately, and unused results are drained when complete while the loader continues pumping. This is not a proof of bounded memory for large scenes or teardown with long-running jobs; WORLD-06 must measure that workload.
++
++For authored adjacent chunks with touching X/Z bounds, the loader places a temporary collision wall at the shared edge while the neighbor has no active instance. This keeps the currently active floor intact and prevents crossing into unavailable space. The wall is removed after the neighbor activates. `res://tests/scenes/chunk_streaming.tscn` verifies real capsule collision/support through delayed neighbor status, injected failure, explicit retry, crossing, unload and backtracking; its backend uses actual threaded resources with controlled neighbor status. Overview captures document the fixture, not production art quality. Navigation synchronization, entity hydration, production player feel, large-scene frame-time/memory and human playtest gates remain separate work.
+--- before/game/tests/run_tests.gd
++++ after/game/tests/run_tests.gd
+@@ -8,7 +8,7 @@
+ func _initialize() -> void:
+ 	var args: PackedStringArray = OS.get_cmdline_user_args()
+ 	if args.size() != 2 or args[0] != "--suite":
+-		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|deliberate_failure>")
++		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|player_controller|deliberate_failure>")
+ 		quit(2)
+ 		return
+ 	var suite: String = args[1]
+@@ -30,6 +30,8 @@
+ 				world_test.run(_check)
+ 				var migration_test: RefCounted = load("res://tests/persistence/test_migrations.gd").new()
+ 				migration_test.run(_check)
++				var loader_test: RefCounted = load("res://tests/world/test_chunk_loader.gd").new()
++				await loader_test.run(_check)
+ 		"registry":
+ 			var registry_test: RefCounted = load("res://tests/persistence/test_registry.gd").new()
+ 			registry_test.run(_check)
+--- before/game/tests/world/test_chunk_loader.gd
++++ after/game/tests/world/test_chunk_loader.gd
+@@ -21,7 +21,13 @@
+ 	_test_timeout_retry(check, loader_script)
+ 	_test_missing_resource_retry(check, loader_script)
+ 	_test_retained_terrain_barrier(check, loader_script)
++	await _test_ready_callback_invalidates_activation(check, loader_script)
++	_test_manager_callback_invalidates_activation(check, loader_script)
++	_test_retained_callback_invalidates_activation(check, loader_script)
++	_test_recursive_pump_preserves_budget(check, loader_script)
+ 	await _test_threaded_resource_progress(check, loader_script)
++	await _test_native_backend_coalesces_loaded_retry(check)
++	await _test_cancelled_native_request_cleanup(check, loader_script)
+ 
+ 
+ func _test_delayed_duplicate_budget_and_cleanup(check: Callable, loader_script: Script) -> void:
+@@ -175,6 +181,85 @@
+ 	backend.complete(CHUNK_B)
+ 	loader.call("pump_frame")
+ 	check.call(loader.call("get_active_instance", "chunk_b") != null and not loader.call("has_seam_barrier", "chunk_a", "chunk_b"), "barrier clears only after neighboring terrain is active")
++	_free_context(context)
++
++
++func _test_ready_callback_invalidates_activation(check: Callable, loader_script: Script) -> void:
++	var backend: FakeBackend = FakeBackend.new()
++	var context: Dictionary = _make_context(loader_script, backend, 1, 500)
++	var manager: Object = context["manager"]
++	var loader: Node = context["loader"]
++	loader.set_process(false)
++	await (Engine.get_main_loop() as SceneTree).process_frame
++	var events: Array[Dictionary] = []
++	loader.connect("chunk_activated", func(payload: Dictionary, _instance: Node3D) -> void: events.append(payload))
++	(context["root"] as Node).set_meta("redirect_on_ready", Callable(manager, "update_player_position").bind(Vector3(40.0, 0.0, 0.0)))
++	manager.call("update_player_position", Vector3(-5.0, 0.0, 0.0))
++	loader.call("pump_frame")
++	var source: Node3D = Node3D.new()
++	source.name = "RedirectOnReady"
++	source.set_script(load("res://tests/world/fixtures/activation_redirect.gd"))
++	var packed: PackedScene = PackedScene.new()
++	assert(packed.pack(source) == OK)
++	source.free()
++	backend.resources[CHUNK_A] = packed
++	backend.states[CHUNK_A] = ResourceLoader.THREAD_LOAD_LOADED
++	loader.call("pump_frame")
++	check.call(events.is_empty(), "scene ready invalidation cannot publish stale activation")
++	check.call(loader.call("get_active_instance", "chunk_a") == null and loader.call("get_pending_request_count") == 0, "scene ready invalidation retires the unwanted instance and request")
++	_free_context(context)
++
++
++func _test_manager_callback_invalidates_activation(check: Callable, loader_script: Script) -> void:
++	var backend: FakeBackend = FakeBackend.new()
++	var context: Dictionary = _make_context(loader_script, backend, 1, 500)
++	var manager: Object = context["manager"]
++	var loader: Node = context["loader"]
++	var events: Array[Dictionary] = []
++	loader.connect("chunk_activated", func(payload: Dictionary, _instance: Node3D) -> void: events.append(payload))
++	manager.connect("chunk_activated", Callable(manager, "update_player_position").bind(Vector3(40.0, 0.0, 0.0)).unbind(1))
++	manager.call("update_player_position", Vector3(-5.0, 0.0, 0.0))
++	loader.call("pump_frame")
++	backend.complete(CHUNK_A)
++	loader.call("pump_frame")
++	check.call(events.is_empty(), "manager activation listener cannot cause a stale loader activation event")
++	check.call(loader.call("get_active_instance", "chunk_a") == null and manager.call("get_load_state", "chunk_a") == 0, "manager activation invalidation retires terrain and acknowledges deactivation")
++	_free_context(context)
++
++
++func _test_retained_callback_invalidates_activation(check: Callable, loader_script: Script) -> void:
++	var backend: FakeBackend = FakeBackend.new()
++	var context: Dictionary = _make_context(loader_script, backend, 1, 500)
++	var manager: Object = context["manager"]
++	var loader: Node = context["loader"]
++	manager.call("update_player_position", Vector3(-5.0, 0.0, 0.0))
++	loader.call("pump_frame")
++	backend.complete(CHUNK_A)
++	loader.call("pump_frame")
++	var events: Array[Dictionary] = []
++	loader.connect("chunk_activated", func(payload: Dictionary, _instance: Node3D) -> void: events.append(payload))
++	manager.connect("chunk_activated", Callable(manager, "update_player_position").bind(Vector3(40.0, 0.0, 0.0)).unbind(1))
++	manager.call("update_player_position", Vector3(40.0, 0.0, 0.0))
++	manager.call("update_player_position", Vector3(-5.0, 0.0, 0.0))
++	loader.call("pump_frame")
++	check.call(events.is_empty() and loader.call("get_active_instance", "chunk_a") == null, "retained-instance callback invalidation cannot publish or retain stale activation")
++	_free_context(context)
++
++
++func _test_recursive_pump_preserves_budget(check: Callable, loader_script: Script) -> void:
++	var backend: FakeBackend = FakeBackend.new()
++	var context: Dictionary = _make_context(loader_script, backend, 1, 500)
++	var manager: Object = context["manager"]
++	var loader: Node = context["loader"]
++	manager.call("update_player_position", Vector3(-0.5, 0.0, 0.0))
++	loader.call("pump_frame")
++	backend.complete(CHUNK_A)
++	backend.complete(CHUNK_B)
++	manager.connect("chunk_activated", func(_payload: Dictionary) -> void: loader.call("pump_frame"))
++	loader.call("pump_frame")
++	check.call(loader.call("get_active_instance", "chunk_a") != null and loader.call("get_active_instance", "chunk_b") == null, "recursive activation callbacks cannot exceed the outer pump activation budget")
++	loader.call("pump_frame")
++	check.call(loader.call("get_active_instance", "chunk_b") != null, "recursive pump guard leaves remaining activation eligible for the next frame")
+ 	_free_context(context)
+ 
+ 
+@@ -190,6 +275,43 @@
+ 		await tree.process_frame
+ 	check.call(Engine.get_process_frames() > frame_count_before, "real threaded ResourceLoader integration advances process frames")
+ 	check.call(loader.call("get_active_instance", "chunk_a") != null, "real ResourceLoader completion activates fixture after frame polling")
++	_free_context(context)
++
++
++func _test_native_backend_coalesces_loaded_retry(check: Callable) -> void:
++	var backend: RefCounted = ChunkLoader._ResourceBackend.new()
++	var started: bool = backend.call("request", CHUNK_B)
++	var tree: SceneTree = Engine.get_main_loop() as SceneTree
++	var deadline: int = Time.get_ticks_msec() + 5000
++	while backend.call("status", CHUNK_B) == ResourceLoader.THREAD_LOAD_IN_PROGRESS and Time.get_ticks_msec() < deadline:
++		await tree.process_frame
++	var retried: bool = backend.call("request", CHUNK_B)
++	var resource: Resource = backend.call("get_resource", CHUNK_B)
++	var after_consume: int = ResourceLoader.load_threaded_get_status(CHUNK_B)
++	check.call(started and retried and resource is PackedScene and after_consume == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE, "native retry coalesces a completed request without leaving an extra engine load token")
++	# Drain the known extra token on the unfixed backend so the red fixture itself is clean.
++	if after_consume == ResourceLoader.THREAD_LOAD_LOADED:
++		ResourceLoader.load_threaded_get(CHUNK_B)
++
++
++func _test_cancelled_native_request_cleanup(check: Callable, loader_script: Script) -> void:
++	var context: Dictionary = _make_context(loader_script, null, 1, 5000)
++	var manager: Object = context["manager"]
++	var loader: Node = context["loader"]
++	loader.set_process(false)
++	manager.call("update_player_position", Vector3(-5.0, 0.0, 0.0))
++	loader.call("pump_frame")
++	manager.call("update_player_position", Vector3(40.0, 0.0, 0.0))
++	loader.call("pump_frame")
++	var tree: SceneTree = Engine.get_main_loop() as SceneTree
++	var deadline: int = Time.get_ticks_msec() + 5000
++	while ResourceLoader.load_threaded_get_status(CHUNK_A) == ResourceLoader.THREAD_LOAD_IN_PROGRESS and Time.get_ticks_msec() < deadline:
++		await tree.process_frame
++	loader.call("pump_frame")
++	var final_status: int = ResourceLoader.load_threaded_get_status(CHUNK_A)
++	check.call(final_status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE and loader.call("get_active_instance", "chunk_a") == null, "cancelled native completion releases its engine token without activating stale terrain")
++	if final_status == ResourceLoader.THREAD_LOAD_LOADED:
++		ResourceLoader.load_threaded_get(CHUNK_A)
+ 	_free_context(context)
+ 
+ 
+--- before/game/world/chunk_loader.gd
++++ after/game/world/chunk_loader.gd
+@@ -22,6 +22,7 @@
+ var _backend: Object
+ var _clock: Callable
+ var _configured: bool = false
++var _pumping: bool = false
+ var _requests: Dictionary = {}
+ var _failed_generation: Dictionary = {}
+ var _instances: Dictionary = {}
+@@ -66,12 +67,15 @@
+ 
+ ## One deterministic streaming step. The engine calls this once per process frame.
+ func pump_frame() -> void:
+-	if not _configured:
+-		return
++	if not _configured or _pumping:
++		return
++	_pumping = true
+ 	_sync_lifecycle()
+ 	_poll_requests()
+ 	_activate_ready()
++	_release_unused_resources()
+ 	_update_seam_barriers()
++	_pumping = false
+ 
+ 
+ func retry_chunk(chunk_id: String) -> bool:
+@@ -105,8 +109,7 @@
+ 			if _instances.has(chunk_id):
+ 				if int(_instance_generations.get(chunk_id, -1)) != generation:
+ 					_instance_generations[chunk_id] = generation
+-					if _manager.acknowledge_activated(chunk_id, generation):
+-						chunk_activated.emit(_payload(chunk_id, generation), _instances[chunk_id])
++					_finish_activation(chunk_id, generation, _instances[chunk_id])
+ 				continue
+ 			if _failed_generation.get(chunk_id, -1) == generation:
+ 				continue
+@@ -187,13 +190,34 @@
+ 			_requests.erase(chunk_id)
+ 			_fail_request(chunk_id, generation, "invalid_scene_root")
+ 			continue
++		activated_count += 1
+ 		_activation_root.add_child(instance)
+ 		_instances[chunk_id] = instance
+ 		_instance_generations[chunk_id] = generation
+ 		_requests.erase(chunk_id)
+-		_manager.acknowledge_activated(chunk_id, generation)
+-		chunk_activated.emit(_payload(chunk_id, generation), instance)
+-		activated_count += 1
++		_finish_activation(chunk_id, generation, instance)
++
++
++func _finish_activation(chunk_id: String, generation: int, instance: Node3D) -> void:
++	# Scene entry and manager acknowledgements both invoke synchronous user callbacks.
++	# Recheck after each boundary before publishing an accepted loader activation.
++	if not _is_currently_desired(chunk_id, generation) or not is_instance_valid(instance) or instance.is_queued_for_deletion():
++		_retire_invalid_activation(chunk_id, generation)
++		return
++	var acknowledged: bool = _manager.acknowledge_activated(chunk_id, generation)
++	if not acknowledged or not _is_currently_desired(chunk_id, generation) or not is_instance_valid(instance) or instance.is_queued_for_deletion():
++		_retire_invalid_activation(chunk_id, generation)
++		return
++	chunk_activated.emit(_payload(chunk_id, generation), instance)
++	if not _is_currently_desired(chunk_id, generation):
++		_retire_invalid_activation(chunk_id, generation)
++
++
++func _retire_invalid_activation(chunk_id: String, generation: int) -> void:
++	var retired_generation: int = generation
++	if not _manager.get_desired_chunk_ids().has(chunk_id):
++		retired_generation = _manager.get_lifecycle_generation(chunk_id)
++	_unload_chunk(chunk_id, retired_generation)
+ 
+ 
+ func _unload_chunk(chunk_id: String, generation: int) -> void:
+@@ -222,6 +246,15 @@
+ 	if _clock.is_valid():
+ 		return int(_clock.call())
+ 	return Time.get_ticks_msec()
++
++
++func _release_unused_resources() -> void:
++	if not _backend.has_method("release_unused"):
++		return
++	var pending_paths: Array[String] = []
++	for request: Dictionary in _requests.values():
++		pending_paths.append(request["scene_path"])
++	_backend.call("release_unused", pending_paths)
+ 
+ 
+ func _payload(chunk_id: String, generation: int) -> Dictionary:
+@@ -315,12 +348,23 @@
+ 
+ 
+ class _ResourceBackend extends RefCounted:
++	var _requested_paths: Dictionary = {}
++
+ 	func request(scene_path: String) -> bool:
++		if _requested_paths.has(scene_path):
++			var existing_status: int = ResourceLoader.load_threaded_get_status(scene_path)
++			if existing_status == ResourceLoader.THREAD_LOAD_IN_PROGRESS or existing_status == ResourceLoader.THREAD_LOAD_LOADED:
++				return true
++			_requested_paths.erase(scene_path)
+ 		var result: Error = ResourceLoader.load_threaded_request(scene_path, "PackedScene", true)
+ 		if result == OK:
++			_requested_paths[scene_path] = true
+ 			return true
+ 		if result == ERR_BUSY:
+-			return ResourceLoader.load_threaded_get_status(scene_path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS
++			var in_progress: bool = ResourceLoader.load_threaded_get_status(scene_path) == ResourceLoader.THREAD_LOAD_IN_PROGRESS
++			if in_progress:
++				_requested_paths[scene_path] = true
++			return in_progress
+ 		return false
+ 
+ 	func status(scene_path: String) -> int:
+@@ -332,4 +376,16 @@
+ 	func get_resource(scene_path: String) -> Resource:
+ 		if ResourceLoader.load_threaded_get_status(scene_path) != ResourceLoader.THREAD_LOAD_LOADED:
+ 			return null
+-		return ResourceLoader.load_threaded_get(scene_path)
++		var resource: Resource = ResourceLoader.load_threaded_get(scene_path)
++		_requested_paths.erase(scene_path)
++		return resource
++
++	func release_unused(pending_paths: Array[String]) -> void:
++		for scene_path: String in _requested_paths.keys():
++			if pending_paths.has(scene_path):
++				continue
++			var status_code: int = ResourceLoader.load_threaded_get_status(scene_path)
++			if status_code == ResourceLoader.THREAD_LOAD_LOADED:
++				get_resource(scene_path)
++			elif status_code == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE or status_code == ResourceLoader.THREAD_LOAD_FAILED:
++				_requested_paths.erase(scene_path)
+--- /dev/null
++++ after/game/tests/world/fixtures/activation_redirect.gd
+@@ -0,0 +1,6 @@
++extends Node3D
++## Regression fixture: scene entry may synchronously invalidate a load generation.
++
++func _ready() -> void:
++	var redirect: Callable = get_parent().get_meta("redirect_on_ready")
++	redirect.call()
+--- /dev/null
++++ after/game/tests/scenes/chunk_streaming.gd
+@@ -0,0 +1,200 @@
++extends Node3D
++## Automated physical traversal evidence for WORLD-02; not the player controller.
++
++enum Phase { APPROACH, BLOCKED, FAILURE, CROSS, RETURN, FINISHED }
++
++const CHUNK_A: String = "res://world/fixtures/chunk_a.tscn"
++const CHUNK_B: String = "res://world/fixtures/chunk_b.tscn"
++const EVIDENCE: String = "res://../docs/evidence/WORLD-02"
++
++var _phase: Phase = Phase.APPROACH
++var _elapsed: float = 0.0
++var _phase_elapsed: float = 0.0
++var _manager: WorldManager = WorldManager.new()
++var _loader: ChunkLoader = ChunkLoader.new()
++var _backend: DelayedNeighborBackend = DelayedNeighborBackend.new()
++var _chunks: Node3D = Node3D.new()
++var _body: CharacterBody3D = CharacterBody3D.new()
++var _camera: Camera3D = Camera3D.new()
++var _overview: Camera3D = Camera3D.new()
++var _label: Label = Label.new()
++var _checks: Array[Dictionary] = []
++var _failures: Array[String] = []
++var _initial_floor_id: int = 0
++
++
++func _ready() -> void:
++	var manifest: ChunkManifest = ChunkManifest.new()
++	var records: Array[Dictionary] = [
++		{"id": "chunk_a", "bounds": AABB(Vector3(-10, -2, -10), Vector3(10, 8, 20)), "scene_path": CHUNK_A, "adjacent": ["chunk_b"]},
++		{"id": "chunk_b", "bounds": AABB(Vector3(0, -2, -10), Vector3(10, 8, 20)), "scene_path": CHUNK_B, "adjacent": ["chunk_a"]}
++	]
++	assert(manifest.configure(records))
++	assert(_manager.configure(manifest, 1.0, 0.0))
++	_chunks.name = "ActiveChunks"
++	add_child(_chunks)
++	add_child(_loader)
++	assert(_loader.configure(_manager, manifest, _chunks, _backend, 1, 10000))
++	_loader.chunk_failed.connect(_on_chunk_failed)
++	_body.name = "TraversalProbe"
++	_body.position = Vector3(-2.0, 0.85, 2.0)
++	var collision: CollisionShape3D = CollisionShape3D.new()
++	var capsule: CapsuleShape3D = CapsuleShape3D.new()
++	capsule.radius = 0.25
++	capsule.height = 1.6
++	collision.shape = capsule
++	_body.add_child(collision)
++	var marker: MeshInstance3D = MeshInstance3D.new()
++	var marker_mesh: CapsuleMesh = CapsuleMesh.new()
++	marker_mesh.radius = 0.25
++	marker_mesh.height = 1.6
++	marker.mesh = marker_mesh
++	var marker_material: StandardMaterial3D = StandardMaterial3D.new()
++	marker_material.albedo_color = Color(1.0, 0.68, 0.16)
++	marker.material_override = marker_material
++	_body.add_child(marker)
++	_camera.position.y = 0.8
++	_camera.rotation.y = -PI * 0.5
++	_camera.current = true
++	_body.add_child(_camera)
++	add_child(_body)
++	_overview.position = Vector3(0, 11, 13)
++	add_child(_overview)
++	_overview.look_at(Vector3(0, 0, 2))
++	var environment_node: WorldEnvironment = WorldEnvironment.new()
++	var environment: Environment = Environment.new()
++	environment.background_mode = Environment.BG_COLOR
++	environment.background_color = Color(0.06, 0.09, 0.14)
++	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
++	environment.ambient_light_color = Color(0.65, 0.75, 1.0)
++	environment.ambient_light_energy = 0.7
++	environment_node.environment = environment
++	add_child(environment_node)
++	var sun: DirectionalLight3D = DirectionalLight3D.new()
++	sun.rotation_degrees = Vector3(-50, -30, 0)
++	add_child(sun)
++	var canvas: CanvasLayer = CanvasLayer.new()
++	_label.position = Vector2(24, 22)
++	_label.add_theme_font_size_override("font_size", 20)
++	canvas.add_child(_label)
++	add_child(canvas)
++	_manager.update_player_position(_body.position)
++
++
++func _physics_process(delta: float) -> void:
++	_elapsed += delta
++	_phase_elapsed += delta
++	if _phase == Phase.FINISHED:
++		return
++	if _elapsed > 18.0:
++		_check(false, "streaming traversal completes before watchdog")
++		_finish()
++		return
++	_manager.update_player_position(_body.position)
++	if _loader.get_active_instance("chunk_a") == null and _phase == Phase.APPROACH:
++		return
++	_body.velocity.x = -1.8 if _phase == Phase.RETURN else 1.8
++	_body.velocity.y -= 18.0 * delta
++	_body.move_and_slide()
++	_label.text = "WORLD-02  /  STREAMING BOUNDARY\n%s\nx %.2f m   y %.2f m" % [Phase.keys()[_phase], _body.position.x, _body.position.y]
++	match _phase:
++		Phase.APPROACH:
++			if _body.position.x > -0.6 and _loader.has_seam_barrier("chunk_a", "chunk_b"):
++				_initial_floor_id = _loader.get_active_instance("chunk_a").get_instance_id()
++				_transition(Phase.BLOCKED)
++		Phase.BLOCKED:
++			if _phase_elapsed >= 1.0:
++				_check(_body.position.x < -0.25 and _body.is_on_floor(), "real capsule cannot cross the unavailable seam or fall through")
++				_transition(Phase.FAILURE)
++				await _capture("blocked-seam")
++				_backend.fail_neighbor = true
++		Phase.FAILURE:
++			if not _failures.is_empty():
++				_check(_loader.get_active_instance("chunk_a").get_instance_id() == _initial_floor_id and _body.is_on_floor(), "neighbor resource failure preserves current terrain and physical support")
++				_backend.fail_neighbor = false
++				_backend.allow_neighbor = true
++				_check(_loader.retry_chunk("chunk_b"), "failed neighbor permits an explicit retry")
++				_transition(Phase.CROSS)
++		Phase.CROSS:
++			if _body.position.x >= 2.4:
++				_check(_loader.get_active_instance("chunk_b") != null and _body.is_on_floor(), "retry opens the seam and capsule walks onto loaded neighbor")
++				_check(_loader.get_active_instance("chunk_a") == null, "departure unloads the old chunk while destination remains solid")
++				_camera.rotation.y = PI * 0.5
++				_transition(Phase.RETURN)
++				await _capture("crossed-seam")
++		Phase.RETURN:
++			if _body.position.x <= -2.2:
++				_check(_loader.get_active_instance("chunk_a") != null and _body.is_on_floor(), "capsule backtracks across the reloaded seam without falling")
++				_check(_chunks.find_children("ChunkA", "Node3D", true, false).size() == 1 and _chunks.find_children("ChunkB", "Node3D", true, false).size() <= 1, "backtracking retains at most one scene instance per chunk")
++				_finish()
++
++
++func _transition(next_phase: Phase) -> void:
++	_phase = next_phase
++	_phase_elapsed = 0.0
++
++
++func _on_chunk_failed(payload: Dictionary, reason: String) -> void:
++	if payload["chunk_id"] == "chunk_b":
++		_failures.append(reason)
++
++
++func _check(passed: bool, description: String) -> void:
++	_checks.append({"passed": passed, "description": description})
++	print("WORLD-02 %s: %s" % ["PASS" if passed else "FAIL", description])
++
++
++func _capture(label: String) -> void:
++	if DisplayServer.get_name() == "headless":
++		return
++	_overview.current = true
++	await RenderingServer.frame_post_draw
++	var path: String = ProjectSettings.globalize_path(EVIDENCE).path_join(label + ".png")
++	var error: Error = get_viewport().get_texture().get_image().save_png(path)
++	_camera.current = true
++	_check(error == OK, "rendered capture saved: " + label)
++
++
++func _finish() -> void:
++	_phase = Phase.FINISHED
++	set_physics_process(false)
++	var passed: bool = true
++	for result: Dictionary in _checks:
++		passed = passed and result["passed"]
++	_label.text = "WORLD-02  /  %s\nBlocked seam, failure, retry and backtracking verified" % ["PASS" if passed else "FAIL"]
++	await _capture("returned-seam")
++	for result: Dictionary in _checks:
++		passed = passed and result["passed"]
++	var mode: String = "headless" if DisplayServer.get_name() == "headless" else "rendered"
++	var path: String = ProjectSettings.globalize_path(EVIDENCE).path_join("runtime-" + mode + ".json")
++	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
++	if file == null:
++		printerr("WORLD-02 could not write traversal evidence")
++		get_tree().quit(1)
++		return
++	file.store_string(JSON.stringify({"passed": passed, "checks": _checks, "duration_seconds": _elapsed, "neighbor_failures": _failures, "godot": Engine.get_version_info()["string"], "display_server": DisplayServer.get_name(), "renderer": RenderingServer.get_current_rendering_method(), "resolution": get_viewport().get_visible_rect().size, "physics_engine": ProjectSettings.get_setting("physics/3d/physics_engine", "DEFAULT")}, "\t"))
++	file.close()
++	print("WORLD-02 traversal %s: %d checks; %s" % ["PASS" if passed else "FAIL", _checks.size(), mode])
++	if mode == "headless" or OS.get_cmdline_user_args().has("--verify"):
++		get_tree().quit(0 if passed else 1)
++
++
++class DelayedNeighborBackend extends RefCounted:
++	## Real threaded resources; only neighbor status is delayed/failed for the scenario.
++	var allow_neighbor: bool = false
++	var fail_neighbor: bool = false
++	var _backend: RefCounted = ChunkLoader._ResourceBackend.new()
++
++	func request(path: String) -> bool:
++		return _backend.call("request", path)
++
++	func status(path: String) -> int:
++		if path == CHUNK_B:
++			if fail_neighbor:
++				return -1
++			if not allow_neighbor:
++				return ResourceLoader.THREAD_LOAD_IN_PROGRESS
++		return _backend.call("status", path)
++
++	func get_resource(path: String) -> Resource:
++		return _backend.call("get_resource", path)
+--- /dev/null
++++ after/game/tests/scenes/chunk_streaming.tscn
+@@ -0,0 +1,6 @@
++[gd_scene load_steps=2 format=3]
++
++[ext_resource type="Script" path="res://tests/scenes/chunk_streaming.gd" id="1_script"]
++
++[node name="ChunkStreamingVerification" type="Node3D"]
++script = ExtResource("1_script")

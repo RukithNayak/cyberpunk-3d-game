@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ground"]
+size = Vector3(10, 0.2, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape_ground"]
+size = Vector3(10, 0.2, 20)
+
+[sub_resource type="StandardMaterial3D" id="Material_asphalt"]
+albedo_color = Color(0.19, 0.17, 0.22, 1)
+roughness = 0.92
+
+[sub_resource type="BoxMesh" id="BoxMesh_marker"]
+size = Vector3(0.35, 2.4, 0.35)
+
+[sub_resource type="StandardMaterial3D" id="Material_marker"]
+albedo_color = Color(0.96, 0.29, 0.17, 1)
+emission_enabled = true
+emission = Color(0.32, 0.04, 0.015, 1)
+
+[node name="ChunkB" type="Node3D"]
+
+[node name="Ground" type="StaticBody3D" parent="."]
+position = Vector3(5, -0.1, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("BoxMesh_ground")
+surface_material_override/0 = SubResource("Material_asphalt")
+
+[node name="Collision" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("BoxShape_ground")
+
+[node name="SeamMarker" type="MeshInstance3D" parent="."]
+position = Vector3(2, 1.2, 0)
+mesh = SubResource("BoxMesh_marker")
+material_override = SubResource("Material_marker")
+
+[node name="FirstPersonSeamView" type="Marker3D" parent="."]
+position = Vector3(1.2, 1.7, 0)

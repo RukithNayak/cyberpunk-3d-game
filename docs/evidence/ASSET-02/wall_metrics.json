@@ -1,0 +1,213 @@
+{
+  "blender": "5.2.3 LTS",
+  "source": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game/art/reference/wall_doorway.blend",
+  "objects": [
+    {
+      "object": "ENV_WallDoorway_A",
+      "role": "render",
+      "dims_m": [
+        4.0,
+        0.3,
+        3.4
+      ],
+      "tris_evaluated": 36,
+      "materials": 2,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_DoorFrame_Left",
+      "role": "render",
+      "dims_m": [
+        0.1,
+        0.11,
+        2.25
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_DoorFrame_Right",
+      "role": "render",
+      "dims_m": [
+        0.1,
+        0.11,
+        2.25
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_DoorLintel",
+      "role": "render",
+      "dims_m": [
+        1.5,
+        0.11,
+        0.1
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_Threshold",
+      "role": "render",
+      "dims_m": [
+        1.5,
+        0.46,
+        0.07
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_ServicePlate",
+      "role": "render",
+      "dims_m": [
+        0.56,
+        0.045,
+        0.66
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_ServicePlateInset",
+      "role": "render",
+      "dims_m": [
+        0.43,
+        0.025,
+        0.48
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_StatusLamp_Upper",
+      "role": "render",
+      "dims_m": [
+        0.22,
+        0.018,
+        0.045
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_StatusLamp_Middle",
+      "role": "render",
+      "dims_m": [
+        0.22,
+        0.018,
+        0.045
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_StatusLamp_Lower",
+      "role": "render",
+      "dims_m": [
+        0.22,
+        0.018,
+        0.045
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_ConduitCollar_A",
+      "role": "render",
+      "dims_m": [
+        0.104,
+        0.07,
+        0.104
+      ],
+      "tris_evaluated": 140,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_ConduitCollar_B",
+      "role": "render",
+      "dims_m": [
+        0.104,
+        0.07,
+        0.104
+      ],
+      "tris_evaluated": 140,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "ENV_ConduitCollar_C",
+      "role": "render",
+      "dims_m": [
+        0.104,
+        0.07,
+        0.104
+      ],
+      "tris_evaluated": 140,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "COL_Wall_Left",
+      "role": "collision",
+      "dims_m": [
+        1.25,
+        0.3,
+        3.4
+      ],
+      "tris_evaluated": 12,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "COL_Wall_Right",
+      "role": "collision",
+      "dims_m": [
+        1.25,
+        0.3,
+        3.4
+      ],
+      "tris_evaluated": 12,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "COL_Wall_Header",
+      "role": "collision",
+      "dims_m": [
+        1.5,
+        0.3,
+        1.15
+      ],
+      "tris_evaluated": 12,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "COL_Threshold",
+      "role": "collision",
+      "dims_m": [
+        1.5,
+        0.3,
+        0.05
+      ],
+      "tris_evaluated": 12,
+      "materials": 1,
+      "uv_maps": 1
+    }
+  ],
+  "triangles_total": 1476,
+  "mesh_objects": 17,
+  "materials": 7
+}

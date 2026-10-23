@@ -1,0 +1,14 @@
+.DS_Store
+.superpowers/
+.worktrees/
+game/.godot/
+game/export.cfg
+game/export_credentials.cfg
+builds/
+*.blend1
+*.blend2
+__pycache__/
+*.pyc
+models/
+*.gguf
+*.safetensors

@@ -1,0 +1,63 @@
+[
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--editor",
+      "--import"
+    ],
+    "exit": 0,
+    "log": "docs/evidence/CORE-04/import.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "sample"
+    ],
+    "exit": 0,
+    "log": "docs/evidence/CORE-04/sample.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "migrations"
+    ],
+    "exit": 0,
+    "log": "docs/evidence/CORE-04/migrations.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "all"
+    ],
+    "exit": 0,
+    "log": "docs/evidence/CORE-04/all.log"
+  }
+]

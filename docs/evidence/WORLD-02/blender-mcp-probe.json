@@ -1,0 +1,22 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"status\": \"ok\",\n  \"result\": {\n    \"version\": \"5.2.3 LTS\",\n    \"engine\": \"BLENDER_EEVEE\",\n    \"objects\": {\n      \"MESH\": 1,\n      \"LIGHT\": 1,\n      \"CAMERA\": 1\n    },\n    \"scene_preserved\": true\n  }\n}"
+    }
+  ],
+  "structuredContent": {
+    "status": "ok",
+    "result": {
+      "version": "5.2.3 LTS",
+      "engine": "BLENDER_EEVEE",
+      "objects": {
+        "MESH": 1,
+        "LIGHT": 1,
+        "CAMERA": 1
+      },
+      "scene_preserved": true
+    }
+  },
+  "isError": false
+}

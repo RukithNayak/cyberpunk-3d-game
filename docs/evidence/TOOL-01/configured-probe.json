@@ -1,0 +1,103 @@
+{
+  "configured_launch": true,
+  "command": "/Users/rukithnayak/.codex/mcp-envs/blender-lab/bin/blender-mcp",
+  "server": {
+    "name": "blender-mcp",
+    "title": null,
+    "version": "1.30.0",
+    "websiteUrl": null,
+    "icons": null
+  },
+  "protocol": "2025-11-25",
+  "tools_count": 26,
+  "tools": [
+    "execute_blender_code",
+    "execute_blender_code_for_cli",
+    "get_blendfile_summary_datablocks",
+    "get_blendfile_summary_datablocks_for_cli",
+    "get_blendfile_summary_missing_files",
+    "get_blendfile_summary_missing_files_for_cli",
+    "get_blendfile_summary_of_linked_libraries",
+    "get_blendfile_summary_of_linked_libraries_for_cli",
+    "get_blendfile_summary_path_info",
+    "get_blendfile_summary_path_info_for_cli",
+    "get_blendfile_summary_usage_guess",
+    "get_blendfile_summary_usage_guess_for_cli",
+    "get_object_detail_summary",
+    "get_objects_summary",
+    "get_python_api_docs",
+    "get_screenshot_of_area_as_image",
+    "get_screenshot_of_window_as_image",
+    "get_screenshot_of_window_as_json",
+    "jump_to_tab_by_name",
+    "jump_to_tab_by_space_type",
+    "jump_to_view3d_object_by_name",
+    "jump_to_view3d_object_data_by_name",
+    "render_thumbnail_to_path",
+    "render_viewport_to_path",
+    "search_api_docs",
+    "search_manual_docs"
+  ],
+  "live_result": {
+    "environment": {
+      "ok": true,
+      "blender": "5.2.3 LTS",
+      "python": "3.13.13",
+      "background": false,
+      "file": null,
+      "engines": [
+        "BLENDER_EEVEE",
+        "BLENDER_WORKBENCH",
+        "CYCLES"
+      ],
+      "engine": "BLENDER_EEVEE",
+      "gpu": {
+        "backend": "METAL",
+        "devices": [
+          "Apple M5 (GPU - 8 cores)"
+        ]
+      },
+      "addons_enabled": [
+        "bl_ext.lab_blender_org.mcp",
+        "bl_pkg",
+        "cycles",
+        "io_anim_bvh",
+        "io_curve_svg",
+        "io_mesh_uv_layout",
+        "io_scene_fbx",
+        "io_scene_gltf2",
+        "pose_library"
+      ],
+      "rigify_available": true,
+      "units": {
+        "system": "METRIC",
+        "scale_length": 1.0,
+        "length": "METERS"
+      },
+      "color": {
+        "view": "AgX",
+        "look": "None",
+        "display": "sRGB"
+      },
+      "frame_range": [
+        1,
+        250,
+        24
+      ],
+      "objects": {
+        "MESH": 1,
+        "LIGHT": 1,
+        "CAMERA": 1
+      },
+      "data": {
+        "meshes": 1,
+        "materials": 2,
+        "images": 2,
+        "actions": 0,
+        "node_groups": 0,
+        "collections": 1
+      }
+    },
+    "scene_preserved": true
+  }
+}

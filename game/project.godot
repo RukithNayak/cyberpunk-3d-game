@@ -1,0 +1,16 @@
+; Project configuration. Approved runtime pin: Godot 4.7.2.
+config_version=5
+
+[application]
+config/name="Cyberpunk 3D — Feasibility"
+run/main_scene="res://tests/scenes/startup.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[display]
+window/size/viewport_width=960
+window/size/viewport_height=540
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.025, 0.035, 0.055, 1)

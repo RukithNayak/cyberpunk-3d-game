@@ -1,0 +1,130 @@
+[
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--editor",
+      "--import"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-02/import.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "sample"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-02/sample.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "chunk_loader"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-02/chunk_loader.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "all"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-02/all.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "res://tests/scenes/chunk_streaming.tscn"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-02/physics.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "world02_unknown"
+    ],
+    "exit": 2,
+    "expected_exit": 2,
+    "log": "docs/evidence/WORLD-02/unknown-suite.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite"
+    ],
+    "exit": 2,
+    "expected_exit": 2,
+    "log": "docs/evidence/WORLD-02/malformed-arguments.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "deliberate_failure"
+    ],
+    "exit": 1,
+    "expected_exit": 1,
+    "log": "docs/evidence/WORLD-02/deliberate-failure.log"
+  }
+]

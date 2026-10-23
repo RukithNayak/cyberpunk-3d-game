@@ -1,0 +1,42 @@
+{
+	"checks": [
+		{
+			"description": "real capsule cannot cross the unavailable seam or fall through",
+			"passed": true
+		},
+		{
+			"description": "neighbor resource failure preserves current terrain and physical support",
+			"passed": true
+		},
+		{
+			"description": "failed neighbor permits an explicit retry",
+			"passed": true
+		},
+		{
+			"description": "retry opens the seam and capsule walks onto loaded neighbor",
+			"passed": true
+		},
+		{
+			"description": "departure unloads the old chunk while destination remains solid",
+			"passed": true
+		},
+		{
+			"description": "capsule backtracks across the reloaded seam without falling",
+			"passed": true
+		},
+		{
+			"description": "backtracking retains at most one scene instance per chunk",
+			"passed": true
+		}
+	],
+	"display_server": "headless",
+	"duration_seconds": 5.96666666666665,
+	"godot": "4.7.2-stable (official)",
+	"neighbor_failures": [
+		"missing_or_failed_resource"
+	],
+	"passed": true,
+	"physics_engine": "DEFAULT",
+	"renderer": "gl_compatibility",
+	"resolution": "(64.0, 64.0)"
+}

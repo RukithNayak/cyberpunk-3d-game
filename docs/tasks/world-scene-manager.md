@@ -1,0 +1,154 @@
+# World & Scene Manager Implementation Plan
+
+> **For agentic workers:** Use `superpowers:executing-plans` for inline implementation, or `superpowers:subagent-driven-development` if subagent execution is explicitly selected. Steps use checkbox syntax for tracking.
+
+**Goal:** Stream continuous exterior chunks and safely transition to selected interiors.
+
+**Architecture:** Owns loading, activation, hydration and unload lifecycle. AI owns navigation behavior; persistence owns durable truth. Keep data and presentation separate; integrate through the contracts named below.
+
+**Tech Stack:** Godot 4.7.2 / typed GDScript; Blender 5.2 for offline assets; local Ollama HTTP for inference.
+
+**Spec:** [Proposal](../PROPOSAL.md), [detailed design — module 2](../detailed_design_document.md); shared sequencing/status: [master progress](../master-progress.md).
+
+## Global constraints
+
+- Source priority: detailed design is approved for Stage 0/1; proposal confirmed requirements remain binding. Where the design is more specific, use it: single-player, Godot 4.7.2 with typed GDScript, Blender 5.2 target, local Ollama HTTP, grid inventory, family-keyed ammo, regenerating hack energy, and brief interior fades. Verify installed tools rather than assuming availability.
+- Preserve the larger seamless exterior city direction, selected detailed interiors, stylized detailed visuals, first-person gun combat and no vehicles. Two chunks are feasibility content, not the final city scope.
+- Target environment is the user-reported M5 MacBook Air with 16 GB shared memory. Do not assert benchmarks or release platforms have been verified. No paid service, large model download, new dependency or publishing is authorized by these plans.
+- Persistent IDs and domain data survive unload/save/restart; runtime Nodes remain transient. Generative output is untrusted, bounded and subordinate to deterministic gameplay authority.
+
+## Execution and completion rules
+
+- Read the linked source sections, this file and the prerequisite tasks only; mock adjacent services until integration tasks require them. Proposed implementation paths below do not exist yet.
+- Each task is a single bounded deliverable intended for one focused worker. If a deferred expansion task is selected, first split its content batches into separately reviewable tickets; it is not permission for an open-ended production pass.
+- For logic tasks, add the named regression cases, demonstrate failure for the new behavior, implement it, then run the focused suite. CORE-01 establishes the runner; use `godot --headless --path game --script res://tests/run_tests.gd -- --suite <suite>` with the module suite registered there. Blender/visual/performance tasks use the stated evidence rather than artificial unit tests.
+- Check a task only after its implementation, acceptance criteria and test evidence pass. Record exact commands, results and visual/performance evidence alongside the task, plus any follow-up issue. Use a small focused change/commit; preserve unrelated work.
+- All implementation boxes start unchecked. Checking off planning documentation does not indicate game implementation is complete. Deferred Stage 2–5 work is outside the currently approved Stage 0/1 scope.
+
+## Review focus
+
+- Save/load failures must preserve valid live and disk state (CORE-03/04); reward replays must not duplicate inventory (INV-04, NPC-04).
+- Scene unload/death/cancel must invalidate late work and preserve UUID ownership (WORLD-02/03/05, AI-04, NPC-02).
+- Interrupted reload/heal and repeated callbacks must conserve ammo/items and prevent attacks while dead (PLAYER-04, INV-03).
+- Prompt injection, unseen facts and invalid/stale action parameters must never mutate progression (NPC-01/04/05).
+- Concurrent inference, streaming and combat must remain responsive within explicitly ratified memory/frame budgets (WORLD-06); visual/playtest evidence is required in addition to headless checks.
+
+## Task checklist
+
+### WORLD-01: Define manifest and chunk lifecycle fixtures
+
+- [x] **WORLD-01 — deliverable complete** (Stage 1).
+
+**Dependencies / sequencing:** CORE-02. Prerequisite IDs resolve through the master progress task index.
+
+**Files / ownership:** `game/world/chunk_manifest.gd`; `game/world/world_manager.gd`; `game/world/fixtures/chunk_a.tscn`; `game/world/fixtures/chunk_b.tscn`; `game/tests/world/test_manifest.gd`.
+
+**Interfaces:** `ChunkManifest` stores IDs, bounds, scene paths and adjacency; `LoadState` is UNLOADED/PRELOADING/ACTIVE; `update_player_position(pos: Vector3) -> void`.
+
+- [x] **Acceptance:** Two greybox chunks share a traversable seam. Validate IDs, adjacency and resources; define preload and hysteresis margins as configuration. Publish pre-unload, activated and deactivated event payloads containing chunk IDs and lifecycle generations.
+
+- [x] **Test expectations:** Cover malformed manifests, unknown neighbor IDs, boundary positions and asymmetric adjacency policy. Fixture movement across the seam triggers expected desired load sets without flicker.
+
+- [x] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+
+Accepted 23 October 2026 (Asia/Kolkata), world_manifest worker and independent reviewer gpt-6-luna medium; Main Agent reproduced 37/37. Review regressions: red 6, green 37/37. [Report](../reports/WORLD-01-worker.md), [contract](../world-contracts.md), [capture](../evidence/WORLD-01/chunk-seam-first-person.png). Working-tree branch codex/stage-0-readiness. Async loading remains WORLD-02.
+
+### WORLD-02: Add asynchronous preload and bounded activation
+
+Resumed 23 October 2026, Main Agent. Supporting acceptance work recorded before edits: add callback-invalidation regressions and a small test-only `game/tests/world/fixtures/activation_redirect.gd`; add `game/tests/scenes/chunk_streaming.{gd,tscn}` for real physics traversal/rendered evidence; integrate the accepted suite in `game/tests/run_tests.gd` and publish corrections in `docs/world-contracts.md`. These serve WORLD-02's existing stale-work/no-fall-through acceptance; no player-controller, hydration, navigation or asset-production scope is added. Unborn branch session baseline preserved under `/private/tmp/cyberpunk-world02-before/` for actual diff review.
+
+- [x] **WORLD-02 — deliverable complete** (Stage 1).
+
+**Dependencies / sequencing:** WORLD-01, CORE-01. Prerequisite IDs resolve through the master progress task index.
+
+**Files / ownership:** `game/world/chunk_loader.gd`; `game/tests/world/test_chunk_loader.gd`.
+
+**Interfaces:** WorldManager consumes ChunkLoader completion/failure events tagged with chunk ID and lifecycle generation.
+
+- [x] **Acceptance:** Background resource loading never blocks street movement. Activation work is budgeted over frames; duplicate requests coalesce and stale completions cannot reactivate unwanted chunks. Timeout/missing-resource failures preserve valid current terrain and allow retry.
+
+- [x] **Test expectations:** Inject delayed, duplicate, missing, timed-out and out-of-order load completions. Assert bounded activation work, one scene per chunk, cleanup of pending work and no fall-through while a neighbor is unavailable.
+
+- [x] **Evidence recorded:** [Main Agent acceptance report](../reports/WORLD-02.md), [bounded review](../reports/WORLD-02-review.md), [exact final commands/exits](../evidence/WORLD-02/verification.json), [focused 42/42](../evidence/WORLD-02/chunk_loader.log), [integrated 184/184](../evidence/WORLD-02/all.log), [runtime data](../evidence/WORLD-02/runtime-rendered.json), [blocked](../evidence/WORLD-02/blocked-seam.png), [crossed](../evidence/WORLD-02/crossed-seam.png), [returned](../evidence/WORLD-02/returned-seam.png).
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent / session model; reviewer gpt-6-luna / medium. Callback regressions reproduced red (40 checks/six failures) and green, native retry/cancellation cleanup red (42 checks/two failures) then green 42/42. Import/sample/all and standalone physics exits 0; unknown/malformed arguments exit 2 and deliberate failure exits 1 as expected. Godot MCP rendered fixture passed ten checks with zero errors; Main Agent inspected all three overview captures. Activation count and two-chunk collision/support are verified; large-scene frame-time/memory, production player feel and human playtest remain later gates. WORLD-03 now has its WORLD-02/CORE-04 prerequisites accepted.
+
+### WORLD-03: Hydrate and unload persistent entities
+
+- [ ] **WORLD-03 — deliverable complete** (Stage 1).
+
+**Dependencies / sequencing:** WORLD-02, CORE-04. Prerequisite IDs resolve through the master progress task index.
+
+**Files / ownership:** `game/world/entity_hydrator.gd`; `game/tests/world/test_chunk_persistence.gd`.
+
+**Interfaces:** Use CORE-02 registry contracts and WORLD-01 pre-unload/activation events; entity identity comes from authored manifest data.
+
+- [ ] **Acceptance:** Hydrate modified entities before enabling interactions. Commit relevant changes before unloading; notify consumers to invalidate pending interactions and model requests. Collected/destroyed records do not respawn on backtracking.
+
+- [ ] **Test expectations:** Unlock a door, collect loot and alter an NPC record; unload/reload in reverse order and assert identical UUID/state with no duplicates. Exercise save at a boundary and stale loader responses after unload.
+
+- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+
+### WORLD-04: Implement safe interior fades
+
+- [ ] **WORLD-04 — deliverable complete** (Stage 1).
+
+**Dependencies / sequencing:** WORLD-03. Prerequisite IDs resolve through the master progress task index.
+
+**Files / ownership:** `game/world/interior_transition.gd`; `game/world/fixtures/interior.tscn`; `game/tests/world/test_interiors.gd`.
+
+**Interfaces:** `request_interior_transition(scene_path: String) -> void` temporarily locks player interaction during a brief fade and publishes transition state.
+
+- [ ] **Acceptance:** Follow the detailed design’s interior fade decision while exteriors remain seamless. Preserve return position and persistent state; an invalid path/timeout keeps the current scene and restores controls. Blocking means a gameplay transition, not a synchronous main-thread loading stall.
+
+- [ ] **Test expectations:** Enter/exit repeatedly; inject missing scenes, load failure and duplicate requests during a fade. Confirm current scene survives failure, controls recover and state persists.
+
+- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+
+### WORLD-05: Verify navigation handoff across chunk boundaries
+
+- [ ] **WORLD-05 — deliverable complete** (Stage 1).
+
+**Dependencies / sequencing:** WORLD-03, AI-03, AI-04. Prerequisite IDs resolve through the master progress task index.
+
+**Files / ownership:** `game/world/navigation_handoff.gd`; `game/tests/scenes/navigation_boundary.tscn`; `game/tests/world/test_navigation_handoff.gd`.
+
+**Interfaces:** Publish navigation readiness before AI resumes; transfer each NPC UUID once using WORLD-01 lifecycle events and AI-04 records.
+
+- [ ] **Acceptance:** AI waits for synchronized navigation maps, follows the player across the two-chunk seam and is not duplicated or stranded during backtracking. Define ownership at the exact boundary.
+
+- [ ] **Test expectations:** Run repeated seam pursuits, unload a destination and reverse direction during synchronization. Check one owner per NPC, valid path recovery and no frame of navigation against an unavailable map. AI-04 is required before the unload scenario is accepted.
+
+- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+
+### WORLD-06: Assemble and measure the integrated feasibility build
+
+- [ ] **WORLD-06 — deliverable complete** (Stage 1).
+
+**Dependencies / sequencing:** CORE-05, WORLD-04, WORLD-05, PLAYER-05, INV-05, AI-05, HACK-05, NPC-06, ASSET-03, ASSET-04. Prerequisite IDs resolve through the master progress task index.
+
+**Files / ownership:** `game/tests/scenes/feasibility.tscn`; `benchmarks/feasibility/`; `docs/feasibility-report.md`.
+
+**Interfaces:** Compose existing module interfaces only; owns cross-system acceptance and benchmark reporting, not new gameplay logic.
+
+- [ ] **Acceptance:** Combine one gun/enemy, two seamless chunks, one NPC mission offer, one hack, loot/grid inventory, healing and save/load. Record resolution/renderer, model/quantization/context, OS/game/model memory, sustained duration, median/tail frame times, first/full response latency and packaged macOS results. Ratify numeric performance/headroom thresholds before evaluating pass/fail; 60 FPS is a proposed target, not an achieved result.
+
+- [ ] **Test expectations:** Traverse and backtrack during combat/inference; cancel dialogue by walking away/unloading/death. Save, quit, relaunch and compare domain states. Include provider-offline fallback, boundary memory/hitch regression and game-only versus concurrent inference measurements; record human playtest findings and failures.
+
+- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+
+### WORLD-07: Expand city layout and prepare distribution
+
+- [ ] **WORLD-07 — deliverable complete** (Stage 2–5 (deferred)).
+
+**Dependencies / sequencing:** WORLD-06; approved playable scope, platform and budget decisions. Prerequisite IDs resolve through the master progress task index.
+
+**Files / ownership:** `game/world/districts/`; `benchmarks/world/`; `game/export_presets.cfg`; `docs/release-checklist.md`.
+
+**Interfaces:** Use existing manifests, navigation and lifecycle contracts; expansion is content in the same continuous exterior city.
+
+- [ ] **Acceptance:** After feasibility, split approved district layouts/interiors into individual content tickets with landmarks, routes, travel-time and budget criteria. Split release exports, clean-machine model setup and signing/distribution decisions into target-specific tickets. Candidate three districts is not a fixed requirement.
+
+- [ ] **Test expectations:** Validate every added district’s alternate routes, backtracking, mission reachability and sustained memory; test selected packaged platforms and local-model/fallback installation on a clean machine.
+
+- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
