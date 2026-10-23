@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="MissionTemplate" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://features/missions/mission_template.gd" id="1_template"]
+
+[resource]
+script = ExtResource("1_template")
+template_id = "retrieve_signal_cache"
+target_uuid = "00000000-0000-4000-8000-000000000032"
+faction_id = "night_market"
+minimum_standing = 0
+reward_credits = 125
+target_label = "Signal cache"
+authored_fallback_offer = "Recover the signal cache from the transit underpass."

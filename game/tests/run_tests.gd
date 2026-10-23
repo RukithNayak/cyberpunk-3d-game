@@ -8,7 +8,7 @@ var _failures: int = 0
 func _initialize() -> void:
 	var args: PackedStringArray = OS.get_cmdline_user_args()
 	if args.size() != 2 or args[0] != "--suite":
-		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|hitscan|weapon_transactions|player_hud|inventory_items|inventory_grid|inventory_equipment|inventory_persistence|inventory_ui|hacking_energy|hacking_door|hacking_security|hacking_combat|hacking_effects|ai_perception|ai_states|ai_navigation|ai_unload|navigation_handoff|ai_encounter|hacking_scenarios|dialogue_schema|dialogue_requests|interiors|deliberate_failure>")
+		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|hitscan|weapon_transactions|player_hud|inventory_items|inventory_grid|inventory_equipment|inventory_persistence|inventory_ui|hacking_energy|hacking_door|hacking_security|hacking_combat|hacking_effects|ai_perception|ai_states|ai_navigation|ai_unload|navigation_handoff|ai_encounter|hacking_scenarios|dialogue_schema|dialogue_requests|missions|interiors|deliberate_failure>")
 		quit(2)
 		return
 	var suite: String = args[1]
@@ -80,6 +80,8 @@ func _initialize() -> void:
 				await dialogue_schema_test.run(_check)
 				var dialogue_requests_test: RefCounted = load("res://tests/dialogue/test_requests.gd").new()
 				await dialogue_requests_test.run(_check)
+				var mission_lifecycle_test: RefCounted = load("res://tests/missions/test_lifecycle.gd").new()
+				mission_lifecycle_test.run(_check)
 		"registry":
 			var registry_test: RefCounted = load("res://tests/persistence/test_registry.gd").new()
 			registry_test.run(_check)
@@ -178,6 +180,9 @@ func _initialize() -> void:
 		"dialogue_requests":
 			var dialogue_requests_test: RefCounted = load("res://tests/dialogue/test_requests.gd").new()
 			await dialogue_requests_test.run(_check)
+		"missions":
+			var mission_lifecycle_test: RefCounted = load("res://tests/missions/test_lifecycle.gd").new()
+			mission_lifecycle_test.run(_check)
 		"deliberate_failure":
 			_check(false, "intentional failing fixture")
 		_:

@@ -77,19 +77,24 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Offline/mock-backed lifecyc
 
 ### NPC-03: Build deterministic mission offers and lifecycle
 
-- [ ] **NPC-03 — deliverable complete** (Stage 1).
+- [x] **NPC-03 — deliverable complete** (Stage 1).
+
+**Supporting contract recorded before implementation:** `MissionTemplate` is a data-only Godot `Resource` with exact authored ID, retrieval target UUID, issuer faction ID, minimum standing, bounded credit reward (0–1,000 engineering cap), target label and authored fallback offer. `MissionDirector` is a data-only service configured with the accepted `EntityRegistry`, `FactionState`, templates and a reachability `Callable`; it rejects unknown, missing, already-collected, unreachable, hostile/under-standing or invalid-reward offers. The shipped `retrieve_signal_cache.tres` template is bound to the existing WORLD-03 loot projection UUID `00000000-0000-4000-8000-000000000032`. A mission ID and reward transaction ID derive deterministically from the stable template/target IDs. Lifecycle is offered→accepted→active→completed or failed; completion requires the registry's code-owned target record to show `collected == true`; failure requires an authored failure reason. Reward credits are bounded and applied once by the director; model prose cannot complete an objective. Mission snapshot uses `domains.missions` shape `{version, credits, missions}` and implements pure prepare plus no-signal commit for CORE-04; snapshots contain only stable IDs and data, so mission state survives chunk unload and provider loss.
 
 **Dependencies / sequencing:** NPC-01, CORE-04. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `game/features/missions/mission_director.gd`; `game/features/missions/mission_template.gd`; `game/tests/missions/test_lifecycle.gd`.
+**Files / ownership:** `game/features/missions/mission_director.gd`; `game/features/missions/mission_template.gd`; `game/features/missions/retrieve_signal_cache.tres`; `game/tests/missions/test_lifecycle.gd`; coordinated runner registration.
 
 **Interfaces:** `offer_mission(template_id)` proposes an existing eligible template; director creates stable mission/target/reward IDs and owns offered/accepted/active/completed/failed transitions.
 
-- [ ] **Acceptance:** Implement one retrieval template against existing reachable fixtures and authored fallback offer. Validate eligibility, target existence/reachability, faction rules and reward bounds. Offers/accepted jobs survive provider failure and chunk unload; code alone validates objectives.
+- [x] **Acceptance:** Authored the retrieval template and fallback against the existing reachable WORLD-03 loot fixture. Offer eligibility validates current faction rules, stable target existence/reachability and bounded reward. Persisted offers/states survive provider failure and chunk unload; code-owned target collection alone completes the objective.
 
-- [ ] **Test expectations:** Test missing/unreachable target, forbidden faction, invalid reward, repeated offer/accept/complete and failed objectives. Persist each lifecycle state; model text claiming completion cannot change progress.
+- [x] **Test expectations:** Covered missing/unreachable target, hostile/low-standing faction, invalid reward, repeated offer/accept/complete and failed objectives. Round-tripped offered, accepted, active, completed and failed states; model text cannot complete an uncollected objective.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Evidence recorded:** [NPC-03 report](../reports/NPC-03.md); focused `missions`41/41, integrated `all`951/951, import and diff-check exit0. No scene or visual change applies.
+
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. The sample retrieval offer is data-driven and authoritative mission state is independent of provider output and chunk-loaded Nodes. See [NPC-03 report](../reports/NPC-03.md).
 
 ### NPC-04: Add guarded deterministic action dispatch
 
