@@ -152,3 +152,19 @@ Visual revision, 23 October 2026: After user rejection of the initial UI look, r
 - [ ] **Test expectations:** Test bounded roll distribution with seeded samples and trade retries/capacity failures; playtest whether rarity preserves family identity and meaningful loadout choice.
 
 - [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+
+### INV-07: Configure one Night Market merchant
+
+- [ ] **INV-07 — deliverable complete** (Stage 2; specifically approved 24 October 2026).
+
+**Dependencies / sequencing:** INV-04, INV-05 and NPC-04; approved Night Market neighborhood design.
+
+**Files / ownership:** Inventory-owned stock resource/configuration and merchant UI/fixture under `game/features/inventory/` and `game/ui/`; focused inventory tests; `docs/reports/INV-07.md`.
+
+**Interfaces:** Use `ActionDispatcher`'s existing merchant-owner, current-stock validator and open-trade adapters. Inventory owns stock, prices and transactions; model output proposes only an owned inventory ID.
+
+**Supporting scope recorded before implementation:** Configure one authored merchant contact/stock panel for the Night Market. The NPC-04 `TRADE UNAVAILABLE` rejection means a world vendor must not be represented as functioning until stock and UI are configured. Limit this task to one small authored catalog; broad rarity/economy balancing remains INV-06. User-requested integration also includes a Mara stock view opened in dialogue, natural concise conversational response guidance/fallbacks, safe rendering of literal and actual newlines, text-only purchase requests for the authored offer, and 100 authored starting credits in this district. The bounded transaction path uses authored item IDs/prices and MissionDirector credits; model text cannot set offers or prices. Mission snapshots preserve the resulting net balance and still reject balances above the configured starting balance plus completed authored rewards. Vendor stock and purchase replay IDs remain runtime-only; no general economy or merchant-stock persistence is added.
+
+- [ ] **Acceptance:** Player can open the configured vendor or request its authored offer in text, then complete deterministic purchases through existing inventory services. Unknown merchant, unavailable stock, invented IDs/prices, duplicate/stale requests, and capacity or funds failures reject without creating/destroying items or currency. Night Market begins with 100 authored credits.
+- [x] **Test expectations:** Successful purchase, replay, unauthorized owner, stock exhaustion, insufficient funds and full inventory are covered by the focused UI fixture; `dialogue_actions` covers stale trade stock and duplicate trade responses. Full-screen visual inspection is still outstanding.
+- [x] **Evidence recorded:** Exact commands, exits and transaction checks are recorded in [INV-07 report](../reports/INV-07.md). A full-screen capture is not available from this Godot MCP session and remains outstanding.

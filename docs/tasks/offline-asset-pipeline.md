@@ -142,3 +142,53 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Godot import and fullscreen
 - [ ] **Test expectations:** Re-run geometry/export QA per asset, representative repeated-use profiling per kit and final manifest/license completeness checks. Review district coherence, readable landmarks and actual accessible routes in-engine.
 
 - [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+
+### ASSET-07: Model and texture the Night Market hero door/storefront
+
+- [x] **ASSET-07 — deliverable complete** (Stage 2; specifically approved 24 October 2026).
+
+**Dependencies / sequencing:** ASSET-03, ASSET-04, approved Night Market neighborhood design. This asset task may proceed independently while WORLD-06's packaging evidence remains open; do not claim integrated neighborhood budget acceptance.
+
+**Files / ownership:** `art/source/environment/night_market/night_market_hero.blend`; reproducible Blender MCP/export script under `tools/blender/`; `game/assets/environment/night_market/night_market_hero.glb` and baked maps; fullscreen inspection fixture `game/tests/scenes/night_market_asset_preview.tscn`; import verification helper `tools/godot/verify_asset07_import.gd`; `docs/reports/ASSET-07.md`; `docs/evidence/ASSET-07/`.
+
+**Interfaces:** Godot GLB, meter-scale geometry, explicit render/collision pieces and baked Godot-compatible PBR images. Use asset pipeline names, pivots and map-channel rules.
+
+**Supporting scope recorded before implementation:** Preserve Blender's active default scene. Create a new project source file. Model a roughly 4 m wide storefront section and a layered 1 m × 2.1 m service door with a frame/jamb, inset metal panels, handle/hinges/lock, security keypad, indicator lights, labels and visible edge wear. Author reusable 1K tileable material sets and 2K hero textures; bake base color, tangent normal, roughness, metallic, AO and emissive maps when appropriate. The door stays a model/asset task; no gameplay logic or service ownership changes.
+
+- [x] **Acceptance:** Blender 5.2 source is editable and reproducible, with applied scale/rotation, valid UVs, connected PBR image nodes, separate low-cost collision proxy and reviewed multi-angle material/wireframe views. Godot 4.7.2 imports the GLB at correct first-person scale/orientation with textures and collision intact. Door close-up reads as layered, textured hardware, not a flat slab.
+- [x] **Test expectations:** Run asset QA, save/reopen source, export/reimport in Godot, and inspect a fullscreen close-range fixture. Record actual dimensions, triangles, object/material/image counts, texture resolutions, file sizes and all QA warnings. Do not accept a render alone.
+- [x] **Evidence recorded:** [ASSET-07 report](../reports/ASSET-07.md), [Blender material](../evidence/ASSET-07/review_material.png), [Blender wireframe](../evidence/ASSET-07/review_wire.png), [Godot fullscreen](../evidence/ASSET-07/godot_fullscreen_preview.png).
+
+**Supporting scope recorded before fixture implementation (24 October 2026):** Add a disposable fullscreen close-range Godot scene for inspecting the exported storefront at first-person scale with a 1.7 m reference capsule and fixed camera. This implements the existing acceptance check and does not add gameplay or change the main scene.
+
+**Supporting scope recorded before import-check implementation (24 October 2026):** Add a one-shot typed GDScript verifier that instantiates the preview scene, checks imported render bounds, counts render meshes and collision shapes, and exits nonzero if dimensions or the `-colonly` facade sections do not survive Godot import. It is a task verification helper, not a new gameplay/test-runner suite.
+
+### ASSET-08: Produce the modular Night Market architecture/streetscape kit
+
+- [ ] **ASSET-08 — deliverable complete** (Stage 2; specifically approved 24 October 2026).
+
+**Dependencies / sequencing:** ASSET-07; approved neighborhood design; measured candidate budgets from ASSET-04.
+
+**Files / ownership:** `art/source/environment/night_market/`; `tools/blender/`; `game/assets/environment/night_market/`; `docs/asset-manifest.md`; `docs/reports/ASSET-08.md`; `docs/evidence/ASSET-08/`.
+
+**Interfaces:** Reuse ASSET-07 material, naming, UV, pivot, collision, and Godot export conventions. Share materials/textures where appropriate; do not collapse the source objects into a monolithic mesh.
+
+**Supporting scope recorded before implementation (24 October 2026):** The user authorized reuse of assets from the MIT-licensed Hiraeth010/neon-district repository at source commit 6bea17fd7ad6467664382e14887fc89d1886448a to accelerate the Night Market. Use its editable Blender-authored city architecture, Lantern Market block assemblies and selected authored props; exclude user-reference campaign imagery. Preserve the required upstream MIT license and third-party notices with the imported deliverables, record source paths and hashes in the asset manifest, and convert to local Godot GLBs without adding a runtime dependency on the upstream project. Crop a 300 m × 300 m district slice consistent with the approved neighborhood footprint.
+
+- [ ] **Acceptance:** Deliver reviewed modular façade bays, corner/upper-floor/roof variations, shutters/windows, awnings, fire-escape/stair pieces, market stall, and street-utility/sign/lighting props with coherent textured variants. All exported GLBs import at measured scale with correct map assignments and collision separation.
+- [ ] **Test expectations:** Blender QA and multi-angle wire/material review for every module family; Godot asset fixture checks dimensions/material maps/collision; representative repeated-use scene records draw calls, triangles, texture memory and fullscreen frame observations. Budgets remain candidate values until integrated limits are ratified.
+- [ ] **Evidence recorded:** Add source/export hashes where useful, measured asset facts, warning dispositions, commands/results, captures and report link.
+
+### ASSET-09: Model and rig the featured Night Market characters
+
+- [ ] **ASSET-09 — deliverable complete** (Stage 2; specifically approved 24 October 2026).
+
+**Dependencies / sequencing:** ASSET-05 character rig/export contract, ASSET-03 round-trip conventions, and approved neighborhood design. If ASSET-05's third-party-source premise conflicts with the user-approved custom-Blender scope, record that task-contract revision before implementation.
+
+**Files / ownership:** `art/source/characters/night_market/`; `tools/blender/`; `game/assets/characters/night_market/`; character-specific Godot fixtures/tests; `docs/reports/ASSET-09.md`; `docs/evidence/ASSET-09/`.
+
+**Interfaces:** Existing Mara and tactical-agent identity/behavior services remain authoritative. Character meshes and animations are transient presentation. Use Godot-compatible skinned glTF and the accepted animation contract.
+
+- [ ] **Acceptance:** Create custom, textured, properly scaled Mara and one security guard, with rigs and the basic authored motion set used by their existing interaction/combat states. No downloaded models. Imported skin/materials/animations maintain scale, orientation and rig compatibility.
+- [ ] **Test expectations:** Validate weights/topology, inspect idle/walk/interaction/combat poses and visible deformations, round-trip through Blender and Godot, and run a real character scene. Record mesh tris, texture maps, rig/clip details and visual evidence.
+- [ ] **Evidence recorded:** Add exact tool/export/test results, captures and report link.

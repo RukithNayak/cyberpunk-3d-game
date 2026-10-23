@@ -1,41 +1,41 @@
 {
 	"all_assertions_passed": true,
 	"display_server": "macOS",
-	"duration_seconds": 90.858626,
+	"duration_seconds": 2.650847,
 	"frame_interval_ms": {
-		"count": 13081,
-		"max": 146.143,
-		"median": 6.896,
-		"p95": 6.94444444444444
+		"count": 255,
+		"max": 150.0,
+		"median": 8.33333333333333,
+		"p95": 10.0
 	},
 	"godot_version": "4.7.2-stable (official)",
-	"model_request_ms": 1959.326,
+	"model_request_ms": -1.0,
 	"model_used_fallback": false,
 	"physics_process_ms": {
-		"count": 13081,
-		"max": 7.416,
-		"median": 0.605,
-		"p95": 0.723
+		"count": 255,
+		"max": 11.516,
+		"median": 0.638,
+		"p95": 11.516
 	},
 	"process_ms": {
-		"count": 13081,
-		"max": 169.849,
-		"median": 0.311,
-		"p95": 2.266
+		"count": 255,
+		"max": 251.802,
+		"median": 23.307,
+		"p95": 251.802
 	},
 	"render_draw_calls": {
-		"count": 13081,
-		"max": 37.0,
-		"median": 37.0,
-		"p95": 37.0
+		"count": 255,
+		"max": 75.0,
+		"median": 75.0,
+		"p95": 75.0
 	},
 	"renderer": "Apple M5",
-	"samples": 13081,
+	"samples": 255,
 	"static_memory_bytes": {
-		"count": 13081,
-		"max": 59867606.0,
-		"median": 58643981.0,
-		"p95": 59862125.0
+		"count": 255,
+		"max": 59803498.0,
+		"median": 59781022.0,
+		"p95": 59803498.0
 	},
 	"task": "WORLD-06",
 	"viewport_size": [

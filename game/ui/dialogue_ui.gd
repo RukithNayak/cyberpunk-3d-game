@@ -19,6 +19,14 @@ var _close: Button
 var _request_job: Button
 var _accept_job: Button
 var _recover_job: Button
+var _market_button: Button
+var _market_panel: PanelContainer
+var _market_offer: Label
+var _market_status: Label
+var _market_credits: Label
+var _market_purchase: Button
+var _merchant_stock: MerchantStock
+var _purchase_counter: int = 0
 var _subtitles: CheckButton
 var _volume: HSlider
 var _npc_label: Label
@@ -39,7 +47,7 @@ func _ready() -> void:
 	set_process_unhandled_key_input(true)
 
 
-func configure(orchestrator: DialogueOrchestrator, dispatcher: ActionDispatcher, missions: MissionDirector, context: ContextSnapshot, npc_id: String = NPC_ID, npc_name: String = _npc_name, fallback_text: String = "The underpass is hot. Bring back the signal cache and I'll pay you.") -> bool:
+func configure(orchestrator: DialogueOrchestrator, dispatcher: ActionDispatcher, missions: MissionDirector, context: ContextSnapshot, npc_id: String = NPC_ID, npc_name: String = _npc_name, fallback_text: String = "Hey. Looking for a decent deal, a lead, or just a place to catch your breath?") -> bool:
 	if orchestrator == null or dispatcher == null or missions == null or context == null:
 		return false
 	if npc_id != NPC_ID or not context.is_configured() or context.npc_identity.get("npc_id") != npc_id:
@@ -123,6 +131,79 @@ func notify_target_collected(target_uuid: String) -> bool:
 
 func set_recovery_action(action: Callable) -> void:
 	_recovery_action = action
+
+
+func configure_market_stock(stock: MerchantStock) -> void:
+	_merchant_stock = stock
+	_refresh_market_stock()
+
+
+func open_market_stock() -> void:
+	_market_panel.visible = true
+	_market_button.text = "CLOSE MARKET STOCK"
+	_refresh_market_stock()
+
+
+func _toggle_market_stock() -> void:
+	_market_panel.visible = not _market_panel.visible
+	_market_button.text = "CLOSE MARKET STOCK" if _market_panel.visible else "BROWSE MARKET STOCK"
+	_refresh_market_stock()
+
+
+func _refresh_market_stock() -> void:
+	if _market_offer == null:
+		return
+	var offer: Dictionary = _merchant_stock.get_offer() if _merchant_stock != null else {}
+	var available: bool = _merchant_stock != null and int(offer.get("remaining", 0)) > 0
+	_market_offer.text = "%s  // %d CR  // %d LEFT" % [String(offer.get("name", "STREET MEDKIT")), int(offer.get("price", MerchantStock.MEDKIT_PRICE)), int(offer.get("remaining", 0))]
+	_market_credits.text = "CREDITS  // %d" % _missions.get_credits() if _missions != null else "CREDITS  // 0"
+	_market_purchase.disabled = not available or _missions == null or _missions.get_credits() < int(offer.get("price", MerchantStock.MEDKIT_PRICE))
+	if not available:
+		_market_purchase.text = "SOLD OUT"
+	elif _missions != null and _missions.get_credits() < int(offer.get("price", MerchantStock.MEDKIT_PRICE)):
+		_market_purchase.text = "EARN %d CR TO BUY" % MerchantStock.MEDKIT_PRICE
+	else:
+		_market_purchase.text = "BUY MEDKIT  // %d CR" % MerchantStock.MEDKIT_PRICE
+
+
+func _purchase_market_item() -> void:
+	if _merchant_stock == null:
+		return
+	_purchase_counter += 1
+	var result: Dictionary = _merchant_stock.purchase(NPC_ID, MerchantStock.MEDKIT_OFFER, "mara_buy_%d" % _purchase_counter)
+	if result.get("ok", false):
+		_market_status.text = "GOOD PICK. PATCH YOURSELF UP OUT THERE.  // -%d CR" % int(result["price"])
+	else:
+		_market_status.text = _friendly_reason(String(result.get("reason", "unavailable")))
+	_refresh_market_stock()
+
+
+func _purchase_market_item_from_text(player_text: String) -> bool:
+	if _merchant_stock == null:
+		return false
+	var offer_id: String = _merchant_stock.purchase_offer_from_text(player_text)
+	if offer_id.is_empty():
+		return false
+	_purchase_counter += 1
+	var result: Dictionary = _merchant_stock.purchase(NPC_ID, offer_id, "mara_text_buy_%d" % _purchase_counter)
+	var npc_reply: String = "Sure, I've got a medkit for you. That'll be %d credits." % MerchantStock.MEDKIT_PRICE
+	if not result.get("ok", false):
+		npc_reply = _conversational_purchase_failure(String(result.get("reason", "unavailable")))
+	_market_status.text = npc_reply
+	_append("[color=#f2b84b]%s[/color]  // %s" % [_npc_name.to_upper(), _escape_dialogue_text(npc_reply)])
+	_status.text = "PURCHASE COMPLETE" if result.get("ok", false) else "NO SALE"
+	_refresh_market_stock()
+	if _audio != null:
+		_audio.play_blip()
+	return true
+
+
+func _conversational_purchase_failure(reason: String) -> String:
+	match reason:
+		"insufficient_funds": return "You're a little short on credits. Come back after a job, yeah?"
+		"inventory_full": return "Your bag's packed. Make a little room and it's yours."
+		"stock_exhausted": return "Sorry, I just sold the last one."
+		_: return "I can't make that sale right now, sorry."
 
 
 func set_return_focus(target: Control) -> void:
@@ -242,6 +323,33 @@ func _build_interface() -> void:
 	_recover_job.disabled = true
 	_recover_job.pressed.connect(_recover_signal_cache)
 	action_row.add_child(_recover_job)
+	_market_button = Button.new()
+	_market_button.name = "MarketStockButton"
+	_market_button.text = "BROWSE MARKET STOCK"
+	_market_button.pressed.connect(_toggle_market_stock)
+	action_row.add_child(_market_button)
+	_market_panel = PanelContainer.new()
+	_market_panel.name = "MarketStock"
+	_market_panel.visible = false
+	conversation.add_child(_market_panel)
+	var stock_column: VBoxContainer = VBoxContainer.new()
+	_market_panel.add_child(stock_column)
+	var stock_title: Label = Label.new()
+	stock_title.text = "MARA'S COUNTER  // SMALL GOODS, FAIR ENOUGH PRICES"
+	stock_title.theme_type_variation = &"CyberpunkHeader"
+	stock_column.add_child(stock_title)
+	_market_offer = Label.new()
+	stock_column.add_child(_market_offer)
+	_market_status = Label.new()
+	_market_status.theme_type_variation = &"CyberpunkAccent"
+	stock_column.add_child(_market_status)
+	_market_credits = Label.new()
+	_market_credits.theme_type_variation = &"CyberpunkMuted"
+	stock_column.add_child(_market_credits)
+	_market_purchase = Button.new()
+	_market_purchase.pressed.connect(_purchase_market_item)
+	stock_column.add_child(_market_purchase)
+	_refresh_market_stock()
 	var input: HBoxContainer = HBoxContainer.new()
 	input.name = "MessageInput"
 	conversation.add_child(input)
@@ -293,8 +401,10 @@ func _submit_prompt() -> void:
 	var text: String = _prompt.text.strip_edges()
 	if text.is_empty():
 		return
-	_append("[color=#9eb0b1]YOU[/color]  // %s" % text)
+	_append("[color=#9eb0b1]YOU[/color]  // %s" % _escape_dialogue_text(text))
 	_prompt.clear()
+	if _purchase_market_item_from_text(text):
+		return
 	_pending = true
 	_submit.disabled = true
 	_cancel.disabled = false
@@ -338,7 +448,7 @@ func _on_dialogue_ready(npc_id: String, conversation_id: String, generation: int
 	if response.proposed_action != null and _dispatcher != null:
 		var result: Dictionary = _dispatcher.dispatch_response(npc_id, conversation_id, generation, response)
 		response_text += "\n\n" + _action_message(result)
-	_append("[color=#f2b84b]%s[/color]  // %s" % [_npc_name.to_upper(), response_text.c_escape()])
+	_append("[color=#f2b84b]%s[/color]  // %s" % [_npc_name.to_upper(), _escape_dialogue_text(response_text)])
 	if _audio != null:
 		_audio.play_blip()
 	_prompt.grab_focus()
@@ -358,10 +468,10 @@ func _on_request_rejected(npc_id: String, reason: StringName) -> void:
 
 func _action_message(result: Dictionary) -> String:
 	if result.get("ok", false):
-		return "[color=#49d8dc]AUTHORIZED ACTION COMMITTED[/color]"
+		return "[color=#49d8dc]Sure, take a look at the counter.[/color]"
 	var reason: String = String(result.get("reason", "action_unavailable"))
 	if reason.begins_with("merchant_") or reason == "trade_rejected":
-		return "[color=#ffb84c]TRADE UNAVAILABLE[/color]  // This contact has no configured stock panel."
+		return "[color=#ffb84c]I don't have that on the counter, sorry.[/color]"
 	return "[color=#ff625d]ACTION NOT AVAILABLE[/color]  // %s" % _friendly_reason(reason)
 
 
@@ -370,12 +480,20 @@ func _friendly_reason(reason: String) -> String:
 		"target_unreachable": return "Signal cache is outside the active route."
 		"target_missing", "target_unavailable": return "Signal cache is no longer available."
 		"faction_ineligible": return "Standing is too low for this contract."
-		"merchant_stock_unavailable", "merchant_not_authorized": return "Trade is unavailable for this contact."
-		_: return "Request unavailable  // %s" % reason.replace("_", " ").to_upper()
+		"merchant_stock_unavailable", "merchant_not_authorized": return "I don't have that on the counter, sorry."
+		"inventory_full": return "You'll need to make a little room in your bag first."
+		"insufficient_funds": return "You're a little short on credits for that one."
+		"stock_exhausted": return "Looks like I just sold the last one."
+		_: return "Let's try something else; I can't help with that one right now."
 
 
 func _append(markup: String) -> void:
 	_log.append_text(markup + "\n\n")
+
+
+func _escape_dialogue_text(value: String) -> String:
+	var normalized: String = value.replace("\\r\\n", "\n").replace("\\n", "\n").replace("\\r", "\n")
+	return normalized.replace("[", "[lb]").replace("]", "[rb]")
 
 
 func _disconnect_services() -> void:

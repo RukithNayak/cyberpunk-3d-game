@@ -145,6 +145,8 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `navigation_handoff` 40/40,
 
 **Acceptance-detail recorded 24 October 2026 before implementation:** Keep Mara as a fixture-only runtime actor parented to streamed chunk A, close the fixture dialogue if the player leaves the interaction radius, the actor's chunk unloads, or player death fires, and smoke-check that an in-flight model response cannot publish after each cancellation. Add an opt-in `--benchmark` mode in the same fixture that records a 30-second no-request baseline followed by 60 seconds of repeated Ollama requests with seam traversal/backtracking; write per-phase frame/process/physics/draw-call/static-memory samples, request latencies and boundary load/hitch observations to `benchmarks/feasibility/sustained_load.json`. No production module ownership changes.
 
+**Night Market fixture scope recorded 24 October 2026 before implementation:** Add a walkable, lightweight Godot-authored plaza, market street, and service alley around the existing WORLD-06 player, NPC, enemy, loot and hack targets. Include named layout landmarks for fixture smoke checks, readable neon wayfinding, and collidable storefront/stall blockout props while keeping the existing interaction clearances, positions, streaming contracts, smoke/benchmark semantics, project main scene and production modules unchanged. Use no downloaded or newly authored Blender assets and no new dependencies. This is test-only Stage 1 dressing, not WORLD-07 district expansion.
+
 **Interfaces:** Compose existing module interfaces only; owns cross-system acceptance and benchmark reporting, not new gameplay logic.
 
 - [ ] **Acceptance:** Combine one gun/enemy, two seamless chunks, one NPC mission offer, one hack, loot/grid inventory, healing and save/load. Record resolution/renderer, model/quantization/context, OS/game/model memory, sustained duration, median/tail frame times, first/full response latency and packaged macOS results. Ratify numeric performance/headroom thresholds before evaluating pass/fail; 60 FPS is a proposed target, not an achieved result.
@@ -155,7 +157,11 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `navigation_handoff` 40/40,
 
 24 October 2026 evidence: implementation report [WORLD-06](../reports/WORLD-06.md), structured integration/measurement record [feasibility report](../feasibility-report.md), [fullscreen capture](../../benchmarks/feasibility/feasibility_startup.png) and [raw benchmarks](../../benchmarks/feasibility/). Import exit 0; latest fixture smoke 24/24 (exit 0), including delayed-response cancellation after walking away, chunk unload and player death; the real Ollama exchange, checkpoint recovery and offline fallback also passed. The latest opt-in 90-second benchmark exited 0 with 22 successful in-game requests and five activated boundaries. The concurrent model probe exited 0 and recorded host capacity, game/model RSS and first/full response times. Nine stale project Godot test processes were stopped before repeats; a separate desktop Godot app remained, and game-only frame/process outliers persisted, so measurements are descriptive. The no-extra-probe and initially contended runs are preserved. Godot MCP launch/read/stop succeeded with no runtime errors (existing script warnings reported). The first `all` run passed 1064/1064; a final rerun exited 1 at 1051 cases/2 failures due to the known intermittent AI-03 empty navigation route and its isolated-suite wrapper. Export failed because there is no `export_presets.cfg`; the export-template directory is empty. Performance thresholds remain unratified, free-memory headroom is not measured, packaged macOS evidence and human playtest findings are outstanding. All WORLD-06 checkboxes stay unchecked.
 
+24 October 2026 Night Market fixture evidence: added landmark smoke assertion observed red before implementation (24/25; expected missing-layout assertion), then `godot --headless --path game --editor --import` exit 0 and `godot --headless --path game res://tests/scenes/feasibility.tscn -- --smoke` exit 0 (25/25). See [Night Market report](../reports/WORLD-06-night-market.md). Runtime visual inspection remains unrun while the existing user feasibility process is preserved; human playtest, packaged build, and performance acceptance remain open.
+
 ### WORLD-07: Expand city layout and prepare distribution
+
+**Scope clarification recorded 24 October 2026:** The user approved the first Night Market neighborhood as the separate Stage 2 tasks WORLD-08/09 and ASSET-07/08/09, INV-07 and HACK-07. WORLD-07 remains the later multi-district expansion and release/distribution outline after the first neighborhood and feasibility evidence; do not merge the initial neighborhood back into the test-only WORLD-06 fixture.
 
 - [ ] **WORLD-07 — deliverable complete** (Stage 2–5 (deferred)).
 
@@ -170,3 +176,93 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `navigation_handoff` 40/40,
 - [ ] **Test expectations:** Validate every added district’s alternate routes, backtracking, mission reachability and sustained memory; test selected packaged platforms and local-model/fallback installation on a clean machine.
 
 - [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+
+### WORLD-08: Assemble the streamed Night Market neighborhood
+
+- [ ] **WORLD-08 — deliverable complete** (Stage 2; specifically approved 24 October 2026).
+
+**Dependencies / sequencing:** WORLD-01/02/03/04/05, ASSET-08/09, INV-07 and HACK-07. ASSET-07 must also be accepted as the hero quality reference. WORLD-06 packaging/headroom evidence remains open and must be reconciled before integrated performance acceptance; it does not prevent independent Blender asset authoring.
+
+**Files / ownership:** `game/world/districts/night_market/`; `game/assets/environment/night_market/`; `game/assets/characters/night_market/`; world fixtures/tests; `docs/reports/WORLD-08.md`; tracked neighborhood evidence/measurements.
+
+**Interfaces:** Use current manifest/loader/navigation/interior-transition/entity hydration contracts and module service APIs. Keep existing feasibility fixture and project main scene unchanged; provide a separate entry scene.
+
+**Supporting scope recorded before implementation:** Assemble an approximately 300 m × 300 m 3 × 3 urban grid (subject to approved measurement and task acceptance) with 8–12 m avenues, narrower alleys, a central night market, repair row, security crossing, utility court, rooftop/vertical landmarks, two connected route loops and three enterable spaces. Use imported Blender models and physical textures, not primitive rectangles as final set dressing.
+
+- [ ] **Acceptance:** The neighborhood supports the authored NPC mission and configured vendor, combat with cover/flank, multiple connected hack scenarios with bypass, loot/healing/inventory, three interior transitions, checkpoint save/reload and free traversal/backtracking. Player routes, alternate access and named landmarks remain legible at first-person scale.
+- [ ] **Test expectations:** Validate chunk crossings/backtracking, actor/loot/door persistence, navigation readiness, merchant transactions, hacking routes, interiors/return points, mouse look, checkpoint, and fullscreen visual/material quality. Run Godot import, relevant focused suites and a Godot MCP visual runtime check. Record draw calls, route frame intervals, game/model memory and chunk hitches; do not claim pass/fail for unratified limits.
+- [ ] **Evidence recorded:** Attach exact commands/tool results, inspected fullscreen captures and structured integration report.
+
+### WORLD-09: Playtest and polish the Night Market neighborhood
+
+- [ ] **WORLD-09 — deliverable complete** (Stage 2; specifically approved 24 October 2026).
+
+**Dependencies / sequencing:** WORLD-08 and ASSET-07/08/09, HACK-07, INV-07. Human playtest is required.
+
+**Files / ownership:** Approved Night Market scenes/assets, world evidence, `docs/reports/WORLD-09.md` and tracker update.
+
+- [ ] **Acceptance:** Human free-walk confirms the area feels like a coherent, detailed cyberpunk neighborhood at full-screen first-person scale; essential mission/combat/hacking/vendor/loot routes can be found and completed. Blocking collision, navigation, visibility or interaction issues are fixed.
+- [ ] **Test expectations:** Record the human route, reading of landmarks, movement/look, dialogue/trade, fight/flank, hacks/bypasses, interiors, pickups, and save/load. Re-run affected focused checks and update performance observations; World-wide perf limits remain separate until ratified.
+- [ ] **Evidence recorded:** Link playtest notes, before/after captures, exact verification results and remaining issues.
+
+### WORLD-10: Make the Night Market immediately playable
+
+- [x] **WORLD-10 — deliverable complete** (Stage 2; specifically approved 24 October 2026).
+
+**Dependencies / sequencing:** PLAYER-01, ASSET-08 district visual base. This is a bounded exploration launch slice; it does not satisfy WORLD-08/09 or ASSET-08's full modular-kit acceptance.
+
+**Files / ownership:** `game/world/districts/night_market/`; `game/project.godot`; focused launch/movement verifier; `docs/reports/WORLD-10.md`; evidence.
+
+**Supporting scope recorded before implementation (24 October 2026):** The user requested practical collision on the reused district assets and a runnable game using them, authorizing the Night Market scene as the project startup scene. Add a walkable ground plane and low-cost static structural blockers derived from authored Blender `solid` meshes. Keep decorative neon, windows and other non-structural meshes non-solid. Place the existing first-person player at a clear street position. Preserve existing gameplay fixture files. This launch-scene decision supersedes WORLD-08's earlier instruction to keep the project main scene unchanged; the feasibility fixture remains intact.
+
+- [x] **Acceptance:** `godot --path game` opens into the imported Night Market with the existing first-person controller and camera active. Player moves along the street, remains grounded, and is blocked by district structural colliders. Project startup is configured for fullscreen; decorative meshes remain non-solid.
+- [x] **Test expectations:** One focused Godot verifier checks startup scene, fullscreen setting, player/camera/mouse capture, ground and structural collision count, wall blocking, grounded state and forward movement. One startup render frame was captured. Full suite, performance budget and WORLD-08 integration acceptance are outside this task.
+- [x] **Evidence recorded:** Exact commands/exits, observed collision/movement result and runtime frame/report recorded in [WORLD-10 report](../reports/WORLD-10.md) and [evidence](../evidence/WORLD-10/night_market_startup_frame.png).
+
+### WORLD-11: Add Night Market color, HUD and NPC presence
+
+- [x] **WORLD-11 — deliverable complete** (Stage 2; scoped by the user's 24 October 2026 request to color the Night Market and add standard UI/NPC presence).
+
+**Dependencies / sequencing:** WORLD-10, PLAYER-05, INV-05, AI-05. NPC-06 services are reusable only if a later task adds interaction; this task is limited to scene presentation and ambient residents.
+
+**Files / ownership:** `game/world/districts/night_market/night_market.tscn`; new `night_market_runtime.gd`; `docs/reports/WORLD-11.md`; `docs/evidence/WORLD-11/`.
+
+**Supporting scope recorded before implementation (24 October 2026):** Tune the existing imported district's engine lighting/color response so its authored vertex colors read clearly without altering upstream source meshes. Add the existing configured PlayerHUD and starter inventory UI to the fullscreen startup scene with a basic pistol/health setup. Populate the street with a small set of visible, named, colored humanoid blockout residents and a security guard. Residents are visual ambience only: no dialogue, navigation, combat, persistence, or custom character models are added; those remain ASSET-09/WORLD-08/NPC integration scope.
+
+- [x] **Acceptance:** Runtime view shows discernible varied cyberpunk district colors rather than blown-out white buildings; standard health/ammo/crosshair/pause HUD and Tab inventory work; multiple resident silhouettes and a guard are visible in the street.
+- [x] **Test expectations:** Godot import and one quick runtime start/capture; verify no runtime errors, configured HUD and ambient NPC node count. Do not perform alternate-resolution or broad suite testing.
+- [x] **Evidence recorded:** Exact commands/results and the fullscreen capture, with known visual limitations, are recorded in [WORLD-11 report](../reports/WORLD-11.md) and [evidence](../evidence/WORLD-11/night_market_fullscreen.png).
+
+Accepted 24 October 2026 (Asia/Kolkata), Main Agent. Import exit 0, focused launch verifier18/18 exit 0, including Tab open/Escape close and player control restoration; Godot MCP runtime errors empty, fullscreen capture inspected and diff check exit 0. The figures are visual placeholders; custom characters and interactive NPC/world integration remain ASSET-09/WORLD-08 scope. [Report](../reports/WORLD-11.md).
+
+### WORLD-12: Connect Night Market dialogue, combat and ambient motion
+
+- [x] **WORLD-12 — deliverable complete** (Stage 2; scoped by the user's 24 October 2026 report that Mara cannot be spoken to, the gun has no visible effect, enemies do not die, and the world feels static).
+
+**Dependencies / sequencing:** WORLD-11, PLAYER-03/04/05, AI-02/03, NPC-01/02/03/04/05/06. Existing accepted services and the WORLD-06 fixture are read-only reference implementations; the main agent owns startup integration.
+
+**Files / ownership:** `game/world/districts/night_market/night_market_runtime.gd`; `game/ui/player_hud.gd` (status feedback method only); `tools/godot/verify_night_market_playable.gd`; `docs/reports/WORLD-12.md`; `docs/evidence/WORLD-12/`.
+
+**Supporting scope recorded before implementation (24 October 2026):** Compose the accepted DialogueUI/DialogueOrchestrator/OllamaProvider/ActionDispatcher with a reachable named Mara in the startup scene; expose an E-key interaction and authored fallback when Ollama is unavailable. Retain the existing deterministic mission authority and configure it against the existing retrieval template. Add a configured, collidable TacticalAgent security target to the player's view, use the existing magazine/ammo fire path, and make accepted lethal damage visibly read as a defeated guard. Make two ambient residents visibly walk short authored loops and add subtle sign/light pulse so the startup street has motion. Keep all persistent state data-only; no new model download, custom rig, navmesh production, new dependency, or district production batch.
+
+- [x] **Acceptance:** E opens Mara's responsive dialogue; a message reaches the configured local Ollama model and displays its validated response, while provider failure still displays authored fallback. Aimed pistol shots consume ammo and damage the security target; lethal damage moves it to a visible dead state. Nearby residents move and signage/lighting changes over time. Inventory, mouse capture and collision traversal from WORLD-11/WORLD-10 still work.
+- [x] **Test expectations:** One focused verifier checks service configuration, E interaction/control lock, a real hitscan hit and lethal security state, ambient movement and retained movement/collision checks. One actual Ollama exchange when the local server is available; one Godot MCP runtime error check and fullscreen capture. Broad suite, alternate resolutions, and performance benchmarking are not part of this fix.
+- [x] **Evidence recorded:** Exact commands/exits, whether inference used the model or fallback, Godot runtime errors, one inspected fullscreen capture, and remaining presentation limits.
+
+Accepted 24 October 2026 (Asia/Kolkata), Main Agent. Import and focused integration verifier exited 0; verifier passed 29 checks, including both live `llama3:willowbrook` response and deliberately unavailable-model authored fallback, E control lock/restore, four actual pistol hits consuming ammo and reducing guard health to zero, visible down state, pedestrian movement, collision and inventory behavior. Godot MCP startup succeeded; debug output had no runtime errors (three pre-existing GDScript warnings in `dialogue_orchestrator.gd`, `perception.gd`, and `tactical_agent.gd`). Inspected fullscreen capture at [WORLD-12 startup](../evidence/WORLD-12/night_market_startup.png). Figures remain low-poly placeholders and ambient loops are short authored walks; custom character models, broader street simulation, and WORLD-08 neighborhood acceptance remain open. [Report](../reports/WORLD-12.md).
+
+### WORLD-13: Add visible pistol projectiles and killable residents
+
+- [x] **WORLD-13 — deliverable complete** (Stage 2; scoped by the user's 24 October 2026 report that pistol fire has no visible bullet animation and every NPC should be killable).
+
+**Dependencies / sequencing:** WORLD-12, PLAYER-04. Use the current hitscan/ammo/damage path and data-only HealthState; no projectile collision or persistence change.
+
+**Files / ownership:** `game/world/districts/night_market/night_market_runtime.gd`; new `game/world/districts/night_market/night_market_resident.gd`; `tools/godot/verify_night_market_playable.gd`; `docs/reports/WORLD-13.md`; `docs/evidence/WORLD-13/`.
+
+**Supporting scope recorded before implementation:** Spawn a short-lived, emissive moving bullet visual for each accepted pistol shot along its existing muzzle-to-hit path. Give Mara, the vendor, and the pedestrian real capsule hitboxes plus the same data-only HealthState damage contract as the security guard. Every named NPC must take starter-pistol hits and visibly enter a down state; a down Mara cannot start dialogue. Keep NPC death transient in this prototype and preserve the deterministic hitscan authority, existing ammo commit, ambient behavior for survivors, and no-new-dependencies rule.
+
+- [x] **Acceptance:** Each shot presents a visible moving bullet/tracer; aiming at Mara, the vendor, the pedestrian or security consumes ammo and reduces that actor's health; lethal damage visibly drops each actor and removes its collider. Dead Mara is unavailable to the dialogue resolver. Survivors retain their ambient walk loops and live Mara retains Ollama/fallback dialogue.
+- [x] **Test expectations:** Extend the focused fullscreen-start verifier to observe projectile movement, hit and kill all four named NPCs through the existing weapon action, verify dead Mara cannot resolve, and retain the previous dialogue/fallback/collision checks. Run import, that focused verifier, one quick Godot MCP startup and inspect a fullscreen capture. Full test suite, alternate resolutions and performance profiling are outside this task.
+- [x] **Evidence recorded:** Exact commands/exits, all four deaths, projectile movement, Godot runtime errors, inspected fullscreen capture, and transient-death/placeholder limitations.
+
+Accepted 24 October 2026 (Asia/Kolkata), Main Agent. Import exited 0; focused playable verifier passed 43/43 (exit 0), observing the animated emissive bullet move toward its hit position, reload, and actual starter-pistol hits/lethal kills/collider removal for security, Mara, vendor and pedestrian. Down Mara no longer resolves as a dialogue actor; live Ollama and unavailable-model fallback checks remain green. Godot MCP startup succeeded with no runtime errors (three existing GDScript shadow/unused warnings). Inspected fullscreen capture at [WORLD-13 startup](../evidence/WORLD-13/night_market_startup.png). Shot visuals are short-lived and health/deaths are transient; character models remain blockout mannequins and the bullet is a visual animation over authoritative hitscan. [Report](../reports/WORLD-13.md).

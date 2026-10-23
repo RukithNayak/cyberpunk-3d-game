@@ -16,11 +16,12 @@ var _factions: FactionState
 var _target_reachable: Callable
 var _missions: Dictionary = {}
 var _credits: int = 0
+var _starting_credits: int = 0
 var _configured: bool = false
 
 
-func configure(templates: Array[MissionTemplate], registry: EntityRegistry, factions: FactionState, target_reachable: Callable) -> bool:
-	if _configured or registry == null or factions == null or not target_reachable.is_valid() or templates.is_empty():
+func configure(templates: Array[MissionTemplate], registry: EntityRegistry, factions: FactionState, target_reachable: Callable, starting_credits: int = 0) -> bool:
+	if _configured or registry == null or factions == null or not target_reachable.is_valid() or templates.is_empty() or starting_credits < 0 or starting_credits > MAX_CREDITS:
 		return false
 	var candidate: Dictionary = {}
 	for template: MissionTemplate in templates:
@@ -31,6 +32,8 @@ func configure(templates: Array[MissionTemplate], registry: EntityRegistry, fact
 	_registry = registry
 	_factions = factions
 	_target_reachable = target_reachable
+	_starting_credits = starting_credits
+	_credits = starting_credits
 	_configured = true
 	return true
 
@@ -152,6 +155,15 @@ func get_credits() -> int:
 	return _credits
 
 
+## Deterministic vendor debit, bounded by the same authoritative wallet as rewards.
+func spend_credits(amount: int) -> bool:
+	if not _configured or amount <= 0 or amount > _credits:
+		return false
+	_credits -= amount
+	mission_changed.emit("", "credits_spent", _credits)
+	return true
+
+
 func capture_snapshot() -> Dictionary:
 	var rows: Array[Dictionary] = []
 	var mission_ids: Array = _missions.keys()
@@ -182,7 +194,8 @@ func prepare_snapshot(candidate: Variant) -> Dictionary:
 		replacement[mission_id] = row.duplicate(true)
 		if row["reward_claimed"]:
 			earned_credits += int(row["reward_credits"])
-	if earned_credits != int(candidate["credits"]):
+	# Spending lowers the balance; it cannot exceed the authored start plus rewards.
+	if int(candidate["credits"]) > _starting_credits + earned_credits:
 		return {"ok": false}
 	return {"ok": true, "prepared": {"credits": int(candidate["credits"]), "missions": replacement}}
 

@@ -157,3 +157,17 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. `HackSnapshot` provides COR
 
 
 Accepted 23 October 2026 (Asia/Kolkata), Main Agent. The neon-market alley combines a camera-covered shortcut with a verified maintenance bypass; the corporate transit spine combines a turret crossing with cover, flank, distraction and implant tactics. Both preserve the larger continuous cyberpunk city direction. Human encounter playtest remains at WORLD-06. See [report](../reports/HACK-06.md).
+
+### HACK-07: Integrate district hacking routes in Night Market
+
+- [ ] **HACK-07 — deliverable complete** (Stage 2; specifically approved 24 October 2026).
+
+**Dependencies / sequencing:** HACK-06, WORLD-05, ASSET-03 and the approved Night Market neighborhood design.
+
+**Files / ownership:** District-owned target instances and encounter setup under `game/world/districts/night_market/`; focused fixture/tests coordinated with WORLD-08; `docs/reports/HACK-07.md`.
+
+**Interfaces:** Compose existing HackingService, HackableDoor, camera, turret/distraction/implant effects, entity persistence and navigation contracts. No second state owner.
+
+- [ ] **Acceptance:** Market district contains a visible surveilled approach, a detailed hackable service-door shortcut, an alternate walkable bypass, and at least one additional reachable utility/security target with a distinct existing hacking consequence. Every encounter remains navigable without hacking or when energy is depleted.
+- [ ] **Test expectations:** Verify target UUID/lifecycle state, distance/line of sight, route reachability, effect consequence, bypass, and save/unload/reload. If a route requires new hacking behavior, add a separate bounded task before expanding capability.
+- [ ] **Evidence recorded:** Record focused tests, in-engine screenshots, manual route notes and report.

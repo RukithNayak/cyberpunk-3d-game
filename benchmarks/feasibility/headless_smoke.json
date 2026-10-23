@@ -1,41 +1,41 @@
 {
 	"all_assertions_passed": true,
 	"display_server": "headless",
-	"duration_seconds": 8.030909,
+	"duration_seconds": 8.181427,
 	"frame_interval_ms": {
-		"count": 1104,
-		"max": 148.481333333333,
+		"count": 1129,
+		"max": 150.0,
 		"median": 6.94444444444444,
-		"p95": 7.11777777777777
+		"p95": 6.94444444444444
 	},
 	"godot_version": "4.7.2-stable (official)",
-	"model_request_ms": 3905.263,
+	"model_request_ms": 4070.231,
 	"model_used_fallback": false,
 	"physics_process_ms": {
-		"count": 1104,
-		"max": 3.248,
-		"median": 0.571,
-		"p95": 3.248
+		"count": 1129,
+		"max": 3.444,
+		"median": 0.493,
+		"p95": 3.444
 	},
 	"process_ms": {
-		"count": 1104,
-		"max": 20.662,
-		"median": 2.517,
-		"p95": 20.662
+		"count": 1129,
+		"max": 15.829,
+		"median": 2.728,
+		"p95": 15.829
 	},
 	"render_draw_calls": {
-		"count": 1104,
+		"count": 1129,
 		"max": 0.0,
 		"median": 0.0,
 		"p95": 0.0
 	},
 	"renderer": "",
-	"samples": 1104,
+	"samples": 1129,
 	"static_memory_bytes": {
-		"count": 1104,
-		"max": 49807326.0,
-		"median": 48780906.0,
-		"p95": 49314006.0
+		"count": 1129,
+		"max": 52651629.0,
+		"median": 51613611.0,
+		"p95": 52214597.0
 	},
 	"task": "WORLD-06",
 	"viewport_size": [

@@ -91,6 +91,11 @@ func get_crosshair_text() -> String:
 	return _crosshair.text if _crosshair != null else ""
 
 
+func set_status_message(message: String) -> void:
+	if _status_label != null and not message.strip_edges().is_empty():
+		_status_label.text = message.to_upper()
+
+
 func get_feedback_event_count() -> int:
 	return combat_feedback.accepted_shot_count if combat_feedback != null else 0
 

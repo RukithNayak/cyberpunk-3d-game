@@ -9,6 +9,7 @@ var _last_mission_signal: Array = []
 
 
 func run(check: Callable) -> void:
+	_test_starting_credits(check)
 	_test_lifecycle_signals(check)
 	_test_offer_eligibility(check)
 	_test_lifecycle_and_reward_idempotence(check)
@@ -16,6 +17,29 @@ func run(check: Callable) -> void:
 	_test_persisted_states_and_unload(check)
 	_test_snapshot_validation(check)
 	_test_save_store_domain_round_trip(check)
+
+
+func _test_starting_credits(check: Callable) -> void:
+	var registry: EntityRegistry = EntityRegistry.new()
+	registry.register_entity(RETRIEVAL_TARGET_UUID, {"collected": false})
+	var factions: FactionState = FactionState.new(["night_market"])
+	factions.set_faction_standing("night_market", 0)
+	var templates: Array[MissionTemplate] = [load("res://features/missions/retrieve_signal_cache.tres") as MissionTemplate]
+	var director: MissionDirector = MissionDirector.new()
+	var configured: bool = bool(director.callv("configure", [templates, registry, factions, func(_uuid: String) -> bool: return true, 100]))
+	var initial_balance: int = director.get_credits()
+	var spent: bool = director.spend_credits(40)
+	var snapshot: Dictionary = director.capture_snapshot()
+	var restored: MissionDirector = MissionDirector.new()
+	var restored_configured: bool = bool(restored.callv("configure", [templates, registry, factions, func(_uuid: String) -> bool: return true, 100]))
+	var prepared: Dictionary = restored.prepare_snapshot(snapshot)
+	if prepared.get("ok", false):
+		restored.commit_prepared_snapshot(prepared["prepared"])
+	var forged: Dictionary = snapshot.duplicate(true)
+	forged["credits"] = 101
+	check.call(configured and initial_balance == 100, "district config can grant 100 authored starting credits")
+	check.call(spent and restored_configured and prepared.get("ok", false) and restored.get_credits() == 60, "spent starting credits survive a mission snapshot round trip")
+	check.call(not director.prepare_snapshot(forged).get("ok", false), "snapshot cannot raise starting credits above authored balance and rewards")
 
 
 func _test_lifecycle_signals(check: Callable) -> void:

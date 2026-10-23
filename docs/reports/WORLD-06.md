@@ -25,6 +25,10 @@ Added the test-only fullscreen scene `game/tests/scenes/feasibility.{tscn,gd}` a
 - `find game -name export_presets.cfg -print` — exit 0, no output. `ls -la "$HOME/Library/Application Support/Godot/export_templates"` — exit 0, directory empty.
 - `godot --headless --path game --export-release "macOS" /tmp/world06_feasibility.zip` — exit 1: no root `export_presets.cfg`. No install or export config change was made.
 
+## Night Market playtest block (24 October 2026)
+
+The fixture now includes a connected plaza, market street, collidable stalls/storefronts, a hack-marked service alley, and a neon chunk-crossing gate. Existing positions, interactions, and smoke/benchmark semantics remain unchanged. Scope and detailed evidence are recorded in [WORLD-06 Night Market report](WORLD-06-night-market.md). Import exited 0; the new landmark check was observed failing before implementation (overall 24/25), and the fixture smoke then passed 25/25. Runtime visual inspection was not performed because an existing `godot --path game res://tests/scenes/feasibility.tscn` process (PID 34381) was left untouched; the human should restart the fixture to see the new layout. Human visual/playtest acceptance remains outstanding.
+
 ## Measured observations
 
 The runs were macOS 26.5.1, Apple M5, 16 GiB unified memory, Godot 4.7.2, compatibility renderer, fullscreen 2940×1846. The separate same-window model probe during concurrent phase above recorded 5.6 GB model memory at 100% GPU and process RSS. The earlier probe sample remains summarized in the feasibility measurements below. The actual non-streaming NPC exchange in the latest headless smoke took about 4 seconds. Total host memory and process RSS are captured, but free-memory headroom and performance/headroom thresholds have not been ratified.

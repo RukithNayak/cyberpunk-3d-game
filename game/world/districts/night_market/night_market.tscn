@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/environment/night_market/neon_market_district.glb" id="1_district"]
+[ext_resource type="PackedScene" path="res://features/player/player.tscn" id="2_player"]
+[ext_resource type="Script" path="res://world/districts/night_market/night_market_collision_builder.gd" id="3_collision"]
+[ext_resource type="Script" path="res://world/districts/night_market/night_market_runtime.gd" id="4_runtime"]
+
+[sub_resource type="Environment" id="Environment_night_market"]
+background_mode = 1
+background_color = Color(0.018, 0.029, 0.046, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.42, 0.43, 0.47, 1)
+ambient_light_energy = 0.3
+tonemap_mode = 3
+adjustment_enabled = true
+adjustment_brightness = 0.86
+adjustment_contrast = 1.16
+adjustment_saturation = 1.5
+
+[node name="NightMarket" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_night_market")
+
+[node name="KeyLight" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-48, -26, 0)
+light_color = Color(1, 0.88, 0.72, 1)
+light_energy = 0.48
+shadow_enabled = true
+
+[node name="District" parent="." instance=ExtResource("1_district")]
+
+[node name="CollisionBuilder" type="Node3D" parent="."]
+script = ExtResource("3_collision")
+district_path = NodePath("../District")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector3(35, 0.05, -44)
+
+[node name="NightMarketRuntime" type="Node" parent="."]
+script = ExtResource("4_runtime")

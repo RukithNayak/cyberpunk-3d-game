@@ -203,6 +203,7 @@ func _build_presentation() -> void:
 	sun.rotation_degrees = Vector3(-48.0, -26.0, 0.0)
 	sun.light_energy = 0.75
 	add_child(sun)
+	_build_night_market_block()
 	var cyan_sign: MeshInstance3D = _build_sign(Vector3(5.5, 3.0, -4.0), Color("00e5ff"), Vector3(3.5, 1.0, 0.18))
 	add_child(cyan_sign)
 	var amber_sign: MeshInstance3D = _build_sign(Vector3(-7.0, 3.6, 4.5), Color("ffb52e"), Vector3(2.4, 0.8, 0.18))
@@ -674,6 +675,125 @@ func _commit_domains(prepared: Dictionary) -> void:
 	dialogue_snapshot.commit_prepared_domains(prepared["dialogue"])
 
 
+func _build_night_market_block() -> void:
+	var block: Node3D = Node3D.new()
+	block.name = "NightMarketBlock"
+	add_child(block)
+	var cyan: StandardMaterial3D = _market_material(Color("00dce8"), Color("00a5ad"), 0.28, 0.45)
+	var amber: StandardMaterial3D = _market_material(Color("ffb52e"), Color("b76d10"), 0.3, 0.3)
+	var graphite: StandardMaterial3D = _market_material(Color("202d3a"), Color("000000"), 0.84, 0.55)
+	var violet: StandardMaterial3D = _market_material(Color("61345e"), Color("7a164e"), 0.38, 0.35)
+
+	var plaza: Node3D = Node3D.new()
+	plaza.name = "StartPlaza"
+	plaza.position = Vector3(-4.0, 0.0, 0.0)
+	block.add_child(plaza)
+	_add_market_box(plaza, "PlazaEdgeNorth", Vector3(0.0, 0.025, 2.8), Vector3(5.8, 0.05, 0.08), cyan, false)
+	_add_market_box(plaza, "PlazaEdgeSouth", Vector3(0.0, 0.025, -2.8), Vector3(5.8, 0.05, 0.08), amber, false)
+	_add_market_box(plaza, "PlazaBeacon", Vector3(2.8, 1.7, 2.5), Vector3(0.24, 3.4, 0.24), cyan)
+	_add_market_label(plaza, "PlazaSign", "NIGHT MARKET  //  OPEN", Vector3(0.0, 3.1, 2.7), cyan)
+
+	var street: Node3D = Node3D.new()
+	street.name = "MarketStreet"
+	block.add_child(street)
+	for index: int in range(8):
+		var x: float = -8.0 + float(index) * 2.25
+		_add_market_box(street, "StreetGuide%02d" % index, Vector3(x, 0.018, 2.05), Vector3(0.8, 0.035, 0.055), cyan if index % 2 == 0 else amber, false)
+	for index: int in range(4):
+		var x: float = -7.0 + float(index) * 4.6
+		var stall: StaticBody3D = StaticBody3D.new()
+		stall.name = "MarketStall%02d" % index
+		stall.position = Vector3(x, 0.0, 4.6)
+		street.add_child(stall)
+		_add_market_box(stall, "Counter", Vector3.ZERO, Vector3(2.3, 1.55, 1.25), graphite)
+		_add_market_box(stall, "NeonCanopy", Vector3(0.0, 1.55, 0.0), Vector3(2.55, 0.18, 1.5), cyan if index % 2 == 0 else amber, false)
+		_add_market_label(stall, "Menu", ["RAMEN // 24H", "CHROME // REPAIR", "NIGHT MARKET", "SYNTH // CAFE"][index], Vector3(0.0, 2.05, -0.69), cyan if index % 2 == 0 else amber)
+
+	for index: int in range(6):
+		var x: float = -8.0 + float(index) * 3.2
+		var facade_color: StandardMaterial3D = violet if index % 2 == 0 else graphite
+		_add_market_box(street, "BackdropWest%02d" % index, Vector3(x, 2.3, 9.1), Vector3(3.0, 4.6, 1.5), facade_color)
+		_add_market_box(street, "BackdropEast%02d" % index, Vector3(x, 2.3, -9.1), Vector3(3.0, 4.6, 1.5), facade_color)
+		_add_market_box(street, "FacadeNeonWest%02d" % index, Vector3(x, 1.2, 8.31), Vector3(2.4, 0.08, 0.05), cyan if index % 2 == 0 else amber, false)
+		_add_market_box(street, "FacadeNeonEast%02d" % index, Vector3(x, 1.2, -8.31), Vector3(2.4, 0.08, 0.05), amber if index % 2 == 0 else cyan, false)
+
+	var alley: Node3D = Node3D.new()
+	alley.name = "ServiceAlley"
+	alley.position = Vector3(-4.0, 0.0, 0.0)
+	block.add_child(alley)
+	_add_market_box(alley, "AlleyLeftWall", Vector3(-3.0, 1.7, -5.6), Vector3(0.65, 3.4, 7.6), graphite)
+	_add_market_box(alley, "AlleyRightWall", Vector3(3.0, 1.7, -5.6), Vector3(0.65, 3.4, 7.6), graphite)
+	_add_market_box(alley, "AlleyGuide", Vector3(0.0, 0.022, -6.2), Vector3(0.08, 0.04, 6.4), amber, false)
+	_add_market_label(alley, "ServiceAccessSign", "SERVICE ACCESS  //  HACK", Vector3(0.0, 3.0, -2.0), amber, PI)
+	_add_market_box(alley, "ServiceLamp", Vector3(0.0, 3.0, -4.0), Vector3(0.18, 0.18, 0.18), amber, false)
+	var lamp: OmniLight3D = OmniLight3D.new()
+	lamp.name = "AlleyAmberLamp"
+	lamp.position = Vector3(0.0, 2.8, -4.0)
+	lamp.light_color = Color("ff9c36")
+	lamp.light_energy = 1.1
+	lamp.omni_range = 5.5
+	alley.add_child(lamp)
+
+	var seam_arch: Node3D = Node3D.new()
+	seam_arch.name = "CrossDistrictNeonGate"
+	seam_arch.position = Vector3(4.0, 0.0, 0.0)
+	block.add_child(seam_arch)
+	_add_market_box(seam_arch, "GatePostNear", Vector3(0.0, 2.3, 5.7), Vector3(0.3, 4.6, 0.3), cyan)
+	_add_market_box(seam_arch, "GatePostFar", Vector3(0.0, 2.3, -5.7), Vector3(0.3, 4.6, 0.3), cyan)
+	_add_market_box(seam_arch, "GateHeader", Vector3(0.0, 4.55, 0.0), Vector3(0.3, 0.28, 11.7), amber, false)
+	_add_market_label(seam_arch, "GateSign", "NIGHT MARKET  //  SECTOR 09", Vector3(0.0, 4.0, 0.0), amber, PI * 0.5)
+
+
+func _market_material(color_value: Color, emission_value: Color, roughness_value: float, metallic_value: float) -> StandardMaterial3D:
+	var material: StandardMaterial3D = StandardMaterial3D.new()
+	material.albedo_color = color_value
+	material.roughness = roughness_value
+	material.metallic = metallic_value
+	if emission_value != Color.BLACK:
+		material.emission_enabled = true
+		material.emission = emission_value
+	return material
+
+
+func _add_market_box(parent: Node3D, node_name: String, local_position: Vector3, box_size: Vector3, material: StandardMaterial3D, collidable: bool = true) -> void:
+	var mesh: BoxMesh = BoxMesh.new()
+	mesh.size = box_size
+	mesh.material = material
+	var visual: MeshInstance3D = MeshInstance3D.new()
+	visual.name = node_name + "Visual"
+	visual.mesh = mesh
+	visual.position = local_position
+	if collidable:
+		var body: StaticBody3D = StaticBody3D.new()
+		body.name = node_name
+		body.position = local_position
+		var collision: CollisionShape3D = CollisionShape3D.new()
+		var shape: BoxShape3D = BoxShape3D.new()
+		shape.size = box_size
+		collision.shape = shape
+		body.add_child(collision)
+		parent.add_child(body)
+	else:
+		visual.name = node_name
+		parent.add_child(visual)
+		return
+	parent.add_child(visual)
+
+
+func _add_market_label(parent: Node3D, node_name: String, label_text: String, local_position: Vector3, material: StandardMaterial3D, rotation_y: float = 0.0) -> void:
+	var label: Label3D = Label3D.new()
+	label.name = node_name
+	label.text = label_text
+	label.position = local_position
+	label.rotation.y = rotation_y
+	label.font_size = 36
+	label.outline_size = 8
+	label.modulate = material.albedo_color
+	label.shaded = false
+	label.no_depth_test = false
+	parent.add_child(label)
+
+
 func _build_sign(position_value: Vector3, color_value: Color, size: Vector3) -> MeshInstance3D:
 	var sign_node: MeshInstance3D = MeshInstance3D.new()
 	sign_node.position = position_value
@@ -720,6 +840,7 @@ func _wait_for(predicate: Callable, timeout_seconds: float = MAX_WAIT_SECONDS) -
 
 func _run_headless_smoke() -> void:
 	await get_tree().process_frame
+	_check(get_node_or_null("NightMarketBlock/StartPlaza") != null and get_node_or_null("NightMarketBlock/MarketStreet") != null and get_node_or_null("NightMarketBlock/ServiceAlley") != null, "walkable Night Market exposes plaza, street and service-alley landmarks")
 	_check(await _wait_for(func() -> bool: return _city_loader.get_active_instance("district_a") != null and _is_mara_live()), "first streamed chunk activates with its attached NPC actor")
 	var dialogue_started: bool = _begin_dialogue_request(CONVERSATION_ID, "What is hidden beneath the transit underpass?")
 	_check(dialogue_started, "named NPC dialogue session starts with the installed local provider")
