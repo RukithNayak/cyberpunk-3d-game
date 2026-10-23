@@ -1,7 +1,7 @@
 # Master Progress
 
 **Updated:** 23 October 2026 (Asia/Kolkata)  
-**Overall status:** Stage 0/1 implementation in progress. CORE-01/02/03/04, WORLD-01/02/03/04/05, PLAYER-01/02/03/04/07, INV-01/02/03/04/05, AI-01/02/03/04/05, HACK-01/02 and ASSET-01/02 accepted. PLAYER-05's visual/HUD slice is implemented but the task remains in progress because its audio and pause/settings acceptance conflicts with the approved UI design. ASSET-03 remains a partial eligible handoff. No worker is left running. Blender/Godot MCP tools are available.
+**Overall status:** Stage 0/1 implementation in progress. CORE-01/02/03/04, WORLD-01/02/03/04/05, PLAYER-01/02/03/04/07, INV-01/02/03/04/05, AI-01/02/03/04/05, HACK-01/02 and ASSET-01/02/03 accepted. PLAYER-05's visual/HUD slice is implemented but the task remains in progress because its audio and pause/settings acceptance conflicts with the approved UI design. No worker is left running. Blender/Godot MCP tools are available.
 **Evidence:** [CORE-01 report](reports/CORE-01.md), [PLAYER-04 report](reports/PLAYER-04.md), [Cyberpunk UI overhaul report](reports/CYBERPUNK-UI-OVERHAUL.md) and [toolchain checks](toolchain.md). Gameplay and integrated milestone gates remain incomplete.
 
 ## Source and scope
@@ -43,7 +43,7 @@ The proposal’s confirmed requirements remain in scope. Candidate city/weapon/r
 - [ ] **[Generative NPC & Mission Orchestrator](tasks/generative-npc-mission-orchestrator.md) — entire module complete.** Status: not started. Stage 0/1: 0/6 tasks; deferred: 1 outline(s).
   Task IDs: NPC-01, NPC-02, NPC-03, NPC-04, NPC-05, NPC-06, NPC-07.
 
-- [ ] **[Offline Asset Pipeline](tasks/offline-asset-pipeline.md) — entire module complete.** Status: in progress. Stage 0/1: 2/4 tasks; deferred: 2 outline(s).
+- [ ] **[Offline Asset Pipeline](tasks/offline-asset-pipeline.md) — entire module complete.** Status: in progress. Stage 0/1: 3/4 tasks; deferred: 2 outline(s).
   Task IDs: ASSET-01, ASSET-02, ASSET-03, ASSET-04, ASSET-05, ASSET-06.
 
 ## Completed work
@@ -89,7 +89,7 @@ The proposal’s confirmed requirements remain in scope. Candidate city/weapon/r
 | WORLD-01 | 1 / CORE-02 | complete | world_manifest / gpt-6-luna medium | game/world/{chunk_manifest,world_manager}.gd, game/world/fixtures/chunk_{a,b}.tscn, game/tests/world/test_manifest.gd | commit 282facb | Accepted 37/37 after red6 review fixes; reports/WORLD-01-worker.md |
 | CORE-04 | 1 / CORE-03 | complete | Main Agent / session model; historical worker metadata unverified | save_migrations.gd, snapshot_adapters.gd, test_migrations.gd, state-contracts migration section; coordinated registry/faction snapshot APIs, save migration hook and runner integration | commit 282facb | Accepted 23 October 2026; rejected-migration false success fixed red→green; migrations 22/22, all 142/142, import/sample exit 0; reports/CORE-04.md |
 | CORE-03 | 1 / CORE-02 | complete | save_store / gpt-6-luna medium | game/persistence/save_store.gd, game/tests/persistence/test_save_store.gd, docs/state-contracts.md save envelope | commit 282facb | Accepted 23/23; independent review clean; reports/CORE-03-worker.md |
-| ASSET-03 | 0 / ASSET-02, CORE-01 | partial; unassigned | historical asset_export assignment; no live worker | tools/blender/export_modular_kit.py, game/assets/reference/, game/tests/scenes/asset_roundtrip.tscn, docs/asset-roundtrip.md | commit 282facb | exporter, GLBs, maps and metadata exist; fixture/report absent; repeatability/visual acceptance unverified; native Blender MCP now available; sources untouched during WORLD-02 |
+| ASSET-03 | 0 / ASSET-02, CORE-01 | complete | Main Agent / current session | tools/blender/export_modular_kit.py, game/assets/reference/, game/tests/scenes/asset_roundtrip.{tscn,gd}, docs/asset-roundtrip.md, docs/reports/ASSET-03.md, docs/evidence/ASSET-03/ | working tree | accepted; repeat exports byte-identical, manifest valid, Godot fixture verifies dimensions/PBR/UVs/normals/collision and first-person pier/opening rays; capture inspected; editable sources untouched; reports/ASSET-03.md |
 | ASSET-02 | 0 / ASSET-01 | complete | reference_assets / gpt-6-luna medium | art/reference/{wall_doorway,mechanical_prop}.blend, tools/blender/build_reference.py, docs/art-reference.md, docs/evidence/ASSET-02/ | commit 282facb | Accepted all four QA checks exit 0, visual review; reports/ASSET-02-worker.md |
 | ASSET-01 | 0 / none | complete | asset_readiness / gpt-6-luna medium | docs/asset-pipeline.md, tools/blender/check_environment.py, art/reference/, docs/asset-provenance.md | commit 282facb | Accepted; export, QA, structural Godot import exit 0; reports/ASSET-01-worker.md |
 
@@ -106,7 +106,7 @@ Main Agent exclusively owns shared toolchain/tracker/configuration and acceptanc
 | 4 — checkpoint and feasibility | CORE-05 → WORLD-06 | Cross-system context is confined to checkpoint restoration, navigation handoff and the combined feasibility gate. All direct prerequisites in WORLD-06 must pass first. |
 | Later — scope dependent | CORE-06, WORLD-07, PLAYER-06, INV-06, AI-06, NPC-07, ASSET-05/06 | Approve content/targets, decompose each outline into small tickets, then execute. Do not create an entire city before feasibility evidence. |
 
-INV-05, HACK-01/02 and AI-01/02/03/04/05 are accepted. WORLD-03/04/05 are accepted; PLAYER-01/02/03/04/07 and INV-01/02/03/04/05 are accepted. Latest integrated `all`: 735 cases, 2 failures (exit 1). Standalone `ai_navigation` also reproduced its empty-route race at map iteration2 / region iteration1; AI-05 is independently green at61/61 and AI-02 state checks at32/32. Shutdown still logs one ObjectDB and one `GodotBody3D` RID leak. PLAYER-05 remains in progress because its existing acceptance conflicts with the approved design. ASSET-03, HACK-03/04 and NPC-01 are eligible under exact dependencies. Preserve unaccepted asset work until its bounded review or resumption.
+INV-05, HACK-01/02 and AI-01/02/03/04/05 are accepted. WORLD-03/04/05 are accepted; PLAYER-01/02/03/04/07 and INV-01/02/03/04/05 are accepted. ASSET-03 is accepted; latest integrated `all`: 735 cases, 2 failures (exit 1). Standalone `ai_navigation` also reproduced its empty-route race at map iteration2 / region iteration1; AI-05 is independently green at61/61 and AI-02 state checks at32/32. Shutdown still logs one ObjectDB and one `GodotBody3D` RID leak. PLAYER-05 remains in progress because its existing acceptance conflicts with the approved design. ASSET-04, HACK-03/04 and NPC-01 are eligible under exact dependencies. The ASSET-03 screenshot is a fixture smoke image, not art-direction acceptance.
 
 UI visual revision (23 October 2026): Following user feedback, updated INV-05/PLAYER-05 presentation to use Avenir system typography, brighter graphite surfaces, larger card layouts and clearer detail/action grouping. Import0, inventory_ui46/46, player_hud9/9, diff check0; Godot MCP runtime errors empty; new fullscreen inventory/HUD captures inspected. [Report and evidence](reports/CYBERPUNK-UI-OVERHAUL.md). No gameplay/service ownership changed. PLAYER-05 stays in progress for its pre-existing audio and pause/settings scope conflict.
 
@@ -135,7 +135,9 @@ UI visual revision (23 October 2026): Following user feedback, updated INV-05/PL
 
 ## Next recommended task
 
-**ASSET-03 — Build repeatable baking/export and Godot round-trip** in [Offline Asset Pipeline](tasks/offline-asset-pipeline.md) is recommended next. It is an eligible Stage 0 task with partial exporter/asset files already in the tree; inspect and preserve them, then complete the repeat export, Godot round-trip fixture and visual evidence. Blender MCP 5.2.3 and Godot MCP 4.7.2 were available in this session. HACK-03/04 and NPC-01 are also eligible under their direct dependencies. PLAYER-05's remaining audio/pause-settings scope needs a recorded resolution before completion. CORE-05 remains blocked by unfinished PLAYER-05, NPC-05 and HACK-05. Do not install tools or download models implicitly.
+**ASSET-04 — Measure repeated asset use and set initial budgets** in [Offline Asset Pipeline](tasks/offline-asset-pipeline.md) is recommended next; ASSET-03's direct dependency is accepted. It is Stage 1 and measures the two existing references only, with no mass production. HACK-03/04 and NPC-01 are also eligible under their exact dependencies. PLAYER-05's remaining audio/pause-settings scope needs a recorded resolution before completion. CORE-05 remains blocked by unfinished PLAYER-05, NPC-05 and HACK-05. Do not install tools or download models implicitly.
+
+**ASSET-03 accepted, 23 October 2026 (Asia/Kolkata):** External `--out-dir` regression reproduced (exit 1) and fixed; Blender repeat-check and canonical export exit 0, with both GLBs and maps byte-identical across repeated builds. Godot import/fixture exit 0; fixture verifies dimensions, PBR maps/channel use, normals, UV bounds, unit scale, six static collision bodies/shapes, and a 1.4 m ray blocked by a pier but clear through the doorway. Godot MCP rendered and wrote the inspected capture. Blender MCP was connected to a blank untitled scene; approved local Blender 5.2.3 opened source assets read-only. [Report](reports/ASSET-03.md), [fixture image](evidence/ASSET-03/asset_roundtrip.png). Next: ASSET-04. No source `.blend` changes.
 
 ## Session decisions and active next steps
 

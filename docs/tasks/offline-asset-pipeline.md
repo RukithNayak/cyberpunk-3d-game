@@ -73,19 +73,23 @@ Accepted 23 October 2026 (Asia/Kolkata), reference_assets gpt-6-luna medium; Mai
 
 ### ASSET-03: Build repeatable baking/export and Godot round-trip
 
-- [ ] **ASSET-03 — deliverable complete** (Stage 0).
+- [x] **ASSET-03 — deliverable complete** (Stage 0).
 
 **Dependencies / sequencing:** ASSET-02, CORE-01. Prerequisite IDs resolve through the master progress task index.
 
-**Files / ownership:** `tools/blender/export_modular_kit.py`; `game/assets/reference/`; `game/tests/scenes/asset_roundtrip.tscn`; `docs/asset-roundtrip.md`.
+**Files / ownership:** `tools/blender/export_modular_kit.py`; `game/assets/reference/`; `game/tests/scenes/asset_roundtrip.tscn`; `game/tests/scenes/asset_roundtrip.gd` (fixture smoke assertions); `docs/asset-roundtrip.md`.
 
 **Interfaces:** `export_modular_kit.py` produces GLBs, baked PBR maps and metadata with source/version/settings; evaluated geometry replaces nonportable Geometry Nodes graphs.
 
-- [ ] **Acceptance:** Normalize UVs/transforms and bake procedural appearance into image-backed materials. Godot import preserves orientation, scale, material response and collision intent. Repeat export is deterministic within documented tolerances and does not overwrite editable sources.
+**Supporting scope recorded by Main Agent, 23 October 2026:** Add a fixture script to assert the imported asset hierarchy, material texture bindings, dimensions and collision proxy presence. This makes the existing Godot round-trip acceptance executable and stays within ASSET-03; no shared test-runner registration is needed.
 
-- [ ] **Test expectations:** Export both references twice, compare mesh/material metadata and open the in-engine fixture. Verify sRGB/non-color maps, packed channel conventions, normals, dimensions and collision from first-person distance; capture visual evidence.
+- [x] **Acceptance:** Normalize UVs/transforms and bake procedural appearance into image-backed materials. Godot import preserves orientation, scale, material response and collision intent. Repeat export is deterministic within documented tolerances and does not overwrite editable sources.
 
-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
+- [x] **Test expectations:** Export both references twice, compare mesh/material metadata and open the in-engine fixture. Verify sRGB/non-color maps, packed channel conventions, normals, dimensions and collision from first-person distance; capture visual evidence.
+
+- [x] **Evidence recorded:** Repeat exports were byte-identical for GLBs and maps; manifest hashes/headers/maps/UV metadata, Godot import and fixture exit 0. [Report](../reports/ASSET-03.md), [instructions](../asset-roundtrip.md), [fixture capture](../evidence/ASSET-03/asset_roundtrip.png).
+
+Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Fixture validates imported normals, 0–1 UVs, unit object scale, base-color/ORM channels, orientation, dimensions and first-person wall/doorway collision. Exact commands, limitations and source preservation are recorded in the report.
 
 ### ASSET-04: Measure repeated asset use and set initial budgets
 

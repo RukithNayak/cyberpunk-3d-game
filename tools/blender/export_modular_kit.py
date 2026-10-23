@@ -319,6 +319,14 @@ def compare_semantics(first, second, tolerance=1e-6):
         raise RuntimeError("repeat export semantic metadata differs")
 
 
+def display_path(path: Path) -> str:
+    """Prefer repository-relative output paths, while supporting external output dirs."""
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out-dir", default="game/assets/reference")
@@ -342,7 +350,7 @@ def main():
     results = []
     for asset_id, source, stem in ASSETS:
         meta, meta_path = export_asset(asset_id, source, stem, out_dir)
-        results.append({"asset_id": asset_id, "metadata": str(meta_path.relative_to(ROOT)),
+        results.append({"asset_id": asset_id, "metadata": display_path(meta_path),
                         "render": meta["render"], "collision": meta["collision"],
                         "files": [meta["render_glb"], meta["collision_glb"],
                                   meta["textures"]["basecolor"]["file"], meta["textures"]["orm"]["file"]]})
