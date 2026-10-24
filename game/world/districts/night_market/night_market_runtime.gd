@@ -15,9 +15,9 @@ const FACADE_TINT: Color = Color(0.72, 0.86, 1.0)
 const PANEL_TINT: Color = Color(0.95, 0.62, 0.95)
 const WINDOW_TINT: Color = Color(1.0, 0.76, 0.48)
 const RESIDENTS: Array[Dictionary] = [
-	{"name": "MARA // MARKET CONTACT", "position": Vector3(33.0, 0.0, -51.0), "coat": Color("b72f62"), "accent": Color("ffb52e")},
-	{"name": "NIGHT MARKET // VENDOR", "position": Vector3(37.8, 0.0, -60.0), "coat": Color("087c86"), "accent": Color("36f0de")},
-	{"name": "NIGHT MARKET // RESIDENT", "position": Vector3(38.5, 0.0, -54.0), "coat": Color("5146a4"), "accent": Color("d95ad9")},
+	{"name": "MARA // MARKET CONTACT", "position": Vector3(33.0, 0.0, -51.0), "accent": Color("ffb52e"), "model": "res://assets/characters/night_market/mara_vega.glb"},
+	{"name": "NIGHT MARKET // VENDOR", "position": Vector3(37.8, 0.0, -60.0), "accent": Color("36f0de"), "model": "res://assets/characters/night_market/crowd/market_vendor.glb"},
+	{"name": "NIGHT MARKET // RESIDENT", "position": Vector3(38.5, 0.0, -54.0), "accent": Color("d95ad9"), "model": "res://assets/characters/night_market/crowd/market_courier.glb"},
 ]
 
 var player: PlayerController
@@ -81,19 +81,7 @@ func _process(delta: float) -> void:
 			next_x = clampf(next_x, float(mover["min_x"]), float(mover["max_x"]))
 			actor.rotation.y = -PI / 2.0 if direction > 0.0 else PI / 2.0
 		actor.position.x = next_x
-		var stride: float = sin(_elapsed * 7.0 + float(mover["phase"])) * 0.22
-		var left_leg: Node3D = actor.get_node_or_null("Visuals/LeftLeg") as Node3D
-		var right_leg: Node3D = actor.get_node_or_null("Visuals/RightLeg") as Node3D
-		var left_arm: Node3D = actor.get_node_or_null("Visuals/LeftArm") as Node3D
-		var right_arm: Node3D = actor.get_node_or_null("Visuals/RightArm") as Node3D
-		if left_leg != null:
-			left_leg.rotation.x = stride
-		if right_leg != null:
-			right_leg.rotation.x = -stride
-		if left_arm != null:
-			left_arm.rotation.x = -stride * 0.7
-		if right_arm != null:
-			right_arm.rotation.x = stride * 0.7
+		_play_character_clip(actor, "walk")
 		actor.position.y = sin(_elapsed * 14.0 + float(mover["phase"])) * 0.035
 	for light_index: int in range(_pulsing_lights.size()):
 		_pulsing_lights[light_index].light_energy = 5.6 + sin(_elapsed * (1.1 + light_index * 0.17)) * 0.6
@@ -307,7 +295,10 @@ func _open_mara_dialogue() -> bool:
 		return false
 	if dialogue_ui.visible:
 		return true
-	return dialogue_ui.begin_conversation("night_market_mara")
+	var began: bool = dialogue_ui.begin_conversation("night_market_mara")
+	if began:
+		_play_character_clip(mara, "interact")
+	return began
 
 
 func _on_dialogue_visibility_changed() -> void:
@@ -316,6 +307,7 @@ func _on_dialogue_visibility_changed() -> void:
 	if dialogue_ui.visible:
 		player.add_control_lock(&"dialogue")
 	else:
+		_play_character_clip(mara, "idle")
 		player.remove_control_lock(&"dialogue")
 		player.resume_mouse_capture()
 
@@ -357,6 +349,7 @@ func _build_security() -> void:
 	security.name = "SecurityGoon"
 	security.position = Vector3(35.0, 0.0, -57.0)
 	add_child(security)
+	_play_character_clip(security, "idle")
 	security.process_ai = false
 	var navigation: Node = security.get_node_or_null("NavigationDriver")
 	if navigation != null:
@@ -368,14 +361,6 @@ func _build_security() -> void:
 	security.set_authored_hostility("player", true)
 	security.agent_died.connect(_on_security_died)
 	security.health_state.health_changed.connect(_on_security_health_changed)
-	var guard_mesh: MeshInstance3D = security.get_node_or_null("MeshInstance3D") as MeshInstance3D
-	if guard_mesh != null:
-		var guard_material: StandardMaterial3D = StandardMaterial3D.new()
-		guard_material.albedo_color = Color("313347")
-		guard_material.emission_enabled = true
-		guard_material.emission = Color("721c39")
-		guard_material.emission_energy_multiplier = 0.35
-		guard_mesh.material_override = guard_material
 	security_status = Label3D.new()
 	security_status.name = "SecurityStatus"
 	security_status.text = "SECURITY // 80 HP"
@@ -402,11 +387,12 @@ func _on_security_died() -> void:
 	var shape: CollisionShape3D = security.get_node_or_null("CollisionShape3D") as CollisionShape3D
 	if shape != null:
 		shape.set_deferred("disabled", true)
-	var mesh: MeshInstance3D = security.get_node_or_null("MeshInstance3D") as MeshInstance3D
-	if mesh != null:
-		var tween: Tween = create_tween()
-		tween.tween_property(mesh, "rotation:z", deg_to_rad(82.0), 0.35)
-		tween.parallel().tween_property(mesh, "position:y", 0.42, 0.35)
+	var visual: Node3D = security.get_node_or_null("CharacterModel") as Node3D
+	if visual != null:
+		if not _play_character_clip(visual, "death"):
+			var tween: Tween = create_tween()
+			tween.tween_property(visual, "rotation:z", deg_to_rad(82.0), 0.35)
+			tween.parallel().tween_property(visual, "position:y", 0.42, 0.35)
 	_set_hud_status("THREAT NEUTRALIZED")
 
 
@@ -475,23 +461,14 @@ func _build_resident(data: Dictionary) -> Node3D:
 	var visuals: Node3D = Node3D.new()
 	visuals.name = "Visuals"
 	resident.add_child(visuals)
-	var outfit: StandardMaterial3D = StandardMaterial3D.new()
-	outfit.albedo_color = data["coat"]
-	outfit.roughness = 0.82
-	var skin: StandardMaterial3D = StandardMaterial3D.new()
-	skin.albedo_color = Color("b77d65")
-	var accent: StandardMaterial3D = StandardMaterial3D.new()
-	accent.albedo_color = data["accent"]
-	accent.emission_enabled = true
-	accent.emission = data["accent"]
-	accent.emission_energy_multiplier = 0.7
-	_add_capsule(visuals, "Coat", Vector3(0.0, 1.0, 0.0), 0.28, 0.78, outfit)
-	_add_sphere(visuals, "Head", Vector3(0.0, 1.64, 0.0), 0.19, skin)
-	_add_capsule(visuals, "LeftLeg", Vector3(-0.12, 0.39, 0.0), 0.105, 0.62, outfit)
-	_add_capsule(visuals, "RightLeg", Vector3(0.12, 0.39, 0.0), 0.105, 0.62, outfit)
-	_add_capsule(visuals, "LeftArm", Vector3(-0.34, 1.02, 0.0), 0.095, 0.58, outfit, Vector3(0.0, 0.0, -0.1))
-	_add_capsule(visuals, "RightArm", Vector3(0.34, 1.02, 0.0), 0.095, 0.58, outfit, Vector3(0.0, 0.0, 0.1))
-	_add_box(visuals, "ChestTag", Vector3(0.0, 1.08, -0.255), Vector3(0.21, 0.07, 0.035), accent)
+	var model_scene: PackedScene = load(String(data["model"])) as PackedScene
+	if model_scene == null:
+		push_error("Night Market resident model failed to load: %s" % String(data["model"]))
+	else:
+		var character_model: Node3D = model_scene.instantiate() as Node3D
+		character_model.name = "CharacterModel"
+		visuals.add_child(character_model)
+		_play_character_clip(character_model, "idle")
 	var nameplate: Label3D = Label3D.new()
 	nameplate.name = "Nameplate"
 	nameplate.text = String(data["name"])
@@ -502,6 +479,19 @@ func _build_resident(data: Dictionary) -> Node3D:
 	nameplate.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	resident.add_child(nameplate)
 	return resident
+
+
+func _play_character_clip(actor: Node, clip_key: String) -> bool:
+	var players: Array[Node] = actor.find_children("*", "AnimationPlayer", true, false)
+	if players.is_empty():
+		return false
+	var animation_player: AnimationPlayer = players[0] as AnimationPlayer
+	for animation_name: StringName in animation_player.get_animation_list():
+		if String(animation_name).to_lower().contains(clip_key):
+			if animation_player.current_animation != animation_name:
+				animation_player.play(animation_name)
+			return true
+	return false
 
 
 func _build_neon_wayfinding() -> void:

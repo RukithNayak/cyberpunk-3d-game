@@ -183,7 +183,7 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Godot import and fullscreen
 
 - [ ] **ASSET-09 — deliverable complete** (Stage 2; specifically approved 24 October 2026).
 
-**Dependencies / sequencing:** ASSET-05 character rig/export contract, ASSET-03 round-trip conventions, and approved neighborhood design. If ASSET-05's third-party-source premise conflicts with the user-approved custom-Blender scope, record that task-contract revision before implementation.
+**Dependencies / sequencing:** ASSET-03 round-trip conventions and approved neighborhood design. **Dependency reconciliation recorded before implementation (24 October 2026):** ASSET-05 remains deferred and its free-source/first-person arms premise is not a prerequisite for this expressly approved custom Night Market character task. ASSET-09 uses new Blender-authored character assets, their own game-ready rigs, and the existing Godot glTF import contract; it does not import third-party models or complete the separate ASSET-05 work.
 
 **Files / ownership:** `art/source/characters/night_market/`; `tools/blender/`; `game/assets/characters/night_market/`; character-specific Godot fixtures/tests; `docs/reports/ASSET-09.md`; `docs/evidence/ASSET-09/`.
 
@@ -192,3 +192,21 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent. Godot import and fullscreen
 - [ ] **Acceptance:** Create custom, textured, properly scaled Mara and one security guard, with rigs and the basic authored motion set used by their existing interaction/combat states. No downloaded models. Imported skin/materials/animations maintain scale, orientation and rig compatibility.
 - [ ] **Test expectations:** Validate weights/topology, inspect idle/walk/interaction/combat poses and visible deformations, round-trip through Blender and Godot, and run a real character scene. Record mesh tris, texture maps, rig/clip details and visual evidence.
 - [ ] **Evidence recorded:** Add exact tool/export/test results, captures and report link.
+
+**Implementation note (24 October 2026):** Blender-authored Mara (7,752 tris, 1.72 m) and market security (6,856 tris, 1.91 m) now export with 12 materials, UVs, 512 px fabric maps, rigs and five clips each; runtime startup imports cleanly. Asset QA reports `pass:false` for overlapping layered costume panels and small detached detail islands. Weight, UV bounds/overlap, degenerate topology and transforms passed. Full pose deformation and fullscreen visual review remain unrun. See [ASSET-09 report](../reports/ASSET-09.md).
+
+### ASSET-10: Replace Night Market vendor and passerby blockouts
+
+- [ ] **ASSET-10 — deliverable complete** (Stage 2; specifically authorized by the user request on 24 October 2026).
+
+**Dependencies / sequencing:** ASSET-09, ASSET-03 and approved Night Market neighborhood design.
+
+**Files / ownership:** `art/source/characters/night_market/crowd/`; `game/assets/characters/night_market/crowd/`; `game/world/districts/night_market/night_market_runtime.gd`; focused fixture/evidence; `docs/reports/ASSET-10.md`.
+
+**Supporting scope recorded before implementation:** Replace the current generic vendor and passerby capsule mannequins with two distinct, detailed, cyberpunk market character models. Keep their existing movement, interaction and damage/death behavior. Reuse the authored Night Market texture style and export contract. No downloaded models, new gameplay behaviors or crowd expansion.
+
+- [ ] **Acceptance:** Both visible civilian roles have distinct, readable silhouettes, layered clothing, face/hair/accessory detail, cohesive PBR materials, and correct game scale. Existing scene interaction/movement/death remains connected.
+- [ ] **Test expectations:** Review Blender multi-angle material/wire views, geometry/UV/transform QA, Godot import and focused live-scene view. Record counts, texture details, warnings, and evidence.
+- [ ] **Evidence recorded:** Add exact tool/export/test results, captures and report link.
+
+**Implementation note (24 October 2026):** Vendor (6,748 tris, 1.69 m) and courier (6,660 tris, 1.76 m) GLBs, civilian runtime hookups and Blender evidence exist in the preserved working tree. This work began in the same builder pass as ASSET-09; per the dependency above, do not accept or advance ASSET-10 until ASSET-09 is accepted. Asset QA reports `pass:false` for costume/accessory overlaps and small detached islands; UV bounds/overlap, weights, degenerate topology and transforms passed. Full pose deformation and fullscreen review remain unrun. See [ASSET-10 report](../reports/ASSET-10.md).

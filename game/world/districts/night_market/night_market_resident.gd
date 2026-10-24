@@ -43,10 +43,23 @@ func _on_died() -> void:
 	var interaction_prompt: Label3D = get_node_or_null("InteractionPrompt") as Label3D
 	if interaction_prompt != null:
 		interaction_prompt.visible = false
-	var fall: Tween = create_tween()
-	fall.tween_property(_visuals, "rotation:z", deg_to_rad(82.0), 0.32)
-	fall.parallel().tween_property(_visuals, "position:y", 0.24, 0.32)
+	if not _play_character_clip("death"):
+		var fall: Tween = create_tween()
+		fall.tween_property(_visuals, "rotation:z", deg_to_rad(82.0), 0.32)
+		fall.parallel().tween_property(_visuals, "position:y", 0.24, 0.32)
 	died.emit()
+
+
+func _play_character_clip(clip_key: String) -> bool:
+	var players: Array[Node] = _visuals.find_children("*", "AnimationPlayer", true, false)
+	if players.is_empty():
+		return false
+	var animation_player: AnimationPlayer = players[0] as AnimationPlayer
+	for animation_name: StringName in animation_player.get_animation_list():
+		if String(animation_name).to_lower().contains(clip_key):
+			animation_player.play(animation_name)
+			return true
+	return false
 
 
 func _base_name() -> String:
