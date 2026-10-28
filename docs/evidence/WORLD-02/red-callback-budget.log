@@ -1,0 +1,51 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Condition "ret != noErr" is true. Returning: ""
+   at: get_system_ca_certificates (platform/macos/os_macos.mm:1035)
+PASS: chunk loader script compiles and is available
+PASS: desired chunk requests start once
+PASS: repeated desired state coalesces duplicate requests
+PASS: activation budget limits simultaneously ready scenes to one per frame
+PASS: remaining ready scene activates on following frame
+PASS: duplicate requests produce exactly one instance for each chunk
+PASS: successful activation is acknowledged with current generations
+PASS: leaving desired set frees both transient instances
+PASS: unload cleans pending work and acknowledges deactivation
+PASS: later chunk request can complete and activate before earlier request
+PASS: earlier request activates when its own resource completes
+PASS: rapid active-chunk re-entry retains one instance without a new resource request
+PASS: retained instance is acknowledged under the fresh desired generation
+PASS: loader publishes activation for the fresh retained-instance generation
+PASS: completion after unload cannot activate obsolete generation
+PASS: re-entry starts a fresh generation and retry request
+PASS: only the current re-entry generation becomes active
+PASS: delayed request times out without blocking
+PASS: timeout clears pending work and preserves active terrain state
+PASS: timed out generation does not hot-loop retries
+PASS: desired chunk permits explicit retry after timeout
+PASS: retry starts another asynchronous request
+PASS: timed-out chunk can activate after retry
+PASS: missing resource failure clears request and publishes failure
+PASS: missing resource can be retried
+PASS: successful retry recovers missing chunk
+PASS: already available terrain activates while neighbor remains unavailable
+PASS: collision barrier blocks unavailable seam
+PASS: neighbor failure does not remove valid current floor collision
+PASS: failed neighbor can be retried while current terrain remains desired
+PASS: barrier clears only after neighboring terrain is active
+FAIL: scene ready invalidation cannot publish stale activation
+FAIL: scene ready invalidation retires the unwanted instance and request
+FAIL: manager activation listener cannot cause a stale loader activation event
+FAIL: manager activation invalidation retires terrain and acknowledges deactivation
+FAIL: retained-instance callback invalidation cannot publish or retain stale activation
+FAIL: recursive activation callbacks cannot exceed the outer pump activation budget
+PASS: recursive pump guard leaves remaining activation eligible for the next frame
+PASS: real threaded ResourceLoader integration advances process frames
+PASS: real ResourceLoader completion activates fixture after frame polling
+Suite chunk_loader: 40 cases, 6 failures
+WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)

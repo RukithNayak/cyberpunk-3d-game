@@ -1,0 +1,197 @@
+{
+	"asset_data": {
+		"import_lods_enabled": true,
+		"prop_collision_boxes": 2,
+		"prop_collision_triangles": 24,
+		"prop_render_meshes": 30,
+		"prop_triangles": 4600,
+		"texture_resolution": [
+			1024,
+			1024
+		],
+		"textures_per_asset": 2,
+		"wall_collision_boxes": 4,
+		"wall_collision_triangles": 48,
+		"wall_render_meshes": 13,
+		"wall_triangles": 1428
+	},
+	"benchmark": "ASSET-04 reference asset repetition",
+	"cases": [
+		{
+			"collision_shapes": 6,
+			"collision_triangles_reference_sum": 72,
+			"draw_calls": {
+				"max": 47.0,
+				"mean": 47.0,
+				"median": 47.0,
+				"p95": 47.0
+			},
+			"engine_process_ms": {
+				"max": 207.84,
+				"mean": 66.0809999999995,
+				"median": 15.791,
+				"p95": 207.84
+			},
+			"frame_interval_ms": {
+				"max": 8.33333333333333,
+				"mean": 8.32909999999997,
+				"median": 8.33333333333333,
+				"p95": 8.33333333333333
+			},
+			"mesh_instances_reference_sum": 43,
+			"name": "isolated_reference",
+			"prop_instances": 1,
+			"render_primitives": {
+				"max": 6056.0,
+				"mean": 6056.0,
+				"median": 6056.0,
+				"p95": 6056.0
+			},
+			"render_triangles_reference_sum": 6028,
+			"samples": 240,
+			"static_bodies": 6,
+			"static_memory_bytes": {
+				"max": 46464167.0,
+				"mean": 46440301.2,
+				"median": 46438967.0,
+				"p95": 46464167.0
+			},
+			"unique_standard_materials": 2,
+			"unique_textures": 4,
+			"video_memory_bytes": {
+				"max": 67198131.0,
+				"mean": 67198131.0,
+				"median": 67198131.0,
+				"p95": 67198131.0
+			},
+			"wall_instances": 1
+		},
+		{
+			"collision_shapes": 24,
+			"collision_triangles_reference_sum": 288,
+			"draw_calls": {
+				"max": 129.0,
+				"mean": 129.0,
+				"median": 129.0,
+				"p95": 129.0
+			},
+			"engine_process_ms": {
+				"max": 12.919,
+				"mean": 12.2037666666667,
+				"median": 12.919,
+				"p95": 12.919
+			},
+			"frame_interval_ms": {
+				"max": 8.33333333333333,
+				"mean": 8.32870555555553,
+				"median": 8.33333333333333,
+				"p95": 8.33333333333333
+			},
+			"mesh_instances_reference_sum": 125,
+			"name": "small_block",
+			"prop_instances": 2,
+			"render_primitives": {
+				"max": 16368.0,
+				"mean": 16368.0,
+				"median": 16368.0,
+				"p95": 16368.0
+			},
+			"render_triangles_reference_sum": 16340,
+			"samples": 240,
+			"static_bodies": 24,
+			"static_memory_bytes": {
+				"max": 46977071.0,
+				"mean": 46953205.2,
+				"median": 46951871.0,
+				"p95": 46977071.0
+			},
+			"unique_standard_materials": 2,
+			"unique_textures": 4,
+			"video_memory_bytes": {
+				"max": 67198131.0,
+				"mean": 67198131.0,
+				"median": 67198131.0,
+				"p95": 67198131.0
+			},
+			"wall_instances": 5
+		},
+		{
+			"collision_shapes": 96,
+			"collision_triangles_reference_sum": 1152,
+			"draw_calls": {
+				"max": 504.0,
+				"mean": 504.0,
+				"median": 504.0,
+				"p95": 504.0
+			},
+			"engine_process_ms": {
+				"max": 21.389,
+				"mean": 17.3815666666667,
+				"median": 15.59,
+				"p95": 21.389
+			},
+			"frame_interval_ms": {
+				"max": 16.661,
+				"mean": 8.89138926767674,
+				"median": 8.33333333333333,
+				"p95": 11.1111111111111
+			},
+			"mesh_instances_reference_sum": 500,
+			"name": "street_segment",
+			"prop_instances": 8,
+			"render_primitives": {
+				"max": 65388.0,
+				"mean": 65388.0,
+				"median": 65388.0,
+				"p95": 65388.0
+			},
+			"render_triangles_reference_sum": 65360,
+			"samples": 240,
+			"static_bodies": 96,
+			"static_memory_bytes": {
+				"max": 49264759.0,
+				"mean": 49240893.2,
+				"median": 49239559.0,
+				"p95": 49264759.0
+			},
+			"unique_standard_materials": 2,
+			"unique_textures": 4,
+			"video_memory_bytes": {
+				"max": 67198131.0,
+				"mean": 67198131.0,
+				"median": 67198131.0,
+				"p95": 67198131.0
+			},
+			"wall_instances": 20
+		}
+	],
+	"date": "2026-10-23T16:13:33",
+	"debug_build": true,
+	"frame_cap": 0,
+	"godot_version": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"notes": [
+		"Fullscreen/current renderer only; no alternate resolution run.",
+		"Reference street-segment counts are measurement samples, not production city limits.",
+		"Performance monitors are debug-run, display-dependent measurements; WORLD-06 must select final budgets."
+	],
+	"renderer": "gl_compatibility",
+	"sampling": {
+		"sample_frames_per_case": 240,
+		"warmup_frames_per_case": 90
+	},
+	"screen_size": "(2940, 1912)",
+	"target_fps_reference_only": 60,
+	"viewport_size": "(2940.0, 1846.0)",
+	"window_mode": 3,
+	"window_size": "(2940, 1846)"
+}

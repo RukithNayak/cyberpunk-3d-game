@@ -1,0 +1,43 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+WORLD-06 PASS: first streamed chunk activates with its attached NPC actor
+WORLD-06 PASS: named NPC dialogue session starts with the installed local provider
+WORLD-06 PASS: neighbor chunk preloads before crossing the seam
+WORLD-06 PASS: player crosses onto connected district geometry
+WORLD-06 PASS: backtracking retains the encounter chunk
+WORLD-06 PASS: player returns to the encounter district
+WORLD-06 PASS: equipped pistol damages the configured security enemy
+WORLD-06 PASS: named NPC offers the authored retrieval mission
+WORLD-06 PASS: local Ollama response completes during traversal and mission interaction
+WORLD-06 PASS: delayed NPC provider configures for deterministic cancellation checks
+WARNING: This control can't grab focus. Use set_focus_mode() and set_focus_behavior_recursive() to allow a control to get focus.
+     at: grab_focus (scene/gui/control.cpp:3011)
+WORLD-06 PASS: old chunk retires after traversal into its neighbor
+WORLD-06 PASS: backtracking reloads the first district
+WORLD-06 PASS: backtracking reattaches the streamed NPC projection
+WARNING: This control can't grab focus. Use set_focus_mode() and set_focus_behavior_recursive() to allow a control to get focus.
+     at: grab_focus (scene/gui/control.cpp:3011)
+WORLD-06 PASS: walking away cancels the in-flight NPC response without unloading its chunk
+WARNING: This control can't grab focus. Use set_focus_mode() and set_focus_behavior_recursive() to allow a control to get focus.
+     at: grab_focus (scene/gui/control.cpp:3011)
+WORLD-06 PASS: chunk unload cancels the in-flight NPC response
+WORLD-06 PASS: backtracking restores Mara after cancellation
+WORLD-06 PASS: validated door hack commits authoritative open state
+WORLD-06 PASS: world loot pickup transfers item into the player grid
+WORLD-06 PASS: inventory medkit heals through the weapon action transaction
+WORLD-06 PASS: integrated player, inventory, mission and world state save to disk
+WARNING: This control can't grab focus. Use set_focus_mode() and set_focus_behavior_recursive() to allow a control to get focus.
+     at: grab_focus (scene/gui/control.cpp:3011)
+WORLD-06 PASS: player death cancels dialogue before saved checkpoint recovery
+WORLD-06 PASS: checkpoint restores data domains and rehydrates the hacked door
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+WORLD-06 relaunch observed: error=0 position=(-4.0, 0.0, 0.0) hp=95 inventory=2 missions=1 door=true
+WORLD-06_RELAUNCH_PASS: player/inventory/mission/world records restored in a fresh process
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+
+WORLD-06 PASS: fresh Godot process reloads feasibility checkpoint (exit 0)
+WORLD-06 PASS: offline provider failure returns authored fallback dialogue
+WORLD-06 smoke: 24/24 passed
+GODOT_EXIT=0

@@ -1,0 +1,129 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="PackedScene" path="res://features/player/player.tscn" id="1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape_floor"]
+size = Vector3(40, 0.2, 40)
+
+[sub_resource type="BoxShape3D" id="BoxShape_ceiling"]
+size = Vector3(4, 0.12, 4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_floor"]
+size = Vector3(40, 0.2, 40)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ceiling"]
+size = Vector3(4, 0.12, 4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_blockout"]
+
+[sub_resource type="StandardMaterial3D" id="Material_floor"]
+albedo_color = Color(0.16, 0.21, 0.29, 1)
+metallic = 0.28
+roughness = 0.78
+
+[sub_resource type="StandardMaterial3D" id="Material_ceiling"]
+albedo_color = Color(0.24, 0.29, 0.34, 1)
+roughness = 0.82
+
+[sub_resource type="StandardMaterial3D" id="Material_facade"]
+albedo_color = Color(0.2, 0.13, 0.3, 1)
+metallic = 0.35
+roughness = 0.62
+
+[sub_resource type="StandardMaterial3D" id="Material_accent"]
+albedo_color = Color(0.015, 0.32, 0.46, 1)
+emission_enabled = true
+emission = Color(0.015, 0.48, 0.8, 1)
+emission_energy_multiplier = 1.6
+roughness = 0.3
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial"]
+sky_top_color = Color(0.025, 0.045, 0.12, 1)
+sky_horizon_color = Color(0.18, 0.12, 0.25, 1)
+ground_bottom_color = Color(0.025, 0.035, 0.07, 1)
+ground_horizon_color = Color(0.13, 0.1, 0.2, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMaterial")
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 2
+background_color = Color(0.025, 0.035, 0.08, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.44, 0.5, 0.68, 1)
+ambient_light_energy = 1.05
+tonemap_mode = 3
+sky = SubResource("Sky")
+
+[node name="PlayerMovementFixture" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment")
+
+[node name="KeyLight" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-48, -32, 0)
+light_color = Color(0.66, 0.79, 1, 1)
+light_energy = 1.25
+shadow_enabled = true
+
+[node name="FillLight" type="OmniLight3D" parent="."]
+position = Vector3(5, 5, -3)
+light_color = Color(0.28, 0.62, 1, 1)
+light_energy = 2.8
+omni_range = 28.0
+omni_attenuation = 1.2
+
+[node name="FloorVisual" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.1, 0)
+mesh = SubResource("BoxMesh_floor")
+material_override = SubResource("Material_floor")
+
+[node name="CeilingVisual" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.72, 0)
+mesh = SubResource("BoxMesh_ceiling")
+material_override = SubResource("Material_ceiling")
+
+[node name="LeftBlockout" type="MeshInstance3D" parent="."]
+position = Vector3(3, 2, -6)
+scale = Vector3(2, 4, 2)
+mesh = SubResource("BoxMesh_blockout")
+material_override = SubResource("Material_facade")
+
+[node name="RightBlockout" type="MeshInstance3D" parent="."]
+position = Vector3(7, 2.5, -9)
+scale = Vector3(2.5, 5, 2.5)
+mesh = SubResource("BoxMesh_blockout")
+material_override = SubResource("Material_facade")
+
+[node name="FarFacade" type="MeshInstance3D" parent="."]
+position = Vector3(5, 3, -16)
+scale = Vector3(12, 6, 0.7)
+mesh = SubResource("BoxMesh_blockout")
+material_override = SubResource("Material_facade")
+
+[node name="CyanSign" type="MeshInstance3D" parent="."]
+position = Vector3(5, 4.15, -15.58)
+scale = Vector3(4.6, 0.12, 0.08)
+mesh = SubResource("BoxMesh_blockout")
+material_override = SubResource("Material_accent")
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.1, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="FloorShape" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("BoxShape_floor")
+
+[node name="LowCeiling" type="StaticBody3D" parent="."]
+position = Vector3(0, 1.72, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CeilingShape" type="CollisionShape3D" parent="LowCeiling"]
+shape = SubResource("BoxShape_ceiling")
+
+[node name="Player" parent="." instance=ExtResource("1")]
+position = Vector3(5, 0.05, 0)

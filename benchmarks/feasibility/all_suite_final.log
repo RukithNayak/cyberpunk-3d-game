@@ -1,0 +1,1146 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: sample arithmetic
+PASS: sample nested copy isolation
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: goon configures navigation fixture
+FAIL: navigation map returns a routed path around the wall
+AI_NAV_DIAG map=RID(201863462912) active=true iteration=2 region_iteration=1 closest=(0.0, 0.0, 0.0) regions=[RID(171798691840)] polygons=8 route=[]
+Suite ai_navigation: 2 cases, 1 failures
+
+
+FAIL: AI navigation isolated process exits successfully (1)
+PASS: entity registry script is available
+PASS: registry reports authority commit acceptance for projection consumers
+PASS: checked delta commits through the registry merge and preserves unrelated data
+PASS: checked valid no-op is an accepted commit
+WARNING: EntityRegistry ignored delta for unknown UUID: 123e4567-e89b-42d3-a456-426614174099
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] try_commit_state_delta (res://persistence/entity_registry.gd:42)
+         [1] _test_checked_delta (res://tests/persistence/test_registry.gd:16)
+         [2] run (res://tests/persistence/test_registry.gd:28)
+         [3] _initialize (res://tests/run_tests.gd:25)
+PASS: checked commit rejects unknown identity
+WARNING: EntityRegistry rejected non-serializable or oversized delta for UUID: 123e4567-e89b-42d3-a456-426614174000
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] try_commit_state_delta (res://persistence/entity_registry.gd:45)
+         [1] _test_checked_delta (res://tests/persistence/test_registry.gd:18)
+         [2] run (res://tests/persistence/test_registry.gd:28)
+         [3] _initialize (res://tests/run_tests.gd:25)
+PASS: checked unsafe delta rejects without changing truth
+PASS: registry exposes registration
+PASS: registry exposes state deltas
+PASS: registry exposes copied state lookup
+PASS: delta replaces scalar values
+PASS: delta recursively merges nested dictionaries
+PASS: delta replaces arrays as complete values
+WARNING: EntityRegistry ignored duplicate entity UUID: 123e4567-e89b-42d3-a456-426614174000
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] register_entity (res://persistence/entity_registry.gd:25)
+         [1] run (res://tests/persistence/test_registry.gd:42)
+         [2] _initialize (res://tests/run_tests.gd:25)
+PASS: duplicate registration preserves modified state
+PASS: returned state is deeply isolated from registry truth
+WARNING: EntityRegistry rejected non-canonical UUID: invalid-id
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] register_entity (res://persistence/entity_registry.gd:22)
+         [1] run (res://tests/persistence/test_registry.gd:48)
+         [2] _initialize (res://tests/run_tests.gd:25)
+WARNING: EntityRegistry rejected non-canonical UUID: 123E4567-E89B-42D3-A456-426614174000
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] register_entity (res://persistence/entity_registry.gd:22)
+         [1] run (res://tests/persistence/test_registry.gd:49)
+         [2] _initialize (res://tests/run_tests.gd:25)
+PASS: invalid UUID registration is rejected
+PASS: UUIDs must use canonical lowercase form
+WARNING: EntityRegistry rejected non-serializable or oversized state for UUID: 123e4567-e89b-42d3-a456-426614174001
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] register_entity (res://persistence/entity_registry.gd:28)
+         [1] run (res://tests/persistence/test_registry.gd:53)
+         [2] _initialize (res://tests/run_tests.gd:25)
+PASS: Node values are rejected from persistent state
+WARNING: EntityRegistry rejected non-serializable or oversized state for UUID: 123e4567-e89b-42d3-a456-426614174002
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] register_entity (res://persistence/entity_registry.gd:28)
+         [1] run (res://tests/persistence/test_registry.gd:59)
+         [2] _initialize (res://tests/run_tests.gd:25)
+PASS: over-depth records are rejected
+WARNING: EntityRegistry rejected non-serializable or oversized delta for UUID: 123e4567-e89b-42d3-a456-426614174003
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] try_commit_state_delta (res://persistence/entity_registry.gd:45)
+         [1] commit_state_delta (res://persistence/entity_registry.gd:34)
+         [2] run (res://tests/persistence/test_registry.gd:63)
+         [3] _initialize (res://tests/run_tests.gd:25)
+PASS: invalid delta is rejected atomically
+WARNING: EntityRegistry rejected non-serializable or oversized delta for UUID: 123e4567-e89b-42d3-a456-426614174003
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] try_commit_state_delta (res://persistence/entity_registry.gd:45)
+         [1] commit_state_delta (res://persistence/entity_registry.gd:34)
+         [2] run (res://tests/persistence/test_registry.gd:66)
+         [3] _initialize (res://tests/run_tests.gd:25)
+PASS: non-finite numeric delta is rejected
+WARNING: EntityRegistry rejected delta whose merged state exceeds limits for UUID: 123e4567-e89b-42d3-a456-426614174004
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] try_commit_state_delta (res://persistence/entity_registry.gd:49)
+         [1] commit_state_delta (res://persistence/entity_registry.gd:34)
+         [2] run (res://tests/persistence/test_registry.gd:74)
+         [3] _initialize (res://tests/run_tests.gd:25)
+PASS: merged state exceeding container bounds is rejected atomically
+WARNING: EntityRegistry ignored delta for unknown UUID: 123e4567-e89b-42d3-a456-426614174099
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] try_commit_state_delta (res://persistence/entity_registry.gd:42)
+         [1] commit_state_delta (res://persistence/entity_registry.gd:34)
+         [2] run (res://tests/persistence/test_registry.gd:76)
+         [3] _initialize (res://tests/run_tests.gd:25)
+PASS: unknown entity delta does not create a record
+PASS: faction state script is available
+PASS: faction standing lookup is available
+PASS: faction mutation contracts are available
+PASS: threshold queries are available
+PASS: standing clamps to -100
+PASS: hostility threshold classifies lower bound as hostile
+PASS: standing clamps to 100
+PASS: alliance threshold classifies upper bound as allied
+PASS: hostility threshold is inclusive
+PASS: alliance threshold is inclusive
+PASS: standing on opposite sides does not cross faction thresholds
+PASS: unknown faction lookup returns neutral zero
+PASS: unknown faction mutation is rejected
+PASS: unknown faction assignment is rejected
+PASS: known faction accepts bounded integer adjustment
+PASS: adjustment preserves standing bounds
+PASS: maximum integer adjustment clamps without overflow
+PASS: minimum integer adjustment clamps without overflow
+PASS: valid configurable faction thresholds are accepted
+PASS: overlapping faction thresholds are rejected
+PASS: configured hostile threshold is applied
+PASS: configured allied threshold is applied
+PASS: health starts full at configured maximum
+PASS: positive damage reduces health
+PASS: nonpositive damage has no effect or event
+PASS: nonpositive healing has no effect
+PASS: extreme healing clamps without overflow
+PASS: extreme damage clamps at death
+PASS: lethal damage emits one death
+PASS: dead actor cannot heal or emit repeated deaths
+PASS: restore rejects health beyond maximum
+PASS: restore rejects zero maximum
+PASS: restore rejects negative maximum
+PASS: restore rejects negative health
+PASS: invalid restore leaves state unchanged
+PASS: explicit checkpoint restore accepts valid state
+PASS: restore applies health and maximum together
+PASS: living actor can heal
+PASS: death event resets after explicit living restore
+PASS: invalid initial maximum falls back to documented default
+PASS: maximum integer health heals safely
+PASS: save store script is available
+PASS: save and load entry points are available
+PASS: valid snapshot saves
+PASS: round trip preserves nested, null, int64 and float types
+PASS: large integer retains integer type and precision
+PASS: signed int64 boundaries round trip
+PASS: float retains float type
+PASS: small and high-precision floats round trip
+PASS: maximum registry entity-state depth round trips
+PASS: missing save fails without live mutation
+PASS: truncated save fails without live mutation
+PASS: invalid slot is rejected
+PASS: unsupported future version fails without live mutation
+PASS: duplicate entity UUID is rejected before live swap
+PASS: valid candidate without duplicate UUID still loads
+PASS: out-of-range faction value is rejected before live swap
+PASS: failed write preserves prior valid disk save
+PASS: interrupted atomic replacement preserves prior valid disk save
+PASS: load after interrupted replacement preserves prior save
+PASS: subsequent replacement succeeds
+PASS: consumer rejection leaves live state unchanged
+PASS: failed load leaves disk save unchanged
+PASS: native filesystem save, replacement and load round trip succeeds
+PASS: chunk manifest script is available
+PASS: world manager script is available
+PASS: manifest exposes validated setup and IDs
+PASS: manifest preserves authored stable-identity descriptors
+PASS: authored entity default data is copy isolated
+PASS: manifest rejects malformed entity UUIDs
+PASS: manifest rejects duplicate UUID ownership across chunks
+PASS: manifest entity node paths cannot escape their chunk
+PASS: manifest rejects two persistent identities for one node path
+PASS: manifest initial entity data rejects engine Objects
+PASS: manifest rejects malformed entity descriptor containers
+PASS: malformed chunk IDs are rejected
+PASS: duplicate chunk IDs are rejected
+PASS: unknown adjacent chunk IDs are rejected
+PASS: asymmetric adjacency is rejected
+PASS: missing chunk scenes are rejected
+PASS: non-3D chunk scenes are rejected
+PASS: Node3D-derived chunk root types are accepted
+PASS: non-positive chunk bounds are rejected
+PASS: valid symmetric manifest is accepted
+PASS: configured manifest rejects later replacement
+PASS: manifest preserves configured chunk IDs
+PASS: both greybox chunk fixtures load as scenes
+PASS: walkable floor collision bounds meet at the seam
+PASS: fixtures define first-person-height seam viewpoints
+PASS: manager exposes desired lifecycle updates
+PASS: configured manager rejects replacement
+PASS: rejected manager replacement preserves generations
+PASS: preload margin selects both chunks near seam
+PASS: current preload generation can be acknowledged as active
+PASS: activation event publishes chunk ID and generation
+PASS: rapid seam recrossing does not flicker desired chunks
+PASS: departed chunk exits preload range while neighbor stays desired
+PASS: pre-unload listeners observe committed generation and desired set
+PASS: hysteresis keeps chunk desired on boundary recrossing
+PASS: re-entering during pending teardown starts a new preload generation
+PASS: prior teardown acknowledgement is stale after re-entry
+PASS: new re-entry generation can be acknowledged as active
+PASS: chunks leave desired set beyond preload and hysteresis margins
+PASS: manager exposes generation-tagged lifecycle acknowledgements
+PASS: pre-unload event publishes IDs and lifecycle generations
+PASS: stale lifecycle generation cannot acknowledge deactivation
+PASS: current retired generation can acknowledge deactivation
+PASS: deactivation returns lifecycle state to unloaded
+PASS: deactivation event publishes chunk ID and generation
+PASS: ordered save migration service is available
+PASS: previous schema migration is deterministic and idempotent at the current version
+PASS: migration preserves stable IDs and unknown recoverable domain records
+PASS: missing migration step is rejected
+PASS: unsupported future save version is rejected
+PASS: unsafe migration rejects without overwriting source bytes or live state
+PASS: rejected migration with an OK error returns failure without changing live state or source bytes
+PASS: snapshot adapter and authoritative owners are available without scenes
+PASS: snapshot adapters preserve owned and extension data with numeric types and no runtime scenes
+PASS: mutating captured snapshot copies cannot mutate live owners
+PASS: extension capture rejects collisions with adapter-owned root keys
+PASS: unknown root records reject before mutation when no extension owner is configured
+PASS: adapter validates all candidate owners before replacement
+PASS: adapter rejects engine Objects from player and domain state
+PASS: adapter rejects duplicate stable entity IDs
+PASS: prepared adapter replacement commits all owners through their existing instances
+PASS: participant prepare failure leaves every live owner unchanged
+PASS: failed participant preparation rejects migrated load before any owner commit
+PASS: SaveStore migrates an older file before validated owner preparation and atomic apply
+PASS: successful migrated load retains unknown root and domain records on recapture
+PASS: successful old-save load leaves original source bytes intact
+PASS: explicit save after migration retains unknown root and domain records
+PASS: checkpoint controller resource exists
+PASS: checkpoint fixture resource exists
+PASS: checkpoint saves all participants
+PASS: nested save is rejected while a save is active
+PASS: checkpoint fixture snapshot contains data only
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: fresh process hydrates checkpoint data
+Suite checkpoint_relaunch_child: 1 cases, 0 failures
+
+PASS: fresh Godot process restores the saved checkpoint (exit 0)
+PASS: player death synchronously restores health, equipment and ammo, completed mission/reward, world flags, NPC facts and active hacks
+PASS: restoring a checkpoint does not re-award a claimed loot transaction
+PASS: restoring a completed mission does not award its credits again
+PASS: missing checkpoint returns disk error, emits recovery, and restores the last validated state
+PASS: corrupt checkpoint fails safely, emits recovery, and restores without partial state
+PASS: invalid domain candidate is rejected before any participant partially commits
+PASS: checkpoint can be saved again after recovery
+PASS: validated checkpoint restore succeeds
+PASS: nested load is rejected without partial state
+PASS: chunk loader script compiles and is available
+PASS: desired chunk requests start once
+PASS: repeated desired state coalesces duplicate requests
+PASS: activation budget limits simultaneously ready scenes to one per frame
+PASS: remaining ready scene activates on following frame
+PASS: duplicate requests produce exactly one instance for each chunk
+PASS: successful activation is acknowledged with current generations
+PASS: leaving desired set frees both transient instances
+PASS: unload cleans pending work and acknowledges deactivation
+PASS: later chunk request can complete and activate before earlier request
+PASS: earlier request activates when its own resource completes
+PASS: rapid active-chunk re-entry retains one instance without a new resource request
+PASS: retained instance is acknowledged under the fresh desired generation
+PASS: loader publishes activation for the fresh retained-instance generation
+PASS: completion after unload cannot activate obsolete generation
+PASS: re-entry starts a fresh generation and retry request
+PASS: only the current re-entry generation becomes active
+PASS: delayed request times out without blocking
+PASS: timeout clears pending work and preserves active terrain state
+PASS: timed out generation does not hot-loop retries
+PASS: desired chunk permits explicit retry after timeout
+PASS: retry starts another asynchronous request
+PASS: timed-out chunk can activate after retry
+PASS: missing resource failure clears request and publishes failure
+PASS: missing resource can be retried
+PASS: successful retry recovers missing chunk
+PASS: already available terrain activates while neighbor remains unavailable
+PASS: collision barrier blocks unavailable seam
+PASS: neighbor failure does not remove valid current floor collision
+PASS: failed neighbor can be retried while current terrain remains desired
+PASS: barrier clears only after neighboring terrain is active
+PASS: scene ready invalidation cannot publish stale activation
+PASS: scene ready invalidation retires the unwanted instance and request
+PASS: manager activation listener cannot cause a stale loader activation event
+PASS: manager activation invalidation retires terrain and acknowledges deactivation
+PASS: retained-instance callback invalidation cannot publish or retain stale activation
+PASS: recursive activation callbacks cannot exceed the outer pump activation budget
+PASS: recursive pump guard leaves remaining activation eligible for the next frame
+PASS: real threaded ResourceLoader integration advances process frames
+PASS: real ResourceLoader completion activates fixture after frame polling
+PASS: native retry coalesces a completed request without leaving an extra engine load token
+PASS: cancelled native completion releases its engine token without activating stale terrain
+PASS: loader supports an optional entity hydration lifecycle
+PASS: entity preparation occurs before tree entry and activation after entry
+PASS: retained re-entry hydrates again before renewing entity interactions
+PASS: entity retirement runs before transient terrain teardown
+PASS: rejected entity preparation cannot enter or activate the scene
+PASS: rejected entity activation keeps manager retryable instead of falsely active
+PASS: entity activation failure recovers through an explicit retry
+PASS: entity hydrator service script is available
+PASS: valid persistent projection manifest is accepted
+PASS: manifest publishes all authored persistent entity descriptors
+PASS: persistent test world manager configures
+PASS: hydrator accepts registry, manifest and lifecycle manager
+PASS: whole chunk defaults prepare before scene entry
+PASS: prepare registers all missing authored defaults
+PASS: prepared projections remain non-interactive
+PASS: door _ready observes hydrated state while interactions are disabled ({ "locked": true } / false)
+PASS: current prepared chunk activates
+PASS: activation enables exactly the live projections
+PASS: duplicate live chunk preparation is rejected
+PASS: door state mutation commits through current generation
+PASS: door delta is authoritative immediately and reprojected
+PASS: loot collection tombstone commits
+PASS: collected loot projection is disabled and unbound
+PASS: NPC record delta commits
+PASS: NPC record preserves recursively merged data
+PASS: pre-unload invalidates live interactions with retirement generation
+PASS: retirement revokes bindings and disables retained projection
+PASS: save-boundary registry reads include mutations before unload
+PASS: real SaveStore round trips authoritative entity state at the unload boundary
+PASS: stale generation cannot write after unload
+PASS: retained instance prepares again on reverse entry
+PASS: tombstoned loot projection stays removed on backtracking
+PASS: reverse-entry chunk activates with current generation
+PASS: reverse order preserves UUID ownership and NPC state without duplicate bindings
+PASS: older generation cannot overwrite live progress
+PASS: stale rejection leaves newer NPC record intact
+PASS: missing target rejects whole chunk preparation
+PASS: failed preparation registers no partial defaults or bindings
+WARNING: EntityRegistry rejected non-serializable or oversized delta for UUID: 00000000-0000-4000-8000-000000000031
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] try_commit_state_delta (res://persistence/entity_registry.gd:45)
+         [1] commit_entity_delta (res://world/entity_hydrator.gd:137)
+         [2] run (res://tests/world/test_chunk_persistence.gd:110)
+PASS: invalid data delta rejects without mutation
+PASS: invalid delta has no partial authority effect
+PASS: generation invalidation from projection callback cancels preparation
+PASS: authored defaults may remain after callback cancellation without staged live ownership
+PASS: retirement callback can prepare a newly entered generation
+PASS: retirement callback can activate a newly entered generation
+PASS: older retirement callback preserves newer generation bindings
+PASS: newer binding remains writable after reentrant retirement
+PASS: retirement callback prepares the retained instance at its newer generation
+PASS: retirement callback reactivates the retained instance
+PASS: old retirement leaves every same-instance newer projection enabled
+PASS: same-instance newer binding remains readable and writable
+PASS: activation callback invalidation rejects the stale generation
+PASS: activation cancellation leaves every staged projection disabled
+PASS: tombstone callback prepares a newer chunk generation
+PASS: tombstone callback activates a newer chunk generation
+PASS: collected tombstone commits through a reentrant projection callback
+PASS: tombstone cleanup preserves other newer-generation entity bindings
+PASS: newer-generation tombstoned projection remains suppressed
+PASS: tombstone revokes its old owner before callback can issue a reentrant stale delta
+PASS: saved destroyed record suppresses an authored live NPC projection
+PASS: suppressed destroyed identity cannot be revived by an interaction
+PASS: destroyed NPC stays absent on fresh-instance backtracking with stable saved data
+PASS: test exterior scene is available
+PASS: interior transition autoload is registered
+PASS: missing interior keeps exterior active and restores controls (["res://world/fixtures/missing.tscn:Scene resource request failed (7)"])
+PASS: interior request enters a transition state
+PASS: exterior interaction locks during preload
+PASS: interior scene loads asynchronously
+PASS: interior player uses authored spawn marker ((0.0, 0.0, 2.0))
+PASS: authoritative persistent data survives scene replacement
+PASS: return transition restores exterior scene
+PASS: return transition restores exterior player position
+PASS: interior request enters a transition state
+PASS: exterior interaction locks during preload
+PASS: interior scene loads asynchronously
+PASS: interior player uses authored spawn marker ((0.0, 0.0, 2.0))
+PASS: authoritative persistent data survives scene replacement
+PASS: return transition restores exterior scene
+PASS: return transition restores exterior player position
+PASS: duplicate requests are rejected without replacing an active transition
+PASS: two enter/exit cycles complete with fades
+PASS: timed-out load restores controls and leaves the current scene active
+PASS: transition coordinator restores its native resource backend
+PASS: input settings resource loads
+PASS: first-person player scene loads
+PASS: movement fixture loads
+PASS: input settings restore defaults
+PASS: controller actions are named and installed
+PASS: camera settings accept bounded values
+PASS: out-of-range FOV is rejected
+PASS: unconflicted jump rebind succeeds
+PASS: duplicate binding is rejected
+PASS: settings persist atomically
+PASS: saved settings restore
+PASS: FOV survives settings restoration
+PASS: look sensitivity survives settings restoration
+PASS: invert-look survives settings restoration
+PASS: rebound action survives settings restoration
+PASS: test settings can reset to defaults
+PASS: inventory lock permits a consumable transaction but blocks combat input
+PASS: pause lock blocks inventory healing
+PASS: inventory healing resumes when only the inventory lock remains
+PASS: player exposes the HUD camera comfort control
+PASS: reduced camera feedback scales recoil to a gentler level
+PASS: standard camera feedback restores full recoil
+PASS: named forward action moves the character (0.80966651439667, velocity=(0.0, 0.0, -4.0))
+PASS: run action increases movement speed (1.92499935626984 > 0.80966651439667)
+PASS: dialogue lock disables actions
+PASS: dialogue lock stops movement
+PASS: dialogue lock prevents jump action
+PASS: removing final lock restores actions
+PASS: mouse capture can resume after a control lock
+PASS: crouch action enters crouch state
+PASS: crouch preserves foot height (0.00083272840129 -> 0.00083272840129)
+PASS: crouch lowers first-person camera
+PASS: player settles on floor beneath the low ceiling
+PASS: real physics query detects a standing-height obstruction
+PASS: low headroom prevents jump (0.0, crouched=true)
+PASS: player can stand after obstruction removal
+PASS: player remains grounded before jumping (0.0)
+PASS: jump action launches when headroom is clear (4.5)
+PASS: jump lands on the collision floor
+PASS: focus loss releases mouse capture
+PASS: focus return does not recapture mouse
+PASS: explicit safe resume captures mouse
+PASS: resume is rejected while unfocused
+PASS: hitscan resolves a camera-aimed target
+PASS: one accepted shot applies configured damage once
+PASS: weapon recoil raises camera by configured amount
+PASS: fire cadence rejects a shot during cooldown
+PASS: control lock rejects firing
+PASS: transition control lock rejects firing
+PASS: dead actor rejects firing
+PASS: target beyond weapon range receives no damage
+PASS: muzzle obstruction blocks camera-visible target
+PASS: camera and muzzle disagreement does not damage off-aim target
+PASS: spread is repeatable for a fixed seed
+PASS: weapon and healing item enter inventory
+PASS: reserve ammo enters family pouch
+PASS: accepted fire commits exactly one magazine round
+PASS: rejected shot restores the reserved magazine round
+PASS: reload begins with a one-use animation token
+PASS: fire input during reload cannot bypass the action state
+PASS: reload completion transfers bounded reserve ammo once
+PASS: repeated reload callback cannot duplicate ammunition
+PASS: accepted shot and reload preserve total ammunition
+PASS: weapon swap cancels outstanding reload callback
+PASS: death cancels reload callback
+PASS: empty reserve rejects reload without changing the magazine
+PASS: pause or transition control lock cancels reload callback
+PASS: one healing callback applies authored heal and consumes one item
+PASS: repeated heal callback cannot heal twice
+PASS: death cancels pending heal without consuming its item
+PASS: weapon swap cancels pending heal without consuming its item
+PASS: player checkpoint snapshot validates health and position data
+PASS: save store captures the checkpoint while reload is pending
+PASS: in-flight reload can finish after an independent save capture
+PASS: load restores a save made mid-reload and cancels the current action
+PASS: load restores pre-reload magazine, rolled stats and family reserve
+PASS: checkpoint restore rejects both stale reload callbacks
+PASS: invalid checkpoint cannot partially alter player state
+PASS: gameplay HUD scene is available
+PASS: pause/settings scene is available
+PASS: HUD model weapon and reserve are valid
+PASS: pause menu starts closed
+PASS: pause locks gameplay and pauses the scene tree
+PASS: settings opens with keyboard focus on the first control
+PASS: pause settings persist and apply camera options
+PASS: resume releases pause lock and restores mouse capture
+PASS: HUD reads initial health from HealthState
+PASS: HUD reads equipped magazine/reserve and presents center crosshair
+PASS: HUD comfort toggle reduces player camera recoil
+PASS: HUD refreshes from authoritative health signal
+PASS: one accepted shot produces one feedback event and updates magazine
+PASS: HUD refreshes after transactional reload
+PASS: HUD refreshes after healing
+PASS: HUD reflects checkpoint health restoration
+PASS: item definition resource is available
+PASS: item instance resource is available
+PASS: loot table resource is available
+PASS: valid weapon definition is accepted
+PASS: nonpositive item dimensions are rejected
+PASS: valid weighted loot table is accepted
+PASS: valid seeded loot produces item instances
+PASS: same seed repeats the weighted item definition
+PASS: same seed repeats rarity and stat rolls
+PASS: each spawned item receives a unique UUID
+PASS: spawned item has a canonical identity and valid bounded data
+PASS: rolled stats stay inside the configured tier bounds
+PASS: weighted table can select each configured item definition
+PASS: rarity changes do not change the underlying item identity
+PASS: spawn copies item dimensions and requested grid position
+PASS: spawn records current magazine ammunition
+PASS: JSON item instance reloads against its definition
+PASS: UUID, rarity, rolls, magazine and equipment state round-trip without rerolling
+PASS: persistent item data rejects Nodes in equipment state
+PASS: magazine above definition capacity is rejected
+PASS: zero definition weight invalidates the loot table
+PASS: invalid definition weights cannot spawn an item
+PASS: zero rarity weight invalidates the loot table
+PASS: invalid loot weights cannot spawn an item
+PASS: configured grid inventory service is available
+PASS: multi-cell item fits exactly at the configured lower-right corner
+PASS: successful insertion emits inventory_changed
+PASS: another cell can be independently occupied
+PASS: overlapping insertion is rejected
+PASS: rejected insertion does not emit inventory_changed
+PASS: negative placement is rejected
+PASS: out-of-bounds placement is rejected
+PASS: duplicate UUID insertion is rejected
+PASS: failed out-of-bounds movement is rejected
+PASS: movement into an occupied cell is rejected
+PASS: failed movement preserves the original placement
+PASS: valid movement commits
+PASS: movement updates the stored placement
+PASS: remove returns the item and clears its grid ownership
+PASS: removing a missing UUID has no effect
+PASS: one-cell inventory can be filled
+PASS: full inventory rejects pickup
+PASS: failed pickup leaves world loot intact
+PASS: pickup test item satisfies item data validation
+PASS: pickup test world drop is active
+PASS: valid pickup inserts the item
+PASS: world loot is removed only after successful insertion
+PASS: successful pickup establishes inventory ownership
+PASS: duplicate pickup is rejected
+PASS: duplicate pickup leaves its world drop intact
+PASS: equipment service is available
+PASS: family ammo pouch is available
+PASS: consumable service is available
+PASS: weapon instances enter inventory
+PASS: reserve ammo is added by family
+PASS: zero and negative ammo consumption are rejected
+PASS: insufficient ammo leaves family reserve unchanged
+PASS: wrong family cannot consume pistol reserve
+PASS: valid family ammo consumption commits
+PASS: reserve capacity rejects overflow atomically
+PASS: weapon can be equipped into primary slot
+PASS: active stats combine item rolls and weapon family
+PASS: equipping another weapon swaps the slot
+PASS: swapped weapon is no longer equipped
+PASS: new weapon is the sole equipped instance
+PASS: one item cannot be equipped in duplicate slots
+PASS: wrong-family reserve cannot reload a rifle
+PASS: rifle reserve is independent from pistol reserve
+PASS: reload transfers only the magazine's remaining capacity
+PASS: reload commits magazine and reserve transfer together
+PASS: full magazine does not consume reserve
+PASS: dropping an equipped weapon clears equipment state
+PASS: dropped item leaves inventory ownership
+PASS: medkit enters inventory
+PASS: valid medkit use heals and consumes once
+PASS: successful healing commits the health effect and item removal
+PASS: reentrant double-use callback is rejected
+PASS: consumed item cannot be reused
+PASS: second medkit enters inventory
+PASS: full-health use is rejected
+PASS: full-health rejection preserves medkit
+PASS: third medkit enters inventory
+PASS: dead-player healing is rejected
+PASS: dead-player rejection preserves medkit
+PASS: fractional grid coordinates are rejected
+PASS: inventory snapshot service is available
+PASS: idempotent item grant service is available
+PASS: equipped weapon is prepared for persistence
+PASS: reserve ammunition is prepared for persistence
+PASS: first equipped inventory snapshot saves through CORE-04 adapters
+PASS: duplicate item UUID load rejects without partially changing inventory or adapters
+PASS: unknown item definition rejects before hydration
+PASS: dropped item is picked back up before second save
+PASS: pickup removal and re-equip are applied
+PASS: second inventory state saves with its new grid placement
+PASS: inventory accepts blocker for full-grid reward fixture
+PASS: inventory accepts blocker for full-grid reward fixture
+PASS: inventory accepts blocker for full-grid reward fixture
+PASS: full inventory rejects immediate reward grant
+PASS: rejected full-grid grant retains an unclaimed entitlement
+PASS: pending entitlement saves through the domain snapshot adapter
+PASS: first save restores prior equipment state
+PASS: first load preserves grid position, equipment, rolls, and magazine
+PASS: first load preserves family reserves and unrelated domain data
+PASS: second save independently restores the dropped-and-picked-up placement
+PASS: pending entitlement survives load after a full-grid rejection
+PASS: freeing one grid cell permits reward retry
+PASS: pending reward commits after grid capacity becomes available
+PASS: one reward item is committed and entitlement is claimed
+PASS: replaying a claimed reward transaction does not duplicate its item
+PASS: claimed grant ledger is saved
+PASS: save load restores the awarded item and its claimed transaction
+PASS: replaying the grant after load remains idempotent
+PASS: out-of-range item dimensions reject without partial hydration
+PASS: project assigns the reusable cyberpunk Theme
+PASS: shared Theme uses the revised Avenir display typography
+PASS: shared panel surfaces have the brighter graphite contrast
+PASS: inventory UI scene is available
+PASS: inventory fixture records are prepared
+PASS: family reserves are prepared
+PASS: inventory cells use readable equipment-card proportions
+PASS: opening inventory locks player input
+PASS: opening inventory selects a keyboard-navigation control
+PASS: inspection shows rarity, rolled stats, magazine and family reserves
+PASS: occupied cell begins a drag
+PASS: overlap preview is invalid
+PASS: failed placement preserves the item
+PASS: free-cell placement preview is valid
+PASS: valid drag commits through inventory service
+PASS: second drag begins
+PASS: cancelled drag leaves item in its authoritative cell
+PASS: equip action uses equipment service and refreshes equipment event
+PASS: equipping second weapon swaps through equipment service
+PASS: consumable action heals and consumes through service
+PASS: drop action transfers an unequipped item to the fixture
+PASS: inventory UI saves through the CORE-04 save store
+PASS: save-load comparison mutates inventory after snapshot
+PASS: inventory UI loads the saved inventory through CORE-04
+PASS: UI refresh after save/load matches restored inventory model
+PASS: fixture fills free grid cell
+PASS: fixture fills free grid cell
+PASS: fixture fills free grid cell
+PASS: fixture fills free grid cell
+PASS: fixture fills free grid cell
+PASS: fixture fills free grid cell
+PASS: fixture fills free grid cell
+PASS: fixture fills free grid cell
+PASS: fixture fills free grid cell
+PASS: fixture fills free grid cell
+PASS: fixture fills free grid cell
+PASS: full-grid pickup explains rejection and keeps world loot
+PASS: pickup retries successfully after capacity is available
+PASS: mouse event drag path cancels invalid overlap without moving item
+PASS: drag can start before closing the UI
+PASS: closing cancels drag and restores player control
+PASS: reopening inventory restores its player lock
+PASS: Escape closes inventory and releases input lock
+PASS: Tab reopens inventory and reacquires its input lock
+PASS: scene-exit fixture starts a drag
+PASS: scene exit cancels drag without moving the item and releases input lock
+PASS: HACK-01 resources and service are available
+PASS: the five detailed-design hacks have default definitions
+PASS: ability costs, cooldowns and durations match recorded tuning defaults
+PASS: negative ability cost is rejected
+PASS: zero ability cost is rejected
+PASS: energy defaults match recorded tuning values
+PASS: energy state accepts bounded initial values
+PASS: energy can be spent at the exact available boundary
+PASS: insufficient energy leaves the pool unchanged
+PASS: energy regenerates by rate times elapsed seconds
+PASS: energy regeneration clamps at maximum
+PASS: negative elapsed time is rejected without energy mutation
+PASS: non-positive energy maximum is rejected
+PASS: negative regeneration rate is rejected
+PASS: negative starting energy is rejected
+PASS: hacking service accepts the valid operator/state/catalog
+PASS: eligible tagged target accepts its hack
+PASS: successful hack commits once then charges its configured cost
+PASS: same target and ability cannot bypass active cooldown
+PASS: target may be hacked again when eligible after cooldown
+PASS: wrong target tag rejects without spending energy
+PASS: blocked line of sight rejects without spending energy
+PASS: out-of-range target rejects without spending energy
+PASS: target access/current-state rejection does not spend energy
+PASS: missing stable target identity rejects without spending energy
+PASS: declined target commit preserves target state and refunds energy
+PASS: declined target commit does not start a cooldown
+PASS: insufficient energy rejects before target commit
+PASS: a request with exactly its configured cost succeeds and spends to zero
+PASS: active hack record contains only stable identity and effect data
+PASS: HACK-02 door target adapter is available
+PASS: mock locked door accepts the unlock request
+PASS: mock target changes only its lock flag and preserves unrelated state
+PASS: door fixture world manager configures
+PASS: door fixture hydrator configures
+PASS: locked door hydrates with current lifecycle generation
+PASS: door fixture activates
+PASS: locked door starts with an enabled blocking shape
+PASS: closed door blocks traversal before unlock
+PASS: door fixture hacking service configures
+PASS: eligible locked door accepts UNLOCK_DOOR (reason= enabled=true locked=false uuid=00000000-0000-4000-8000-000000000041)
+PASS: unlock commits only durable lock/open flags to the entity registry
+PASS: successful unlock opens door and disables its blocking collider
+PASS: player can traverse after the door collider is disabled
+PASS: door emits state feedback after authoritative commit
+PASS: open door record saves through CORE-03 SaveStore
+PASS: saved open state restores into a fresh registry after unload
+PASS: fresh door projection hydrates after unload/re-entry
+PASS: fresh door projection activates
+PASS: saved open door remains traversable on fresh projection reload
+PASS: mission-critical door rejects without charge or state change
+PASS: ordinary door accepts first unlock
+PASS: rehacking an unlocked door rejects without a second charge
+PASS: second ordinary door can unlock before disappearing
+PASS: disappearing target rejects without charging
+PASS: HACK-03 security camera target script exists
+PASS: HACK-03 security turret target script exists
+PASS: active camera detects a player in its view cone and line of sight
+PASS: camera rejects targets outside its configured view cone
+PASS: camera rejects targets beyond its configured detection range
+PASS: eligible camera accepts DISABLE_CAMERA
+PASS: DISABLE_CAMERA suppresses camera detection
+PASS: active camera effect rejects reapplication without another energy charge
+PASS: camera remains disabled before configured duration expires
+PASS: camera restores detection when its effect expires
+PASS: camera detection respects an occluding wall
+PASS: turret accepts explicit faction and friendly-mode configuration
+PASS: hostile faction turret targets player before hacking
+PASS: hostile turret does not target an unrelated faction before hacking
+PASS: eligible hostile turret accepts DISABLE_TURRET
+PASS: friendly override creates a safe player crossing and targets hostile gangs
+PASS: turret effect reapplication is rejected during cooldown without charge
+PASS: expiry restores current faction authority rather than stale pre-hack hostility
+PASS: second turret configures before the destruction case
+PASS: neutral-mode target starts hostile before the effect
+PASS: explicit neutral turret accepts DISABLE_TURRET
+PASS: neutral override ceases fire against all factions
+PASS: destroyed turret does not restore allegiance when its effect timer elapses
+PASS: HACK-04 distraction target script exists
+PASS: HACK-04 implant target script exists
+PASS: HACK-04 uses the existing AI-02 guard scene
+PASS: AI perceptions register for decoupled distraction broadcasts
+PASS: eligible sound source accepts TRIGGER_DISTRACTION
+PASS: sound reaches listeners within the authored radius only
+PASS: guard investigates the distraction position through cover
+PASS: distraction cooldown prevents duplicate event and charge
+PASS: combat guard accepts the existing AI faction contract
+PASS: open-lane guard has a visible hostile candidate
+PASS: combat guard advances before the implant hack
+PASS: guard is actively attacking before DISRUPT_IMPLANT
+PASS: eligible live implant accepts DISRUPT_IMPLANT
+PASS: implant hack applies configured damage and interrupts the active attack
+PASS: already stunned implant cannot duplicate damage
+PASS: guard cannot attack during the first 2.99 seconds of the stun
+PASS: stun expires at three seconds without a repeated attack
+PASS: implant cooldown blocks repeat requests without another damage event
+PASS: dead or immune guard rejects implant disruption
+PASS: HACK-05 data-only timed effect snapshot is available
+PASS: HACK-05 hacking HUD is available
+PASS: HACK-05 camera target can restore an active effect
+PASS: timed hack fixture has a valid streamed chunk
+PASS: timed hack fixture configures WORLD-01 lifecycle authority
+PASS: hack snapshot binds lifecycle activation and unload events
+PASS: hack room becomes active
+PASS: hydrated camera registers by stable ID and owning chunk
+PASS: hacking service accepts the optional persistent effect owner
+PASS: HUD status query exposes eligible target cost and duration without mutation
+PASS: hacking HUD has an instantiable reusable scene
+PASS: HUD shows target readiness, cost, cooldown, and duration
+PASS: camera hack commits through the snapshot owner
+PASS: HUD presents committed hack feedback
+PASS: active camera effect rejects a repeated hack
+PASS: HUD presents authoritative rejection feedback
+PASS: save captures the remaining active simulation duration as data
+PASS: persisted hack domain contains no Nodes or engine Objects
+PASS: active hack remainder saves through CORE-04 SaveStore
+PASS: mismatched chunk projection drops the delayed effect without applying it
+PASS: loaded snapshot removal clears the matching live effect on the next simulation tick
+PASS: saved effect reloads into the same active snapshot owner
+PASS: same-chunk load reapplies the effect without retaining stale save-time truth
+PASS: effect time pauses as soon as WORLD-01 announces chunk unload
+PASS: fresh snapshot owner binds to WORLD-01 lifecycle events
+PASS: fresh snapshot owner loads the effect remainder through CORE-04 SaveStore
+PASS: fresh projection resumes the saved camera effect without stale target references
+PASS: restored effect expires after its remaining active time
+PASS: HUD visibly reports an unavailable hacking provider
+PASS: AI-01 perception and faction rules are available
+PASS: perception accepts faction owner and default sight configuration
+PASS: visible target inside sight range is observed
+PASS: visual contact records seen and last-known positions
+PASS: wall occlusion clears current visual contact
+PASS: occluded target movement does not update last-known position
+PASS: out-of-range target cannot update visual knowledge
+PASS: target at the configured sight-range boundary remains visible
+PASS: sound at the inclusive radius is emitted through a wall without granting visual contact
+PASS: sound outside radius is ignored
+PASS: invalid negative-radius sound is ignored
+PASS: heard-event history stays within its configured bound
+PASS: faction rules bind to authoritative faction state
+PASS: unknown factions safely default to neither hostile nor allied
+PASS: neutral standing is not hostile
+PASS: live perception reads the configured faction authority
+PASS: hostility uses the inclusive CORE-02 threshold
+PASS: one point above hostile threshold is neutral
+PASS: allied threshold is inclusive and never hostile
+PASS: reputation change updates hostility while the target faction remains present
+PASS: AI-02 goon scene and tactical agent script are available
+PASS: goon fixture is ready in the active scene tree
+PASS: goon accepts its faction authority and patrol route
+PASS: oversized simulation step rejects without advancing agent state
+PASS: idle agent deterministically emits the first patrol destination
+PASS: patrol route advances in authored order
+PASS: out-of-bound attack damage rejects agent configuration
+PASS: visible hostile initiates combat pursuit
+PASS: pursuit targets the currently observed location
+PASS: too-close combat target produces a deterministic reposition intent
+PASS: in-range target receives one bounded attack
+PASS: attack cadence prevents early repeated damage
+PASS: attack repeats once at the exact configured cadence
+PASS: agent accepts a bounded stun event
+PASS: stunned agent cannot attack while stun time elapses
+PASS: attack cooldown resumes after stun rather than bursting
+PASS: attack resumes at bounded cadence after stun ends
+PASS: standing change to allied stops attacks while target remains present
+PASS: authored hostility event accepts a transient faction override
+PASS: authored hostility can engage an otherwise unknown faction
+PASS: clearing override restores safe faction default without mutating authority (state=idle hostile=false)
+PASS: visible hostile returns agent to combat before sight is lost
+PASS: lost sight transitions to investigation
+PASS: unseen target movement does not change investigation destination
+PASS: reaching last-known position enters search
+PASS: search ends after configured investigation duration
+PASS: through-wall sound starts investigation at its source
+PASS: agent owns data-only health state
+PASS: low health deterministically selects flee behavior
+PASS: flee intent moves away from last-known hostile position
+PASS: lethal damage permanently prevents further state actions and attacks
+PASS: invalid stun duration and negative time are rejected
+PASS: AI-04 simulation record service is available
+PASS: AI unload fixture can instantiate goons
+PASS: AI-04 two-chunk manifest configures
+PASS: AI-04 manager configures for lifecycle signals
+PASS: simulation service connects to the authoritative owners
+PASS: first NPC is unloaded during combat pursuit
+PASS: combat NPC registers under its stable UUID
+PASS: neighboring chunk activates after the pursuit chunk unloads
+PASS: pre-unload commits NPC health to registry truth
+PASS: surviving NPC is recorded as alive
+PASS: pre-unload stores world pose as data-only components
+PASS: pre-unload stores world rotation as quaternion data
+PASS: persistent NPC record retains no runtime Node references
+PASS: pre-unload releases transient actor ownership
+PASS: pre-unload clears transient target Nodes
+PASS: unloaded pursuit cannot deliver a late damage callback
+PASS: NPC commit preserves unrelated entity data
+PASS: second NPC attacks before unload
+PASS: second NPC enters stun before unload
+PASS: attacking NPC registers under a distinct UUID
+PASS: district A re-enters before district B for reverse-order restore
+PASS: transient stun state is not serialized as durable NPC state
+PASS: unloaded attack/stun cannot invoke volatile combat callbacks
+PASS: CORE-04 snapshot adapter captures NPC entity records
+PASS: CORE-04 validates the NPC record in a save snapshot
+PASS: saved actor waits while navigation is not ready
+PASS: saved actor restores after navigation becomes ready
+PASS: restore applies saved world position
+PASS: restore applies saved world rotation
+PASS: restore preserves health and restarts volatile pursuit as idle
+PASS: restored UUID has exactly one active actor owner
+PASS: one active UUID cannot acquire a second actor
+PASS: district B re-enters after district A
+PASS: NPC restores correctly when chunks re-enter in reverse order
+PASS: reverse-order restore preserves the second NPC pose and health
+PASS: lethal damage marks durable NPC death
+PASS: dead NPC record is accepted after navigation readiness
+PASS: dead NPC remains dead after unload and restoration
+PASS: AI-05 lightweight ambient agent script is available
+PASS: ambient pedestrian configures faction, area and reduced tick interval
+PASS: ambient pedestrian has no inference request interface
+PASS: active ambient updates stay on the configured low-frequency clock (6 updates / 3s expected near 6)
+PASS: inactive ambient actor performs zero simulation updates
+PASS: runtime ambient update timer starts at its configured interval
+PASS: inactive ambient actor stops its runtime timer
+PASS: runtime timer advances exactly one ambient update per timeout
+PASS: hostile sound raises a readable alert and stores only the heard position
+PASS: ambient actor displays its alert state in-world
+PASS: ambient debug switch exposes the bounded update counter
+PASS: live faction change turns the same sound source into a distraction
+PASS: out-of-range sound does not replace a current ambient alert state
+PASS: WORLD-05 navigation handoff coordinator is available
+PASS: WORLD-05 streamed navigation chunk fixture is available
+PASS: WORLD-05 two-chunk navigation manifest configures
+PASS: WORLD-05 lifecycle configures around the seam
+PASS: WORLD-05 uses the real threaded chunk loader
+PASS: AI-04 registry service accepts world navigation readiness
+PASS: WORLD-05 connects streaming, AI records, and persistent actor ownership
+PASS: exact seam ownership is deterministic for the shared boundary
+PASS: first navigation chunk activates through threaded loading
+PASS: NPC acquires one navigation-aware UUID owner
+PASS: AI begins after its current chunk map synchronizes
+PASS: AI remains active while its current chunk is the only desired navigation map
+PASS: seam crossing pauses AI and movement while the destination map synchronizes
+PASS: destination chunk activates while the source remains loaded
+PASS: AI resumes only after both chunk regions synchronize
+PASS: navigation readiness is published to the actor after synchronization
+PASS: stale source generation cannot transfer UUID ownership
+PASS: stale destination generation cannot transfer UUID ownership
+PASS: hostile pursuit follows the target across the connected chunk seam
+PASS: seam handoff keeps exactly one actor under persistent ownership
+PASS: stable UUID transfers to the destination exactly once
+PASS: source chunk unloads after the actor transfers out
+PASS: source unload neither strands nor duplicates the transferred actor
+PASS: returning AI pauses while a fresh chunk generation synchronizes
+PASS: reversing direction invalidates the stale generation while preserving valid destination navigation
+PASS: backtracking reactivates the source chunk with a fresh generation
+PASS: AI resumes after reverse-direction map synchronization
+PASS: NPC pursuit returns across the seam without a second UUID owner
+PASS: backtracking performs one reverse owner transfer
+PASS: destination chunk unloads after reverse handoff
+PASS: reverse unload retains exactly one live actor
+PASS: last-owned chunk unload commits NPC state before freeing its projection
+PASS: retired persistent projection releases its runtime actor
+PASS: unload record retains durable data without runtime Node references
+PASS: backtracking restores the saved NPC chunk under a fresh generation
+PASS: restored NPC attaches through the generation-aware handoff
+PASS: restored actor waits for its re-entered navmap
+PASS: AI-04 record restores the same UUID once at its last world position
+PASS: re-entry leaves one active runtime actor for the stable UUID
+PASS: a duplicate projection cannot attach to an already-owned UUID
+PASS: authored ambient factions populate both configured streamed areas
+PASS: ambient population coexists with the seam encounter while both chunks are loaded
+PASS: ambient crowd unloads as its streamed area retires during the seam route
+PASS: ambient fixture uses live shared faction standing for alert interpretation
+PASS: ambient crowd projections are released with their streamed chunk owners
+PASS: encounter fixture leaves no ambient actors after streamed-area teardown
+PASS: fixture records configured faction populations on each side of the seam
+PASS: F3 debug switch shows active and peak ambient counts
+PASS: stealth_route.tscn scene resource loads
+PASS: neon_market_alley composes hydration and hacking services
+PASS: neon_market_alley exposes natural approach and objective markers
+PASS: neon_market_alley authors a stable surveillance target
+PASS: neon market has a durable locked shortcut with canonical identity
+PASS: market surveillance target is within natural approach hacking range
+PASS: market camera covers the natural approach before hacking
+PASS: disabling market camera removes surveillance during the shortcut approach
+PASS: market camera resumes after its authored timed hack effect
+PASS: service shortcut opens through the durable entity registry
+PASS: maintenance bypass remains traversable without hacking or opening the gate
+PASS: security_corridor.tscn scene resource loads
+PASS: corporate_transit_spine composes hydration and hacking services
+PASS: corporate_transit_spine exposes natural approach and objective markers
+PASS: corporate_transit_spine authors a stable surveillance target
+PASS: corporate transit corridor starts with a hostile turret
+PASS: turret is in range from the corridor approach
+PASS: friendly turret override creates a safe crossing window
+PASS: turret resumes hostile coverage after the timed effect
+PASS: guard presents both a distraction device and implant target
+PASS: security guard owns the accepted perception component
+PASS: distraction pulls the guard toward the holo-ad source
+PASS: implant hack interrupts and damages the guard accepted=true hp=72/80 substate=8 rejection=
+PASS: side maintenance flank remains traversable with hacks unavailable
+PASS: bounded NPC context configures
+PASS: context emits the exact documented payload fields
+PASS: context identity carries validated stable ids and display name
+PASS: context carries current standing and only eligible mission templates
+PASS: context payload contains no Nodes or runtime references
+PASS: scoped prose remains data even when it contains instruction-like text
+PASS: instruction-like context text is not interpreted as an action
+PASS: invalid NPC identifier is rejected
+PASS: overlong scoped fact is rejected
+PASS: overlong memory summary is rejected
+PASS: invalid mission template identifier is rejected
+PASS: faction standing outside canonical range is rejected
+PASS: context fact count is bounded
+PASS: allowlisted proposal validates inertly: offer_mission
+PASS: allowlisted proposal validates inertly: initiate_trade
+PASS: allowlisted proposal validates inertly: accept_into_faction
+PASS: allowlisted proposal validates inertly: begin_fight
+PASS: allowlisted proposal validates inertly: disclose_fact
+PASS: allowlisted proposal validates inertly: give_item
+PASS: parsing all six action proposals mutates no registry or faction state
+PASS: dialogue may contain no action proposal
+PASS: malformed JSON is rejected
+PASS: non-object JSON root is rejected
+PASS: unknown root keys are rejected
+PASS: incorrect dialogue field type is rejected
+PASS: dialogue length limit is enforced
+PASS: serialized response byte limit is enforced
+PASS: unknown and unauthorized action names are rejected
+PASS: parameter injection into parameterless action is rejected
+PASS: extra reward parameters are rejected
+PASS: invalid item identifier and freeform reward are rejected
+PASS: non-string action parameter is rejected
+PASS: action string cannot replace the structured proposal
+PASS: mock provider accepts a well-formed request identity and context
+PASS: mock echoes exact NPC, conversation and generation identity
+PASS: default mock response is deterministic valid JSON
+PASS: mock rejects malformed NPC identity before emitting
+PASS: mock selects deterministic delayed response mode
+PASS: mock accepts delayed request without blocking caller
+PASS: delayed mock does not complete synchronously
+PASS: delayed mock completes asynchronously with the same request generation
+PASS: mock selects malformed response mode
+PASS: mock delivers invalid fixture as raw provider output
+PASS: malformed mock result remains rejectable by the validator
+PASS: orchestrator accepts mock transport and bounded config
+PASS: default queue and timeout remain bounded at two queued and fifteen seconds
+PASS: orchestrator binds scoped conversation
+PASS: request submission returns without waiting for provider completion
+PASS: only one dialogue request is in flight
+PASS: validated provider response is delivered once
+PASS: next queued dialogue starts after completion
+PASS: duplicate old response is ignored and next result delivered
+PASS: timeout returns authored fallback exactly once
+PASS: late provider output after timeout is discarded
+PASS: bounded queue rejects requests beyond one active plus configured capacity
+PASS: conversation replacement invalidates old generation before late output
+PASS: new conversation remains responsive after replacement
+PASS: offline provider immediately returns authored fallback
+PASS: invalid model JSON returns authored fallback exactly once
+PASS: synchronous transport callback during cancellation is invalidated before it can publish
+PASS: Ollama provider requires an explicit model name
+PASS: Ollama provider accepts local endpoint and model configuration
+PASS: model cannot switch during an active HTTP request
+PASS: model cannot switch during an active HTTP request
+PASS: HTTP 4xx and 5xx responses become rejectable model output for authored fallback
+PASS: malformed Ollama HTTP envelope becomes rejectable model output
+PASS: model can switch safely after the active request ends
+PASS: guarded ActionDispatcher implementation is available
+PASS: action fixture configures authoritative mission service
+PASS: dispatcher accepts explicit authority adapters and allowlists
+PASS: dispatcher binds a live actor to a conversation
+PASS: authorized mission proposal calls MissionDirector to create an offered job
+PASS: duplicate mission response is served from transaction cache without a second commit
+PASS: invented mission template is rejected before MissionDirector mutation
+PASS: dispatcher replaces the active conversation
+PASS: authorized live merchant stock opens the trade adapter
+PASS: duplicate trade response does not open a second trade
+PASS: trade rechecks current stock and rejects a stale merchant inventory
+PASS: invented merchant inventory is rejected
+PASS: faction action receives a fresh conversation
+PASS: authored faction rule commits the allowed allied standing
+PASS: faction without an authored eligibility rule cannot mutate standing
+PASS: fact disclosure receives a fresh conversation
+PASS: known disclosable fact reaches the authoritative fact commit adapter
+PASS: unknown fact is rejected without disclosure
+PASS: item action receives a fresh conversation
+PASS: preauthorized item blueprint is granted through ItemGrants
+PASS: duplicate item response cannot duplicate its inventory reward
+PASS: invented item without a live entitlement is rejected
+PASS: tamper test binds a live conversation
+PASS: dispatcher revalidates exact action parameter keys before any commit
+PASS: minimal dispatcher configuration permits only supplied actions
+PASS: dispatcher begins first guarded conversation
+PASS: out-of-order generation cannot replay a prior action
+PASS: conversation replacement invalidates previous identity
+PASS: response from a replaced conversation cannot commit
+PASS: actor unload invalidates a response before its commit adapter runs
+PASS: fight fixture configures a live tactical actor
+PASS: fight permission binds only the authored live NPC
+PASS: authorized fight proposal commits a live combat transition
+PASS: live hostile TacticalAgent enters combat against the current player
+PASS: unsupported actor can still have a conversation
+PASS: noncombat NPC cannot be coerced into hostility
+PASS: dead TacticalAgent cannot start a new authorized action conversation
+PASS: full inventory fixture occupies every grid cell
+PASS: item-only dispatcher safely configures entitlement adapter
+PASS: full inventory preserves the preauthorized reward entitlement for retry
+PASS: pending item entitlement grants exactly once after space becomes available
+PASS: NPC memory and dialogue snapshot owners are available
+PASS: memory requires a game-owned evidence authorizer
+PASS: memory accepts an authored fact catalog and evidence authority
+PASS: witnessed fact commits only after authoritative evidence approval
+PASS: disclosed fact commits with its stable action transaction reference
+PASS: fact absent from authored catalog cannot enter NPC knowledge
+PASS: model supplied source and evidence cannot authorize a fact
+PASS: unverified event cannot enter NPC knowledge
+PASS: context facts come from the authored catalog rather than model prose
+PASS: hostile player prompt may be retained as transcript data
+PASS: bounded provider summary is stored in the separate derived field
+PASS: hostile prompt and derived summary never promote themselves into facts
+PASS: dialogue projection binds NPC memory and current authoritative mission and faction owners
+PASS: provider context projects verified facts, current standing, and game-approved mission IDs
+PASS: hostile derived summary cannot add facts or overwrite mission/faction truth
+PASS: dialogue context keeps derived summary separate from verified factual entries
+PASS: dialogue history keeps only the bounded most recent lines
+PASS: transcript speakers are restricted to player, NPC, and system
+PASS: oversized derived summary is rejected
+PASS: captured memory snapshot is a defensive copy
+PASS: unknown fact provenance rejects during prepare without mutating live memory
+PASS: snapshot rejects runtime Nodes and unknown transcript keys
+PASS: unsupported NPC memory snapshot version is rejected
+PASS: valid data-only memory snapshot prepares on a fresh owner
+PASS: memory restore reproduces facts without replaying evidence authorization
+PASS: SaveStore writes and reloads composed NPC memory, mission, faction, and conversation state
+PASS: relaunch restores authoritative mission offer state and faction relationship
+PASS: relaunch restores scoped knowledge, transcript-backed summary and context projection
+PASS: dialogue domain round trip preserves unknown recoverable data opaquely
+PASS: loading history performs no fact authorization, reward grant, or gameplay action
+PASS: new mission offer publishes one lifecycle event after commit
+PASS: idempotent repeated offer publishes no duplicate lifecycle event
+PASS: mission emits only actual accepted and active transitions
+PASS: completion event includes credits committed with the reward
+PASS: snapshot hydration emits no user-facing lifecycle notifications
+PASS: shipped retrieval resource binds the existing stable loot target and authored fallback
+PASS: offer rejects a target absent from the persistent world registry
+PASS: offer rejects an existing but unreachable retrieval fixture
+PASS: hostile issuer faction cannot offer the mission
+PASS: issuer standing must meet the authored template requirement
+PASS: stale offer rechecks current faction authority before acceptance
+PASS: authored fallback offer is available without a model response
+PASS: invalid reward bounds reject mission-template configuration
+PASS: eligible retrieval template creates a deterministic mission offer
+PASS: offer carries authored text for provider-failure fallback
+PASS: repeated offer returns the same mission instead of duplicating it
+PASS: target and reward transaction identities are stable and authored
+PASS: offered job accepts idempotently
+PASS: accepted job becomes active idempotently
+PASS: model claims cannot complete an objective before code-owned retrieval state
+PASS: retrieval fixture records collection in authoritative world state
+PASS: active retrieval completes after the registered target is collected
+PASS: completion commits the bounded credit reward once
+PASS: replayed completion cannot duplicate the reward
+PASS: completed mission cannot transition to failed
+PASS: unrecognized failure reasons are rejected
+PASS: failure fixture reaches active state
+PASS: objective failure is authoritative and idempotent
+PASS: failed objective remains terminal and grants no reward
+PASS: failed mission cannot be completed by a later claim
+PASS: CORE-04 data snapshot restores offered state after fixture unload
+PASS: restored offered state recaptures deterministically
+PASS: CORE-04 data snapshot restores accepted state after fixture unload
+PASS: restored accepted state recaptures deterministically
+PASS: CORE-04 data snapshot restores active state after fixture unload
+PASS: restored active state recaptures deterministically
+PASS: CORE-04 data snapshot restores completed state after fixture unload
+PASS: restored completed state recaptures deterministically
+PASS: CORE-04 data snapshot restores failed state after fixture unload
+PASS: restored failed state recaptures deterministically
+PASS: unsupported mission snapshot version rejects without mutating live state
+PASS: credits without a completed authored reward reject during restore
+PASS: out-of-bound reward snapshot rejects without altering mission state
+PASS: mission snapshot preserves integer reward types instead of accepting float substitution
+PASS: SaveStore restores an accepted mission after its target fixture unloads
+PASS: disk round trip preserves stable target identity without storing scene Nodes
+PASS: named NPC opens responsive conversation UI with initial focus target
+PASS: conversation opens with keyboard text-entry focus
+PASS: audio slider changes generated dialogue volume
+PASS: accessible mute control disables generated UI audio
+PASS: authored fallback accepts and completes the retrieval contract after authoritative collection
+PASS: mission journal refreshes from lifecycle events with committed reward credits
+PASS: mission journal reconstructs completed job and credits from the data-only saved snapshot
+PASS: unauthorized inventory-backed trade is explained without claiming a panel or transaction
+PASS: model's unknown retrieval action is rejected and never presented as a committed action
+PASS: offline provider routes to authored fallback
+PASS: timeout emits authored fallback and stops any generation audio
+PASS: mid-dialogue cancellation invalidates late response and stops generated audio
+PASS: generation audio exposes bounded volume and mute state
+PASS: close cancels active work, stops audio and releases dialogue focus
+PASS: close returns keyboard focus to the interaction that opened the conversation
+Suite all: 1051 cases, 2 failures
+WARNING: 3 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+ERROR: 1 RID allocations of type 'P11GodotBody3D' were leaked at exit.

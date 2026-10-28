@@ -1,0 +1,100 @@
+{
+	"checks": [
+		{
+			"description": "loader hydrates before ready and enables interactions only after entry",
+			"passed": true
+		},
+		{
+			"description": "door unlock commits through current-generation authority",
+			"passed": true
+		},
+		{
+			"description": "collected loot immediately loses its runtime projection",
+			"passed": true
+		},
+		{
+			"description": "pre-unload boundary save sees already-committed door and loot records",
+			"passed": true
+		},
+		{
+			"description": "NPC record changes preserve unrelated authoritative data",
+			"passed": true
+		},
+		{
+			"description": "all entity records save through CORE-04 snapshot adapters",
+			"passed": true
+		},
+		{
+			"description": "unload revokes both chunks and notifies stale-work consumers",
+			"passed": true
+		},
+		{
+			"description": "saved entity data restores after all runtime scenes are gone",
+			"passed": true
+		},
+		{
+			"description": "reverse-order NPC re-entry restores saved state before ready",
+			"passed": true
+		},
+		{
+			"description": "reverse-order door re-entry preserves unlock and suppresses collected loot",
+			"passed": true
+		},
+		{
+			"description": "old asynchronous interaction cannot mutate a reloaded generation",
+			"passed": true
+		},
+		{
+			"description": "two runtime projections and one tombstone retain exactly three stable identities",
+			"passed": true
+		}
+	],
+	"display_server": "headless",
+	"godot": "4.7.2-stable (official)",
+	"invalidations": [
+		{
+			"chunk_id": "chunk_a",
+			"entity_uuids": [
+				"00000000-0000-4000-8000-000000000031"
+			],
+			"lifecycle_generation": 2
+		},
+		{
+			"chunk_id": "chunk_b",
+			"entity_uuids": [
+				"00000000-0000-4000-8000-000000000033"
+			],
+			"lifecycle_generation": 2
+		},
+		{
+			"chunk_id": "chunk_b",
+			"entity_uuids": [
+				"00000000-0000-4000-8000-000000000033"
+			],
+			"lifecycle_generation": 4
+		}
+	],
+	"passed": true,
+	"records": [
+		{
+			"state": {
+				"locked": false
+			},
+			"uuid": "00000000-0000-4000-8000-000000000031"
+		},
+		{
+			"state": {
+				"collected": true
+			},
+			"uuid": "00000000-0000-4000-8000-000000000032"
+		},
+		{
+			"state": {
+				"opaque": "preserve",
+				"trust": 4
+			},
+			"uuid": "00000000-0000-4000-8000-000000000033"
+		}
+	],
+	"renderer": "gl_compatibility"
+}

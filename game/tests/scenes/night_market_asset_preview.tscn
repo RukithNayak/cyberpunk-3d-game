@@ -1,0 +1,52 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/environment/night_market/night_market_hero.glb" id="1_hero"]
+
+[sub_resource type="Environment" id="Environment_preview"]
+background_mode = 1
+background_color = Color(0.018, 0.029, 0.046, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.27, 0.38, 0.48, 1)
+ambient_light_energy = 0.28
+tonemap_mode = 2
+
+[sub_resource type="CapsuleMesh" id="Capsule_reference"]
+radius = 0.28
+height = 1.7
+
+[node name="NightMarketAssetPreview" type="Node3D"]
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_preview")
+
+[node name="KeyLight" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-38, -26, 0)
+light_color = Color(0.64, 0.78, 1, 1)
+light_energy = 0.72
+shadow_enabled = true
+
+[node name="WarmFill" type="OmniLight3D" parent="."]
+position = Vector3(-2.5, 2.1, 1.2)
+light_color = Color(1, 0.24, 0.055, 1)
+light_energy = 0.72
+omni_range = 6.0
+
+[node name="CoolFill" type="OmniLight3D" parent="."]
+position = Vector3(2.7, 2.4, 1.4)
+light_color = Color(0.02, 0.48, 1, 1)
+light_energy = 0.78
+omni_range = 7.0
+
+[node name="Storefront" parent="." instance=ExtResource("1_hero")]
+
+[node name="HumanScaleReference" type="MeshInstance3D" parent="."]
+position = Vector3(-1.48, 0.85, 0.42)
+mesh = SubResource("Capsule_reference")
+cast_shadow = 0
+
+[node name="CloseRangeCamera" type="Camera3D" parent="."]
+position = Vector3(0, 1.72, 3.35)
+current = true
+fov = 68.0
+near = 0.05
+far = 100.0

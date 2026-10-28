@@ -1,0 +1,48 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: chunk manifest script is available
+PASS: world manager script is available
+PASS: manifest exposes validated setup and IDs
+PASS: manifest preserves authored stable-identity descriptors
+PASS: authored entity default data is copy isolated
+PASS: manifest rejects malformed entity UUIDs
+PASS: manifest rejects duplicate UUID ownership across chunks
+PASS: manifest entity node paths cannot escape their chunk
+PASS: manifest rejects two persistent identities for one node path
+PASS: manifest initial entity data rejects engine Objects
+PASS: manifest rejects malformed entity descriptor containers
+PASS: malformed chunk IDs are rejected
+PASS: duplicate chunk IDs are rejected
+PASS: unknown adjacent chunk IDs are rejected
+PASS: asymmetric adjacency is rejected
+PASS: missing chunk scenes are rejected
+PASS: non-3D chunk scenes are rejected
+PASS: Node3D-derived chunk root types are accepted
+PASS: non-positive chunk bounds are rejected
+PASS: valid symmetric manifest is accepted
+PASS: configured manifest rejects later replacement
+PASS: manifest preserves configured chunk IDs
+PASS: both greybox chunk fixtures load as scenes
+PASS: walkable floor collision bounds meet at the seam
+PASS: fixtures define first-person-height seam viewpoints
+PASS: manager exposes desired lifecycle updates
+PASS: configured manager rejects replacement
+PASS: rejected manager replacement preserves generations
+PASS: preload margin selects both chunks near seam
+PASS: current preload generation can be acknowledged as active
+PASS: activation event publishes chunk ID and generation
+PASS: rapid seam recrossing does not flicker desired chunks
+PASS: departed chunk exits preload range while neighbor stays desired
+PASS: pre-unload listeners observe committed generation and desired set
+PASS: hysteresis keeps chunk desired on boundary recrossing
+PASS: re-entering during pending teardown starts a new preload generation
+PASS: prior teardown acknowledgement is stale after re-entry
+PASS: new re-entry generation can be acknowledged as active
+PASS: chunks leave desired set beyond preload and hysteresis margins
+PASS: manager exposes generation-tagged lifecycle acknowledgements
+PASS: pre-unload event publishes IDs and lifecycle generations
+PASS: stale lifecycle generation cannot acknowledge deactivation
+PASS: current retired generation can acknowledge deactivation
+PASS: deactivation returns lifecycle state to unloaded
+PASS: deactivation event publishes chunk ID and generation
+Suite world_manifest: 45 cases, 0 failures

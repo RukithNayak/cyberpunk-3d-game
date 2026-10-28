@@ -1,0 +1,71 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://tests/ai/test_navigation.gd" id="1_test"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_floor"]
+size = Vector3(10, 0.2, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall"]
+size = Vector3(0.35, 2, 3.2)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+size = Vector2(10, 10)
+
+[sub_resource type="StandardMaterial3D" id="Material_floor"]
+albedo_color = Color(0.075, 0.105, 0.13, 1)
+metallic = 0.35
+roughness = 0.65
+
+[sub_resource type="BoxMesh" id="BoxMesh_wall"]
+size = Vector3(0.35, 2, 3.2)
+
+[sub_resource type="StandardMaterial3D" id="Material_wall"]
+albedo_color = Color(0.96, 0.53, 0.12, 1)
+emission_enabled = true
+emission = Color(0.36, 0.12, 0.015, 1)
+
+[sub_resource type="Environment" id="Environment_fixture"]
+background_mode = 1
+background_color = Color(0.018, 0.035, 0.06, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.3, 0.55, 0.72, 1)
+ambient_light_energy = 0.7
+
+[node name="AiNavigationFixture" type="Node3D"]
+script = ExtResource("1_test")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_fixture")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(8, 7, 8)
+rotation_degrees = Vector3(-27, 45, 0)
+current = true
+
+[node name="KeyLight" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-50, -35, 0)
+light_energy = 2.0
+
+[node name="FloorVisual" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.21, 0)
+mesh = SubResource("PlaneMesh_floor")
+surface_material_override/0 = SubResource("Material_floor")
+
+[node name="WallVisual" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1, 0)
+mesh = SubResource("BoxMesh_wall")
+surface_material_override/0 = SubResource("Material_wall")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+position = Vector3(0, -0.1, 0)
+
+[node name="FloorShape" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("BoxShape3D_floor")
+
+[node name="Wall" type="StaticBody3D" parent="."]
+position = Vector3(0, 1, 0)
+
+[node name="WallShape" type="CollisionShape3D" parent="Wall"]
+shape = SubResource("BoxShape3D_wall")

@@ -1,0 +1,39 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS: entity hydrator service script is available
+PASS: valid persistent projection manifest is accepted
+PASS: manifest publishes all authored persistent entity descriptors
+PASS: persistent test world manager configures
+PASS: hydrator accepts registry, manifest and lifecycle manager
+PASS: whole chunk defaults prepare before scene entry
+PASS: prepare registers all missing authored defaults
+PASS: prepared projections remain non-interactive
+PASS: door _ready observes hydrated state while interactions are disabled ({ "locked": true } / false)
+PASS: current prepared chunk activates
+PASS: activation enables exactly the live projections
+PASS: duplicate live chunk preparation is rejected
+PASS: door state mutation commits through current generation
+PASS: door delta is authoritative immediately and reprojected
+PASS: loot collection tombstone commits
+PASS: collected loot projection is disabled and unbound
+PASS: NPC record delta commits
+PASS: NPC record preserves recursively merged data
+PASS: pre-unload invalidates live interactions with retirement generation
+PASS: retirement revokes bindings and disables retained projection
+PASS: save-boundary registry reads include mutations before unload
+PASS: real SaveStore round trips authoritative entity state at the unload boundary
+PASS: stale generation cannot write after unload
+PASS: retained instance prepares again on reverse entry
+PASS: tombstoned loot projection stays removed on backtracking
+PASS: reverse-entry chunk activates with current generation
+PASS: reverse order preserves UUID ownership and NPC state without duplicate bindings
+PASS: older generation cannot overwrite live progress
+PASS: stale rejection leaves newer NPC record intact
+PASS: missing target rejects whole chunk preparation
+PASS: failed preparation registers no partial defaults or bindings
+PASS: invalid data delta rejects without mutation
+PASS: invalid delta has no partial authority effect
+PASS: generation invalidation from projection callback cancels preparation
+PASS: authored defaults may remain after callback cancellation without staged live ownership
+Suite chunk_persistence: 35 cases, 0 failures
+exit_code=0

@@ -1,0 +1,182 @@
+--- before/docs/master-progress.md
++++ after/docs/master-progress.md
+@@ -1,7 +1,7 @@
+ # Master Progress
+ 
+ **Updated:** 23 October 2026 (Asia/Kolkata)  
+-**Overall status:** Stage 0/1 implementation in progress. CORE-01/02/03, WORLD-01, PLAYER-02 and ASSET-01 accepted; CORE-04, WORLD-02 and ASSET-02 active.  
++**Overall status:** Stage 0/1 implementation in progress. CORE-01/02/03/04, WORLD-01, PLAYER-02 and ASSET-01/02 accepted. WORLD-02 awaits validation; ASSET-03 and PLAYER-01 have unassigned partial handoffs. No workers are active.  
+ **Evidence:** [CORE-01 report](reports/CORE-01.md) and [fresh toolchain checks](toolchain.md). Minimal Godot scaffold and test harness now exist; gameplay and integrated gates remain incomplete.
+ 
+ ## Source and scope
+@@ -20,7 +20,7 @@
+ 
+ ## Module status and task index
+ 
+-- [ ] **[Core State & Persistence Registry](tasks/core-state-persistence.md) — entire module complete.** Status: in progress. Stage 0/1: 3/5 tasks; deferred: 1 outline(s).
++- [ ] **[Core State & Persistence Registry](tasks/core-state-persistence.md) — entire module complete.** Status: in progress. Stage 0/1: 4/5 tasks; deferred: 1 outline(s).
+   Task IDs: CORE-01, CORE-02, CORE-03, CORE-04, CORE-05, CORE-06.
+ 
+ - [ ] **[World & Scene Manager](tasks/world-scene-manager.md) — entire module complete.** Status: in progress. Stage 0/1: 1/6 tasks; deferred: 1 outline(s).
+@@ -51,6 +51,7 @@
+ - [x] Define shared sequencing, integration gates and initial status tracking.
+ - [x] Validate local links, unique task IDs, per-task acceptance/test/evidence fields, unchecked implementation/module status and an acyclic dependency graph.
+ - [x] CORE-01 accepted: Godot pin, typed test harness, native launch and toolchain evidence; no gameplay/performance acceptance.
++- [x] CORE-04 accepted: data-only migration/adapters, opaque-record preservation and clock policy; Main Agent regression fix red→green, migrations 22/22 and integrated all 142/142. [Report](reports/CORE-04.md).
+ 
+ ## Task ledger
+ 
+@@ -58,17 +59,17 @@
+ |---|---|---|---|---|---|---|
+ | CORE-01 | 0 / none | complete | Main Agent / session model | AGENTS.md, .gitignore, game/project.godot, game/tests/, docs/toolchain.md | working tree | Accepted; sample/all 2/2, intentional fail 1, unknown 2, import/native launch 0; reports/CORE-01.md |
+ | CORE-02 | 1 / CORE-01 | complete | registry / gpt-6-luna medium | game/persistence/{entity_registry,faction_state}.gd, game/tests/persistence/test_registry.gd, docs/state-contracts.md | working tree | Accepted 39/39; independent review clean; reports/CORE-02-worker.md |
+-| PLAYER-01 | 1 / CORE-01 | in progress | player_controller / gpt-6-luna medium | game/features/player/{player_controller,input_settings}.gd, player.tscn, game/tests/scenes/player_movement.tscn, game/tests/player/test_controller.gd | working tree | first-person input/settings/control locks and movement fixture |
++| PLAYER-01 | 1 / CORE-01 | partial; unassigned | historical player_controller assignment; no live worker | game/features/player/{player_controller,input_settings}.gd, player.tscn, game/tests/scenes/player_movement.tscn, game/tests/player/test_controller.gd | working tree | test_controller.gd exists; controller/settings/player scene and movement fixture absent; preserve test and resume later |
+ | PLAYER-02 | 1 / CORE-02 | complete | Main Agent / session model | game/features/player/health_state.gd, game/tests/player/test_health.gd | working tree | Accepted 19/19 focused, all 60/60; reports/PLAYER-02.md |
+-| WORLD-02 | 1 / WORLD-01, CORE-01 | in progress | chunk_loader / gpt-6-luna medium | game/world/chunk_loader.gd, game/tests/world/test_chunk_loader.gd, world manager integration | working tree | asynchronous resource preload, bounded activation, stale-work rejection |
++| WORLD-02 | 1 / WORLD-01, CORE-01 | awaiting validation; unassigned | historical chunk_loader assignment; no live worker | game/world/chunk_loader.gd, game/tests/world/test_chunk_loader.gd, world manager integration | working tree | implementation and reports/WORLD-02-worker.md exist; focused reproduction and review pending; no prerequisite blocker identified |
+ | WORLD-01 | 1 / CORE-02 | complete | world_manifest / gpt-6-luna medium | game/world/{chunk_manifest,world_manager}.gd, game/world/fixtures/chunk_{a,b}.tscn, game/tests/world/test_manifest.gd | working tree | Accepted 37/37 after red6 review fixes; reports/WORLD-01-worker.md |
+-| CORE-04 | 1 / CORE-03 | in progress | snapshot_adapters / gpt-6-luna medium | save_migrations.gd, snapshot_adapters.gd, test_migrations.gd, state-contracts migration section; coordinated registry/faction snapshot APIs and save migration hook | working tree | ordered migrations, data-only adapter ownership/time policy |
++| CORE-04 | 1 / CORE-03 | complete | Main Agent / session model; historical worker metadata unverified | save_migrations.gd, snapshot_adapters.gd, test_migrations.gd, state-contracts migration section; coordinated registry/faction snapshot APIs, save migration hook and runner integration | working tree on codex/stage-0-readiness | Accepted 23 October 2026; rejected-migration false success fixed red→green; migrations 22/22, all 142/142, import/sample exit 0; reports/CORE-04.md |
+ | CORE-03 | 1 / CORE-02 | complete | save_store / gpt-6-luna medium | game/persistence/save_store.gd, game/tests/persistence/test_save_store.gd, docs/state-contracts.md save envelope | working tree | Accepted 23/23; independent review clean; reports/CORE-03-worker.md |
+-| ASSET-03 | 0 / ASSET-02, CORE-01 | in progress | asset_export / gpt-6-luna medium | tools/blender/export_modular_kit.py, game/assets/reference/, game/tests/scenes/asset_roundtrip.tscn, docs/asset-roundtrip.md | working tree | repeatable baked export and Godot roundtrip evidence |
++| ASSET-03 | 0 / ASSET-02, CORE-01 | partial; unassigned | historical asset_export assignment; no live worker | tools/blender/export_modular_kit.py, game/assets/reference/, game/tests/scenes/asset_roundtrip.tscn, docs/asset-roundtrip.md | working tree | exporter, GLBs, maps and metadata exist; fixture and roundtrip report absent; repeatability/visual acceptance unverified; no Blender MCP tools exposed in this session |
+ | ASSET-02 | 0 / ASSET-01 | complete | reference_assets / gpt-6-luna medium | art/reference/{wall_doorway,mechanical_prop}.blend, tools/blender/build_reference.py, docs/art-reference.md, docs/evidence/ASSET-02/ | working tree | Accepted all four QA checks exit 0, visual review; reports/ASSET-02-worker.md |
+ | ASSET-01 | 0 / none | complete | asset_readiness / gpt-6-luna medium | docs/asset-pipeline.md, tools/blender/check_environment.py, art/reference/, docs/asset-provenance.md | working tree | Accepted; export, QA, structural Godot import exit 0; reports/ASSET-01-worker.md |
+ 
+-Main Agent exclusively owns shared toolchain/tracker/configuration and acceptance updates. Repository has no commits; existing untracked source documents are preserved. No tests existed at session start; integrated all now passes 120 checks. Work occurs in the supplied workspace; no initial commit or unrelated file staging is required.
++Main Agent exclusively owns shared toolchain/tracker/configuration and acceptance updates. Repository has no commits; existing untracked source documents are preserved. Integrated all now passes 142 checks, including accepted migrations. WORLD-02 and PLAYER-01 suites remain outside all pending their task acceptance. Work occurs in the supplied workspace; no initial commit or unrelated file staging is required.
+ 
+ ## Dependencies and recommended sequence
+ 
+@@ -81,7 +82,7 @@
+ | 4 — checkpoint and feasibility | CORE-05 → WORLD-06 | Cross-system context is confined to checkpoint restoration, navigation handoff and the combined feasibility gate. All direct prerequisites in WORLD-06 must pass first. |
+ | Later — scope dependent | CORE-06, WORLD-07, PLAYER-06, INV-06, AI-06, NPC-07, ASSET-05/06 | Approve content/targets, decompose each outline into small tickets, then execute. Do not create an entire city before feasibility evidence. |
+ 
+-Parallel scheduling is active as recorded in the ledger. Exact dependencies in each task take precedence over this wave summary. Shared-interface changes must be published to consumers before they continue; workers should edit only their listed files and coordinate changes to shared contract docs.
++CORE-04 is accepted; no task or worker is left active at this handoff. Prior worker names identify historical assignments. Exact dependencies in each task take precedence over this wave summary. Preserve unaccepted world/player/asset files until their bounded review or resumption.
+ 
+ ## Milestone checklists
+ 
+@@ -107,9 +108,9 @@
+ 
+ ## Next recommended task
+ 
+-**CORE-04 — Add idempotent migrations and domain snapshot adapters** in [Core State & Persistence Registry](tasks/core-state-persistence.md). CORE-03 accepted; CORE-04 publishes ordered migrations, data adapters and timed-effect policy. ASSET-02 authors two references; CORE-02 consumers are now eligible.
++**WORLD-02 — review asynchronous preload and bounded activation** in [World & Scene Manager](tasks/world-scene-manager.md). WORLD-01/CORE-01 are accepted; implementation and worker report exist. Reproduce focused checks and review required runtime evidence before accepting it. WORLD-03 then has both prerequisites (WORLD-02 and the now-accepted CORE-04).
+ 
+-After CORE-02, start CORE-03; after ASSET-01, start ASSET-02. If a tool is unavailable, record the precise blocked task and continue independent contract/planning or mock-backed work rather than assuming approval to install it.
++ASSET-03 is an alternative eligible partial task: preserve the existing exporter/assets, complete repeatability and in-engine fixture/evidence under the applicable Blender skills. No Blender MCP tools are exposed in this session; local Blender suitability must be verified when resuming that task. CORE-05 is blocked by unfinished PLAYER-04, INV-04, NPC-05 and HACK-05, so it is not yet eligible. Do not install tools or download models implicitly.
+ 
+ ## Session decisions and active next steps
+ 
+@@ -132,3 +133,6 @@
+ - WORLD-01 accepted 23 October 2026 after 37/37 reproduction, independent review clean following six red regression failures. WORLD-02 eligible; authorized supporting integration in world_manager.gd/world-contracts.md as existing loader handoff scope.
+ 
+ - ASSET-02 accepted 23 October 2026; two editable references, all four QA runs reproduced, visual review and hashes verified. Accepted warning categories: flat cap n-gons and hidden opposite-facing closed assembly contacts. Provisional art/budgets remain proposals. ASSET-03 now eligible.
++
++- Resume reconciliation, 23 October 2026 (Asia/Kolkata): historical worker assignments are inactive. WORLD-02 has implementation/tests/report awaiting review; ASSET-03 has exporter/generated assets but no round-trip fixture/report; PLAYER-01 has a test but lacks implementation and fixture. Preserved all partial source files; no delegation or scope expansion.
++- CORE-04 accepted 23 October 2026, Main Agent / session model. Existing handoff verified at 21/21; new false-success regression failed at 22 checks/one failure (exit 1), then passed 22/22 after SaveStore rejected `ok: false, error: OK`. Unknown-root ownership contract documented; migration suite included in all (142/142, exit 0). Import and sample exit 0. [Report and review](reports/CORE-04.md), [command/exit manifest](evidence/CORE-04/verification.json). Next: WORLD-02 review; WORLD-03 remains blocked until that acceptance. No visual/performance or real gameplay-domain integration claimed.
+--- before/docs/state-contracts.md
++++ after/docs/state-contracts.md
+@@ -41,6 +41,10 @@
+ 
+ `SnapshotAdapters` is callback glue over existing owners, not a state store. `EntityRegistry` and `FactionState` remain authoritative and expose copy-out snapshots, pure validation, prepared replacements, and a no-signal/no-fail commit phase. Adapter capture returns the v1 root keys `player`, `entities`, `factions`, and `domains`. The player callback owns `player`; registry and faction instances own `entities` and `factions`; the domain callback coordinates actual domain owners. Planned domain keys are `inventory`, `missions`, `npc_memory`, and `active_hacks`, all as data dictionaries. Stage 1 currently uses fixture/mock player and domain callbacks; no inventory, mission, NPC-memory, or hack gameplay integration is claimed.
+ 
++Optional extension capture/prepare/commit callbacks retain root records outside those four owned keys. Configure all three callbacks together; partial configuration rejects. The extension owner must preserve opaque recoverable root records through prepare, commit, recapture and explicit save. Extension capture cannot overwrite an owned root key. Without an extension owner, a candidate containing unknown root records rejects before any mutation, rather than silently dropping data. Unknown domain records remain the domain coordinator's responsibility. The adapter itself retains no additional authoritative state.
++
++A rejected migration must return a nonzero load error. If its result omits an integer error or contradicts rejection with `error: OK`, SaveStore returns `ERR_FILE_UNRECOGNIZED`; it never reports a successful load without applying the candidate. This failure path leaves source bytes and live state intact.
++
+ Each callback owner must return deep copies from capture. Its prepare callback validates and returns `{ok: true, prepared: <data>}` without changing live state; commit receives that prepared value and must be infallible, void, and emit no signals. The adapter prepares every participant first, then swaps registry, faction, player, and domain state in one synchronous commit call. Any preparation rejection returns false before the first swap, and SaveStore treats a boolean false apply result as a rejected load. Consumers must defer notifications until all owners have swapped. A domain coordinator may apply only keys for which it has an authoritative owner; it must preserve opaque unknown recoverable domain records rather than claim they were applied to an unknown runtime service. These contracts do not create gameplay owners for unimplemented domains.
+ 
+ Snapshot values remain data-only and preserve `int` and `float` types through deep copies. The complete decoded/migrated root is bounded by the SaveStore envelope: 16 MiB file size; at most 19 nested value levels (the registry's 16 entity-state levels plus three envelope levels); at most 1,024 entries per container; 10,000 visited values; 16 KiB UTF-8 strings; and 256-byte dictionary keys. Each entity state is additionally validated against the registry's own 16-level, 10,000-value limit. Migration output is checked against the same v1 root limits before any callback runs.
+--- before/docs/tasks/core-state-persistence.md
++++ after/docs/tasks/core-state-persistence.md
+@@ -91,7 +91,7 @@
+ 
+ ### CORE-04: Add idempotent migrations and domain snapshot adapters
+ 
+-- [ ] **CORE-04 — deliverable complete** (Stage 1).
++- [x] **CORE-04 — deliverable complete** (Stage 1).
+ 
+ **Dependencies / sequencing:** CORE-03. Prerequisite IDs resolve through the master progress task index.
+ 
+@@ -99,11 +99,13 @@
+ 
+ **Interfaces:** Document adapter ownership and snapshot keys for player, inventory, missions, NPC memory and active hacks; adapters exchange data only, without importing domain scenes.
+ 
+-- [ ] **Acceptance:** Provide one previous-schema fixture and ordered migrations; repeated migration gives the same current result. Preserve stable IDs and unknown recoverable records; reject unsafe migrations without overwriting source saves. Document timed-effect clock policy shared with HACK-05.
++- [x] **Acceptance:** Provide one previous-schema fixture and ordered migrations; repeated migration gives the same current result. Preserve stable IDs and unknown recoverable records; reject unsafe migrations without overwriting source saves. Document timed-effect clock policy shared with HACK-05.
+ 
+-- [ ] **Test expectations:** Migrate an older fixture twice and compare results; test missing migration step and unsupported future version. Reload saved records without any runtime scene instances.
++- [x] **Test expectations:** Migrate an older fixture twice and compare results; test missing migration step and unsupported future version. Reload saved records without any runtime scene instances.
+ 
+-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
++- [x] **Evidence recorded:** [Main Agent acceptance report](../reports/CORE-04.md), [exact commands/exits](../evidence/CORE-04/verification.json), [red regression](../evidence/CORE-04/red-migrations.log), [focused green](../evidence/CORE-04/migrations.log), [integrated suite](../evidence/CORE-04/all.log), [session diff](../evidence/CORE-04/session.diff).
++
++Accepted 23 October 2026 (Asia/Kolkata), Main Agent / session model; working tree on `codex/stage-0-readiness`. Existing worker implementation reviewed and retained. Migration false-success regression observed red (22 checks, one failure, exit 1), then green (22/22, exit 0); import/sample/all exit 0, integrated all 142/142. Unknown root extensions are explicitly owned or rejected before mutation; opaque records survive migration, recapture and explicit save. Timed-effect clock policy is published in [state contracts](../state-contracts.md). Review performed inline per user instruction; no independent reviewer claimed. CORE-05 still requires its gameplay prerequisites; WORLD-03 also requires WORLD-02 acceptance.
+ 
+ ### CORE-05: Connect checkpoints to player and domain state
+ 
+--- before/game/persistence/save_store.gd
++++ after/game/persistence/save_store.gd
+@@ -101,7 +101,7 @@
+ 			return ERR_FILE_UNRECOGNIZED
+ 		var migration_result: Variant = _migrations.call("migrate_snapshot", version_number, candidate.duplicate(true))
+ 		if typeof(migration_result) != TYPE_DICTIONARY or not migration_result.get("ok", false):
+-			if typeof(migration_result) != TYPE_DICTIONARY or typeof(migration_result.get("error")) != TYPE_INT:
++			if typeof(migration_result) != TYPE_DICTIONARY or typeof(migration_result.get("error")) != TYPE_INT or migration_result["error"] == OK:
+ 				return ERR_FILE_UNRECOGNIZED
+ 			return migration_result["error"]
+ 		if migration_result.get("version") != CURRENT_VERSION or typeof(migration_result.get("snapshot")) != TYPE_DICTIONARY:
+--- before/game/tests/persistence/test_migrations.gd
++++ after/game/tests/persistence/test_migrations.gd
+@@ -29,6 +29,7 @@
+ 	check.call(not missing_step.call("migrate_snapshot", 0, old_snapshot).get("ok", false), "missing migration step is rejected")
+ 	check.call(not migrations.call("migrate_snapshot", 2, {}).get("ok", false), "unsupported future save version is rejected")
+ 	_test_unsafe_migration_preserves_bytes(check, migrations_script)
++	_test_rejected_migration_cannot_report_success(check)
+ 	_test_registry_and_faction_adapters(check)
+ 	_test_store_migrates_before_atomic_apply(check, migrations)
+ 
+@@ -43,6 +44,17 @@
+ 	var store: Object = _store(io, Callable(self, "_capture_live").bind(live), Callable(self, "_accept"), Callable(self, "_ignore_apply"), failing_migrations)
+ 	var load_error: Error = store.call("load_from_disk", 0)
+ 	check.call(load_error != OK and io.files[path] == bytes and live == {"sentinel": true}, "unsafe migration rejects without overwriting source bytes or live state")
++
++
++func _test_rejected_migration_cannot_report_success(check: Callable) -> void:
++	var io: TestFileOps = TestFileOps.new()
++	var path: String = "user://core04_migration_tests/slot_00.save"
++	var bytes: PackedByteArray = _encoded_envelope(0, _v0_fixture())
++	io.files[path] = bytes.duplicate()
++	var live: Dictionary = {"sentinel": true}
++	var store: Object = _store(io, Callable(self, "_capture_live").bind(live), Callable(self, "_accept"), Callable(self, "_apply_to_live").bind(live), ContradictoryMigration.new())
++	var load_error: Error = store.call("load_from_disk", 0)
++	check.call(load_error != OK and live == {"sentinel": true} and io.files[path] == bytes, "rejected migration with an OK error returns failure without changing live state or source bytes")
+ 
+ 
+ func _test_registry_and_faction_adapters(check: Callable) -> void:
+@@ -213,6 +225,11 @@
+ 		return {"ok": false}
+ 
+ 
++class ContradictoryMigration extends RefCounted:
++	func migrate_snapshot(_version: int, _snapshot: Dictionary) -> Dictionary:
++		return {"ok": false, "error": OK}
++
++
+ class MissingStepMigrations extends "res://persistence/save_migrations.gd":
+ 	func _migration_for(_source_version: int) -> Callable:
+ 		return Callable()
+--- before/game/tests/run_tests.gd
++++ after/game/tests/run_tests.gd
+@@ -28,6 +28,8 @@
+ 				save_test.run(_check)
+ 				var world_test: RefCounted = load("res://tests/world/test_manifest.gd").new()
+ 				world_test.run(_check)
++				var migration_test: RefCounted = load("res://tests/persistence/test_migrations.gd").new()
++				migration_test.run(_check)
+ 		"registry":
+ 			var registry_test: RefCounted = load("res://tests/persistence/test_registry.gd").new()
+ 			registry_test.run(_check)

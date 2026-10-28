@@ -1,0 +1,12 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ERROR: Condition "ret != noErr" is true. Returning: ""
+   at: get_system_ca_certificates (platform/macos/os_macos.mm:1035)
+WORLD-02 PASS: real capsule cannot cross the unavailable seam or fall through
+WORLD-02 PASS: neighbor resource failure preserves current terrain and physical support
+WORLD-02 PASS: failed neighbor permits an explicit retry
+WORLD-02 PASS: retry opens the seam and capsule walks onto loaded neighbor
+WORLD-02 PASS: departure unloads the old chunk while destination remains solid
+WORLD-02 PASS: capsule backtracks across the reloaded seam without falling
+WORLD-02 PASS: backtracking retains at most one scene instance per chunk
+WORLD-02 traversal PASS: 7 checks; headless

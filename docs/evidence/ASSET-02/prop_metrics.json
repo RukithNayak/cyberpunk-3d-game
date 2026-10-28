@@ -1,0 +1,393 @@
+{
+  "blender": "5.2.3 LTS",
+  "source": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game/art/reference/mechanical_prop.blend",
+  "objects": [
+    {
+      "object": "PRP_Junction_Chassis",
+      "role": "render",
+      "dims_m": [
+        0.92,
+        0.34,
+        1.28
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_FrontFace",
+      "role": "render",
+      "dims_m": [
+        0.82,
+        0.055,
+        1.13
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_ServiceDoor",
+      "role": "render",
+      "dims_m": [
+        0.39,
+        0.045,
+        0.79
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_DoorInset",
+      "role": "render",
+      "dims_m": [
+        0.31,
+        0.025,
+        0.66
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_Fastener_01",
+      "role": "render",
+      "dims_m": [
+        0.0342,
+        0.02,
+        0.0355
+      ],
+      "tris_evaluated": 276,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_Fastener_02",
+      "role": "render",
+      "dims_m": [
+        0.0342,
+        0.02,
+        0.0355
+      ],
+      "tris_evaluated": 276,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_Fastener_03",
+      "role": "render",
+      "dims_m": [
+        0.0342,
+        0.02,
+        0.0355
+      ],
+      "tris_evaluated": 276,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_Fastener_04",
+      "role": "render",
+      "dims_m": [
+        0.0342,
+        0.02,
+        0.0355
+      ],
+      "tris_evaluated": 276,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_Latch",
+      "role": "render",
+      "dims_m": [
+        0.035,
+        0.06,
+        0.15
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeBezel",
+      "role": "render",
+      "dims_m": [
+        0.41,
+        0.08,
+        0.41
+      ],
+      "tris_evaluated": 380,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeFace",
+      "role": "render",
+      "dims_m": [
+        0.332,
+        0.025,
+        0.332
+      ],
+      "tris_evaluated": 380,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeHub",
+      "role": "render",
+      "dims_m": [
+        0.05,
+        0.014,
+        0.05
+      ],
+      "tris_evaluated": 140,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeTick_01",
+      "role": "render",
+      "dims_m": [
+        0.012,
+        0.012,
+        0.037
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeTick_02",
+      "role": "render",
+      "dims_m": [
+        0.012,
+        0.012,
+        0.037
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeTick_03",
+      "role": "render",
+      "dims_m": [
+        0.012,
+        0.012,
+        0.037
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeTick_04",
+      "role": "render",
+      "dims_m": [
+        0.012,
+        0.012,
+        0.037
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeTick_05",
+      "role": "render",
+      "dims_m": [
+        0.012,
+        0.012,
+        0.037
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeTick_06",
+      "role": "render",
+      "dims_m": [
+        0.012,
+        0.012,
+        0.037
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeTick_07",
+      "role": "render",
+      "dims_m": [
+        0.012,
+        0.012,
+        0.037
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeTick_08",
+      "role": "render",
+      "dims_m": [
+        0.012,
+        0.012,
+        0.037
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_GaugeTick_09",
+      "role": "render",
+      "dims_m": [
+        0.012,
+        0.012,
+        0.037
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_CableGland",
+      "role": "render",
+      "dims_m": [
+        0.21,
+        0.16,
+        0.21
+      ],
+      "tris_evaluated": 188,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_Conduit",
+      "role": "render",
+      "dims_m": [
+        0.116,
+        0.16,
+        0.116
+      ],
+      "tris_evaluated": 140,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_VentBlock",
+      "role": "render",
+      "dims_m": [
+        0.36,
+        0.07,
+        0.18
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_VentSlot_A",
+      "role": "render",
+      "dims_m": [
+        0.26,
+        0.015,
+        0.012
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_VentSlot_B",
+      "role": "render",
+      "dims_m": [
+        0.26,
+        0.015,
+        0.012
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_VentSlot_C",
+      "role": "render",
+      "dims_m": [
+        0.26,
+        0.015,
+        0.012
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_StatusLamp_Lower",
+      "role": "render",
+      "dims_m": [
+        0.09,
+        0.05,
+        0.036
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_StatusLamp_Middle",
+      "role": "render",
+      "dims_m": [
+        0.09,
+        0.05,
+        0.036
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "PRP_StatusLamp_Upper",
+      "role": "render",
+      "dims_m": [
+        0.09,
+        0.05,
+        0.036
+      ],
+      "tris_evaluated": 108,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "COL_Junction_Body",
+      "role": "collision",
+      "dims_m": [
+        0.92,
+        0.34,
+        1.28
+      ],
+      "tris_evaluated": 12,
+      "materials": 1,
+      "uv_maps": 1
+    },
+    {
+      "object": "COL_Junction_Cable",
+      "role": "collision",
+      "dims_m": [
+        0.16,
+        0.44,
+        0.16
+      ],
+      "tris_evaluated": 12,
+      "materials": 1,
+      "uv_maps": 1
+    }
+  ],
+  "triangles_total": 4624,
+  "mesh_objects": 32,
+  "materials": 7
+}

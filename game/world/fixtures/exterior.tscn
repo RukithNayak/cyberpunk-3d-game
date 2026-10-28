@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://world/fixtures/transition_player.gd" id="1"]
+
+[node name="Exterior" type="Node3D"]
+
+[node name="Player" type="Node3D" parent="."]
+position = Vector3(3, 0, 4)
+script = ExtResource("1")
+groups = ["player"]

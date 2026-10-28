@@ -1,0 +1,68 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://tests/scenes/asset_stress.gd" id="1_driver"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_city_pad"]
+size = Vector2(128, 96)
+
+[sub_resource type="StandardMaterial3D" id="Material_city_pad"]
+albedo_color = Color(0.045, 0.06, 0.085, 1)
+metallic = 0.18
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_neon_cyan"]
+size = Vector3(0.08, 0.025, 72)
+
+[sub_resource type="StandardMaterial3D" id="Material_neon_cyan"]
+albedo_color = Color(0.05, 0.6, 0.68, 1)
+emission_enabled = true
+emission = Color(0.02, 0.8, 1, 1)
+emission_energy_multiplier = 1.5
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_neon_magenta"]
+size = Vector3(0.08, 0.025, 72)
+
+[sub_resource type="StandardMaterial3D" id="Material_neon_magenta"]
+albedo_color = Color(0.68, 0.06, 0.35, 1)
+emission_enabled = true
+emission = Color(1, 0.02, 0.28, 1)
+emission_energy_multiplier = 1.2
+shading_mode = 0
+
+[node name="AssetStress" type="Node3D"]
+script = ExtResource("1_driver")
+
+[node name="StreetBase" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.12, -2)
+mesh = SubResource("PlaneMesh_city_pad")
+surface_material_override/0 = SubResource("Material_city_pad")
+
+[node name="CyanWayfinding" type="MeshInstance3D" parent="."]
+position = Vector3(-9, 0.015, -3)
+mesh = SubResource("BoxMesh_neon_cyan")
+surface_material_override/0 = SubResource("Material_neon_cyan")
+
+[node name="MagentaWayfinding" type="MeshInstance3D" parent="."]
+position = Vector3(9, 0.015, -3)
+mesh = SubResource("BoxMesh_neon_magenta")
+surface_material_override/0 = SubResource("Material_neon_magenta")
+
+[node name="KeyLight" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.82, -0.38, 0)
+light_color = Color(0.66, 0.78, 1, 1)
+light_energy = 1.4
+
+[node name="FillLight" type="OmniLight3D" parent="."]
+position = Vector3(0, 7, 6)
+light_color = Color(0.14, 0.62, 0.9, 1)
+light_energy = 2.0
+omni_range = 32.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(0, 11, 26)
+fov = 55.0
+far = 160.0
+current = true
+
+[node name="Assets" type="Node3D" parent="."]

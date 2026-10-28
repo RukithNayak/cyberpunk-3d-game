@@ -1,0 +1,44 @@
+WorkerThreadPool: 10 threads, 3 max low-priority.
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+SDL: Init OK!
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+CORE API HASH: 2004498165
+EDITOR API HASH: 1696660745
+SceneTreeFTI: traversal method DEFAULT
+ERROR: Condition "ret != noErr" is true. Returning: ""
+   at: get_system_ca_certificates (platform/macos/os_macos.mm:1035)
+Loaded builtin CA certificates
+Loading resource: res://tests/scenes/chunk_streaming.tscn remapped: res://tests/scenes/chunk_streaming.tscn
+Loading resource: res://tests/scenes/chunk_streaming.gd remapped: res://tests/scenes/chunk_streaming.gd
+Completed load for: 'res://tests/scenes/chunk_streaming.gd' remapped 'res://tests/scenes/chunk_streaming.gd' at thread -1
+Completed load for: 'res://tests/scenes/chunk_streaming.tscn' remapped 'res://tests/scenes/chunk_streaming.tscn' at thread -1
+Loading resource: res://world/fixtures/chunk_a.tscn remapped: res://world/fixtures/chunk_a.tscn
+Completed load for: 'res://world/fixtures/chunk_a.tscn' remapped 'res://world/fixtures/chunk_a.tscn' at thread -1
+Loading resource: res://world/fixtures/chunk_b.tscn remapped: res://world/fixtures/chunk_b.tscn
+Completed load for: 'res://world/fixtures/chunk_b.tscn' remapped 'res://world/fixtures/chunk_b.tscn' at thread -1
+Loading resource: res://world/fixtures/chunk_a.tscn remapped: res://world/fixtures/chunk_a.tscn
+Completed load for: 'res://world/fixtures/chunk_a.tscn' remapped 'res://world/fixtures/chunk_a.tscn' at thread 0
+Loading resource: res://world/fixtures/chunk_b.tscn remapped: res://world/fixtures/chunk_b.tscn
+Completed load for: 'res://world/fixtures/chunk_b.tscn' remapped 'res://world/fixtures/chunk_b.tscn' at thread 1
+WORLD-02 PASS: real capsule cannot cross the unavailable seam or fall through
+WORLD-02 PASS: neighbor resource failure preserves current terrain and physical support
+WORLD-02 PASS: failed neighbor permits an explicit retry
+load_threaded_request(): Another threaded load for resource path 'res://world/fixtures/chunk_b.tscn' has been initiated. Not an error.
+WORLD-02 PASS: retry opens the seam and capsule walks onto loaded neighbor
+WORLD-02 PASS: departure unloads the old chunk while destination remains solid
+Loading resource: res://world/fixtures/chunk_a.tscn remapped: res://world/fixtures/chunk_a.tscn
+Completed load for: 'res://world/fixtures/chunk_a.tscn' remapped 'res://world/fixtures/chunk_a.tscn' at thread 2
+WORLD-02 PASS: capsule backtracks across the reloaded seam without falling
+WORLD-02 PASS: backtracking retains at most one scene instance per chunk
+WORLD-02 traversal PASS: 7 checks; headless
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"
+Leaked instance: RefCounted:9223372065661257204 - Reference count: 0
+Hint: Leaked instances typically happen when nodes are removed from the scene tree (with `remove_child()`) but not freed (with `free()` or `queue_free()`).

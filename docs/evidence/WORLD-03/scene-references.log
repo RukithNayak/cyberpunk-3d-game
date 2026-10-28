@@ -1,0 +1,11 @@
+{
+  "tool": "check_godot_project",
+  "schema": 1,
+  "root": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game/game",
+  "files_checked": 66,
+  "error_count": 0,
+  "warning_count": 0,
+  "errors": [],
+  "warnings": [],
+  "truncated": false
+}

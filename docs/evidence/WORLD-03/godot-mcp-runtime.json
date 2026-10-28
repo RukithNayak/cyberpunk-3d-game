@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"output\": [\n    \"Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org\",\n    \"\",\n    \"OpenGL API 4.1 Metal - 90.5 - Compatibility - Using Device: Apple - Apple M5\",\n    \"\",\n    \"\",\n    \"\",\n    \"WORLD-03 PASS: loader hydrates before ready and enables interactions only after entry\",\n    \"\",\n    \"WORLD-03 PASS: rendered capture saved: before-changes\",\n    \"\",\n    \"WORLD-03 PASS: door unlock commits through current-generation authority\",\n    \"\",\n    \"WORLD-03 PASS: collected loot immediately loses its runtime projection\",\n    \"\",\n    \"WORLD-03 PASS: pre-unload boundary save sees already-committed door and loot records\",\n    \"\",\n    \"WORLD-03 PASS: NPC record changes preserve unrelated authoritative data\",\n    \"\",\n    \"WORLD-03 PASS: all entity records save through CORE-04 snapshot adapters\",\n    \"\",\n    \"WORLD-03 PASS: unload revokes both chunks and notifies stale-work consumers\",\n    \"\",\n    \"WORLD-03 PASS: saved entity data restores after all runtime scenes are gone\",\n    \"\",\n    \"WORLD-03 PASS: reverse-order NPC re-entry restores saved state before ready\",\n    \"\",\n    \"WORLD-03 PASS: reverse-order door re-entry preserves unlock and suppresses collected loot\",\n    \"\",\n    \"WORLD-03 PASS: old asynchronous interaction cannot mutate a reloaded generation\",\n    \"\",\n    \"WORLD-03 PASS: two runtime projections and one tombstone retain exactly three stable identities\",\n    \"\",\n    \"WORLD-03 PASS: rendered capture saved: after-restore\",\n    \"\",\n    \"WORLD-03 runtime PASS: 14 checks; rendered\",\n    \"\"\n  ],\n  \"errors\": []\n}"
+    }
+  ]
+}

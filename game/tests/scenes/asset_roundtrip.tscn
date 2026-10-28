@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/reference/wall_doorway.glb" id="1_wall"]
+[ext_resource type="PackedScene" path="res://assets/reference/wall_doorway_collision.glb" id="2_wall_collision"]
+[ext_resource type="PackedScene" path="res://assets/reference/mechanical_prop.glb" id="3_prop"]
+[ext_resource type="PackedScene" path="res://assets/reference/mechanical_prop_collision.glb" id="4_prop_collision"]
+[ext_resource type="Script" path="res://tests/scenes/asset_roundtrip.gd" id="5_fixture"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+size = Vector2(14, 14)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.095, 0.12, 0.14, 1)
+roughness = 0.85
+
+[node name="AssetRoundtrip" type="Node3D"]
+script = ExtResource("5_fixture")
+
+[node name="WallVisual" parent="." instance=ExtResource("1_wall")]
+position = Vector3(-2.5, 0, 0)
+
+[node name="WallCollision" parent="." instance=ExtResource("2_wall_collision")]
+position = Vector3(-2.5, 0, 0)
+
+[node name="PropVisual" parent="." instance=ExtResource("3_prop")]
+position = Vector3(2.2, 0, 0)
+
+[node name="PropCollision" parent="." instance=ExtResource("4_prop_collision")]
+position = Vector3(2.2, 0, 0)
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.04, 0)
+mesh = SubResource("PlaneMesh_floor")
+surface_material_override/0 = SubResource("StandardMaterial3D_floor")
+
+[node name="KeyLight" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.72, -0.42, 0)
+light_energy = 1.5
+shadow_enabled = true
+
+[node name="FillLight" type="OmniLight3D" parent="."]
+position = Vector3(0, 3.2, 3.0)
+light_color = Color(0.24, 0.63, 0.82, 1)
+light_energy = 3.0
+omni_range = 12.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(0, 2.05, 6.0)
+rotation = Vector3(-0.08, 0, 0)
+fov = 55.0
+current = true

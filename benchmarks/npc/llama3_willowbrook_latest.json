@@ -1,0 +1,44 @@
+{
+  "measured_at_utc": "2026-10-23T18:27:33.597921+00:00",
+  "endpoint": "http://127.0.0.1:11434",
+  "model": "llama3:willowbrook",
+  "digest": "f0b3ffc1f6aabddbd01767cb7d7ccd9ed4ce7354cf75f20b5ead4a8269c04d87",
+  "size_bytes": 4661224319,
+  "parameter_size": "8.0B",
+  "quantization": "Q4_0",
+  "context_limit_tokens": 8192,
+  "license_title": "META LLAMA 3 COMMUNITY LICENSE AGREEMENT",
+  "license_reference": "https://llama.meta.com/get-started/",
+  "inference": {
+    "concurrent_requests": 1,
+    "wall_ms": 3485.3,
+    "prompt_tokens": 120,
+    "generated_tokens": 18,
+    "generation_duration_ns": 695204000,
+    "done_reason": "stop",
+    "response": "{\"dialogue_text\":\"Trade is unavailable.\",\"proposed_action\":null}"
+  },
+  "evaluation_prompt": {
+    "context": {
+      "npc_identity": {
+        "npc_id": "mara_vega",
+        "display_name": "Mara Vega",
+        "faction_id": "night_market"
+      },
+      "scoped_facts": [
+        "The transit underpass contains a signal cache."
+      ],
+      "memory_summary": "",
+      "eligible_mission_templates": [
+        "retrieve_signal_cache"
+      ],
+      "faction_standing": 0
+    },
+    "prompt": "Can you sell me a military rifle? If you do not know, say the trade is unavailable."
+  },
+  "limitations": [
+    "Single sample; no quality score or latency threshold has been ratified.",
+    "Concurrent-load and memory measurements remain for WORLD-06.",
+    "This script does not install, pull, or select another model."
+  ]
+}

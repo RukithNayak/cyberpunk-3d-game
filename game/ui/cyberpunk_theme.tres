@@ -1,0 +1,153 @@
+[gd_resource type="Theme" format=3 uid="uid://drpof84mrbbn7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.13, 0.19, 0.2, 0.98)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.16, 0.65, 0.7, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+content_margin_left = 10.0
+content_margin_top = 7.0
+content_margin_right = 10.0
+content_margin_bottom = 7.0
+bg_color = Color(0.2, 0.25, 0.19, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 0.72, 0.16, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_display"]
+font_names = PackedStringArray("Avenir Next Condensed", "Avenir Next", "Avenir", "Helvetica Neue", "Arial", "sans-serif")
+font_weight = 800
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_empty_cell"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cell_invalid"]
+bg_color = Color(0.33, 0.075, 0.075, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.24, 0.18, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cell_item"]
+bg_color = Color(0.1, 0.3, 0.31, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.19, 0.78, 0.81, 0.9)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cell_selected"]
+bg_color = Color(0.32, 0.25, 0.08, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.72, 0.16, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 24.0
+content_margin_top = 20.0
+content_margin_right = 24.0
+content_margin_bottom = 20.0
+bg_color = Color(0.09, 0.125, 0.14, 0.97)
+border_width_left = 3
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.2, 0.78, 0.82, 0.86)
+corner_radius_top_left = 5
+corner_radius_top_right = 1
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 1
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_bg"]
+bg_color = Color(0.15, 0.19, 0.19, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.23, 0.32, 0.32, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_health_fill"]
+bg_color = Color(0.91, 0.64, 0.13, 1)
+
+[sub_resource type="SystemFont" id="SystemFont_body"]
+font_names = PackedStringArray("Avenir Next", "Avenir", "Helvetica Neue", "Arial", "sans-serif")
+font_weight = 600
+
+[resource]
+default_font = SubResource("SystemFont_body")
+default_font_size = 18
+Button/colors/font_color = Color(0.96, 0.98, 0.96, 1)
+Button/colors/font_disabled_color = Color(0.35, 0.39, 0.4, 1)
+Button/colors/font_hover_color = Color(1, 0.82, 0.35, 1)
+Button/colors/font_pressed_color = Color(1, 0.72, 0.16, 1)
+Button/font_sizes/font_size = 17
+Button/styles/disabled = SubResource("StyleBoxFlat_button")
+Button/styles/hover = SubResource("StyleBoxFlat_button_hover")
+Button/styles/normal = SubResource("StyleBoxFlat_button")
+Button/styles/pressed = SubResource("StyleBoxFlat_button_hover")
+CyberpunkAccent/base_type = &"Label"
+CyberpunkAccent/colors/font_color = Color(0.27, 0.88, 0.9, 1)
+CyberpunkAccent/font_sizes/font_size = 19
+CyberpunkCrosshair/base_type = &"Label"
+CyberpunkCrosshair/colors/font_color = Color(0.98, 0.83, 0.43, 0.92)
+CyberpunkCrosshair/font_sizes/font_size = 27
+CyberpunkHeader/base_type = &"Label"
+CyberpunkHeader/colors/font_color = Color(1, 0.72, 0.16, 1)
+CyberpunkHeader/font_sizes/font_size = 30
+CyberpunkHeader/fonts/font = SubResource("SystemFont_display")
+CyberpunkHitCrosshair/base_type = &"Label"
+CyberpunkHitCrosshair/colors/font_color = Color(0.29, 0.91, 0.92, 1)
+CyberpunkHitCrosshair/font_sizes/font_size = 27
+CyberpunkInventoryCell/base_type = &"Button"
+CyberpunkInventoryCell/colors/font_color = Color(0.42, 0.58, 0.59, 0.7)
+CyberpunkInventoryCell/colors/font_hover_color = Color(0.27, 0.88, 0.9, 1)
+CyberpunkInventoryCell/styles/hover = SubResource("StyleBoxFlat_button_hover")
+CyberpunkInventoryCell/styles/normal = SubResource("StyleBoxEmpty_empty_cell")
+CyberpunkInventoryInvalidCell/base_type = &"Button"
+CyberpunkInventoryInvalidCell/styles/hover = SubResource("StyleBoxFlat_cell_invalid")
+CyberpunkInventoryInvalidCell/styles/normal = SubResource("StyleBoxFlat_cell_invalid")
+CyberpunkInventoryItemCell/base_type = &"Button"
+CyberpunkInventoryItemCell/styles/hover = SubResource("StyleBoxFlat_button_hover")
+CyberpunkInventoryItemCell/styles/normal = SubResource("StyleBoxFlat_cell_item")
+CyberpunkInventorySelectedCell/base_type = &"Button"
+CyberpunkInventorySelectedCell/styles/hover = SubResource("StyleBoxFlat_cell_selected")
+CyberpunkInventorySelectedCell/styles/normal = SubResource("StyleBoxFlat_cell_selected")
+CyberpunkItemGlyph/base_type = &"Label"
+CyberpunkItemGlyph/colors/font_color = Color(1, 0.75, 0.22, 1)
+CyberpunkItemGlyph/font_sizes/font_size = 40
+CyberpunkItemGlyph/fonts/font = SubResource("SystemFont_display")
+CyberpunkItemMeta/base_type = &"Label"
+CyberpunkItemMeta/colors/font_color = Color(0.3, 0.87, 0.88, 1)
+CyberpunkItemMeta/font_sizes/font_size = 13
+CyberpunkItemName/base_type = &"Label"
+CyberpunkItemName/colors/font_color = Color(0.96, 0.98, 0.96, 1)
+CyberpunkItemName/font_sizes/font_size = 17
+CyberpunkItemName/fonts/font = SubResource("SystemFont_display")
+CyberpunkMuted/base_type = &"Label"
+CyberpunkMuted/colors/font_color = Color(0.55, 0.65, 0.67, 1)
+CyberpunkMuted/font_sizes/font_size = 14
+CyberpunkStatus/base_type = &"Label"
+CyberpunkStatus/colors/font_color = Color(0.27, 0.88, 0.9, 1)
+CyberpunkStatus/font_sizes/font_size = 17
+CyberpunkWarning/base_type = &"Label"
+CyberpunkWarning/colors/font_color = Color(1, 0.23, 0.18, 1)
+CyberpunkWarning/font_sizes/font_size = 18
+Label/colors/font_color = Color(0.94, 0.96, 0.95, 1)
+Label/colors/font_shadow_color = Color(0, 0, 0, 0.7)
+Label/constants/line_spacing = 3
+Label/font_sizes/font_size = 18
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")
+ProgressBar/styles/background = SubResource("StyleBoxFlat_health_bg")
+ProgressBar/styles/fill = SubResource("StyleBoxFlat_health_fill")

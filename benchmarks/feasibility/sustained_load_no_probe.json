@@ -1,0 +1,167 @@
+{
+	"all_assertions_passed": true,
+	"boundary_crossings": [
+		{
+			"activated": true,
+			"load_ms": 13.795,
+			"settle_frame_interval_ms": {
+				"count": 75,
+				"max": 6.896,
+				"median": 6.896,
+				"p95": 6.896
+			},
+			"static_memory_after_settle_bytes": 58643369.0,
+			"static_memory_before_bytes": 58643413.0,
+			"static_memory_change_bytes": -44.0,
+			"target_x": 3.5
+		},
+		{
+			"activated": true,
+			"load_ms": 7.696,
+			"settle_frame_interval_ms": {
+				"count": 74,
+				"max": 6.896,
+				"median": 6.896,
+				"p95": 6.896
+			},
+			"static_memory_after_settle_bytes": 58647017.0,
+			"static_memory_before_bytes": 58640545.0,
+			"static_memory_change_bytes": 6472.0,
+			"target_x": -4.0
+		},
+		{
+			"activated": true,
+			"load_ms": 6.981,
+			"settle_frame_interval_ms": {
+				"count": 74,
+				"max": 6.896,
+				"median": 6.896,
+				"p95": 6.896
+			},
+			"static_memory_after_settle_bytes": 59132153.0,
+			"static_memory_before_bytes": 59129665.0,
+			"static_memory_change_bytes": 2488.0,
+			"target_x": 3.5
+		},
+		{
+			"activated": true,
+			"load_ms": 7.684,
+			"settle_frame_interval_ms": {
+				"count": 74,
+				"max": 8.88566666666921,
+				"median": 6.896,
+				"p95": 6.94444444444444
+			},
+			"static_memory_after_settle_bytes": 59143997.0,
+			"static_memory_before_bytes": 59141989.0,
+			"static_memory_change_bytes": 2008.0,
+			"target_x": -4.0
+		},
+		{
+			"activated": true,
+			"load_ms": 14.223,
+			"settle_frame_interval_ms": {
+				"count": 75,
+				"max": 6.896,
+				"median": 6.896,
+				"p95": 6.896
+			},
+			"static_memory_after_settle_bytes": 59863889.0,
+			"static_memory_before_bytes": 59133121.0,
+			"static_memory_change_bytes": 730768.0,
+			"target_x": 3.5
+		}
+	],
+	"concurrent_inference": {
+		"duration_seconds": 60.429292,
+		"frame_interval_ms": {
+			"count": 8759,
+			"max": 11.9186666666667,
+			"median": 6.896,
+			"p95": 6.94444444444444
+		},
+		"phase": "concurrent_inference",
+		"physics_process_ms": {
+			"count": 8759,
+			"max": 0.825,
+			"median": 0.621,
+			"p95": 0.703
+		},
+		"process_ms": {
+			"count": 8759,
+			"max": 13.72,
+			"median": 0.419,
+			"p95": 2.501
+		},
+		"render_draw_calls": {
+			"count": 8759,
+			"max": 37.0,
+			"median": 37.0,
+			"p95": 37.0
+		},
+		"static_memory_bytes": {
+			"count": 8759,
+			"max": 59867694.0,
+			"median": 59131421.0,
+			"p95": 59864517.0
+		}
+	},
+	"display_server": "macOS",
+	"full_response_latency_ms": {
+		"count": 22,
+		"max": 3250.071,
+		"median": 1994.365,
+		"p95": 2290.657
+	},
+	"game_only": {
+		"duration_seconds": 29.90265,
+		"frame_interval_ms": {
+			"count": 4254,
+			"max": 104.424666666667,
+			"median": 6.896,
+			"p95": 8.33333333333333
+		},
+		"phase": "game_only",
+		"physics_process_ms": {
+			"count": 4254,
+			"max": 7.071,
+			"median": 0.628,
+			"p95": 0.909
+		},
+		"process_ms": {
+			"count": 4254,
+			"max": 168.638,
+			"median": 0.2,
+			"p95": 57.662
+		},
+		"render_draw_calls": {
+			"count": 4254,
+			"max": 37.0,
+			"median": 37.0,
+			"p95": 37.0
+		},
+		"static_memory_bytes": {
+			"count": 4254,
+			"max": 58304460.0,
+			"median": 57944820.0,
+			"p95": 58304460.0
+		}
+	},
+	"godot_version": "4.7.2-stable (official)",
+	"inference_fallbacks": 0,
+	"inference_request_failures": 0,
+	"inference_requests_completed": 22,
+	"mode": "fullscreen local debug build; repeated in-game Ollama requests with streamed-chunk seam traversal",
+	"model": {
+		"context_length": 8192,
+		"endpoint": "http://127.0.0.1:11434",
+		"name": "llama3:willowbrook"
+	},
+	"renderer": "Apple M5",
+	"task": "WORLD-06",
+	"viewport_size": [
+		2940,
+		1846
+	],
+	"window_mode": "3"
+}

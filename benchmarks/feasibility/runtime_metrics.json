@@ -1,0 +1,46 @@
+{
+	"all_assertions_passed": true,
+	"display_server": "macOS",
+	"duration_seconds": 2.650847,
+	"frame_interval_ms": {
+		"count": 255,
+		"max": 150.0,
+		"median": 8.33333333333333,
+		"p95": 10.0
+	},
+	"godot_version": "4.7.2-stable (official)",
+	"model_request_ms": -1.0,
+	"model_used_fallback": false,
+	"physics_process_ms": {
+		"count": 255,
+		"max": 11.516,
+		"median": 0.638,
+		"p95": 11.516
+	},
+	"process_ms": {
+		"count": 255,
+		"max": 251.802,
+		"median": 23.307,
+		"p95": 251.802
+	},
+	"render_draw_calls": {
+		"count": 255,
+		"max": 75.0,
+		"median": 75.0,
+		"p95": 75.0
+	},
+	"renderer": "Apple M5",
+	"samples": 255,
+	"static_memory_bytes": {
+		"count": 255,
+		"max": 59803498.0,
+		"median": 59781022.0,
+		"p95": 59803498.0
+	},
+	"task": "WORLD-06",
+	"viewport_size": [
+		2940,
+		1846
+	],
+	"window_mode": "3"
+}

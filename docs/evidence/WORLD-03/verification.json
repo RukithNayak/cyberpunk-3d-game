@@ -1,0 +1,193 @@
+[
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--editor",
+      "--import"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-03/import.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "sample"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-03/sample.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "registry"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-03/registry.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "world_manifest"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-03/world_manifest.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "chunk_loader"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-03/chunk_loader.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "chunk_persistence"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-03/chunk_persistence.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "all"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-03/all.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "res://tests/scenes/chunk_persistence.tscn"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-03/runtime.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "/opt/homebrew/bin/python3.12",
+      "/Users/rukithnayak/.agents/skills/godot-nodes-scenes/scripts/check_godot_project.py",
+      "game",
+      "--json"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "log": "docs/evidence/WORLD-03/scene-references.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "world03_unknown"
+    ],
+    "exit": 2,
+    "expected_exit": 2,
+    "log": "docs/evidence/WORLD-03/unknown-suite.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite"
+    ],
+    "exit": 2,
+    "expected_exit": 2,
+    "log": "docs/evidence/WORLD-03/malformed-arguments.log"
+  },
+  {
+    "cwd": "/Users/rukithnayak/Documents/ChatGPT/Cyberpunk 3D Game",
+    "command": [
+      "godot",
+      "--headless",
+      "--path",
+      "game",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--suite",
+      "deliberate_failure"
+    ],
+    "exit": 1,
+    "expected_exit": 1,
+    "log": "docs/evidence/WORLD-03/deliberate-failure.log"
+  }
+]

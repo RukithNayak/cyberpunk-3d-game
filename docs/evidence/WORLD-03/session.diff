@@ -1,0 +1,1550 @@
+diff --git a/docs/master-progress.md b/docs/master-progress.md
+index b73c6d2..418e9c5 100644
+--- a/docs/master-progress.md
++++ b/docs/master-progress.md
+@@ -1,7 +1,7 @@
+ # Master Progress
+ 
+ **Updated:** 23 October 2026 (Asia/Kolkata)  
+-**Overall status:** Stage 0/1 implementation in progress. CORE-01/02/03/04, WORLD-01/02, PLAYER-02 and ASSET-01/02 accepted. WORLD-03 is next eligible; ASSET-03 and PLAYER-01 retain unassigned partial handoffs. Blender/Godot MCP tools are active; no worker is left running.  
++**Overall status:** Stage 0/1 implementation in progress. CORE-01/02/03/04, WORLD-01/02/03, PLAYER-02 and ASSET-01/02 accepted. WORLD-04 is next eligible; ASSET-03 and PLAYER-01 retain partial handoffs. No worker is left running. Blender/Godot MCP tools are available.
+ **Evidence:** [CORE-01 report](reports/CORE-01.md) and [fresh toolchain checks](toolchain.md). Minimal Godot scaffold and test harness now exist; gameplay and integrated gates remain incomplete.
+ 
+ ## Source and scope
+@@ -23,7 +23,7 @@ The proposal’s confirmed requirements remain in scope. Candidate city/weapon/r
+ - [ ] **[Core State & Persistence Registry](tasks/core-state-persistence.md) — entire module complete.** Status: in progress. Stage 0/1: 4/5 tasks; deferred: 1 outline(s).
+   Task IDs: CORE-01, CORE-02, CORE-03, CORE-04, CORE-05, CORE-06.
+ 
+-- [ ] **[World & Scene Manager](tasks/world-scene-manager.md) — entire module complete.** Status: in progress. Stage 0/1: 2/6 tasks; deferred: 1 outline(s).
++- [ ] **[World & Scene Manager](tasks/world-scene-manager.md) — entire module complete.** Status: in progress. Stage 0/1: 3/6 tasks; deferred: 1 outline(s).
+   Task IDs: WORLD-01, WORLD-02, WORLD-03, WORLD-04, WORLD-05, WORLD-06, WORLD-07.
+ 
+ - [ ] **[Player, Health & Combat Core](tasks/player-health-combat.md) — entire module complete.** Status: in progress. Stage 0/1: 1/5 tasks; deferred: 1 outline(s).
+@@ -53,6 +53,7 @@ The proposal’s confirmed requirements remain in scope. Candidate city/weapon/r
+ - [x] CORE-01 accepted: Godot pin, typed test harness, native launch and toolchain evidence; no gameplay/performance acceptance.
+ - [x] CORE-04 accepted: data-only migration/adapters, opaque-record preservation and clock policy; Main Agent regression fix red→green, migrations 22/22 and integrated all 142/142. [Report](reports/CORE-04.md).
+ - [x] WORLD-02 accepted: callback invalidation/budget and native request-token fixes, focused 42/42, integrated 184/184, real physics and Godot MCP rendered traversal/captures. [Report](reports/WORLD-02.md).
++- [x] WORLD-03 accepted: authored identities, hydration gates, tombstones, generation-safe invalidation/commits, real boundary save/reverse reload and reentrant cleanup. Focused54/all258; headless runtime12/rendered14. [Report](reports/WORLD-03.md).
+ 
+ ## Task ledger
+ 
+@@ -64,6 +65,7 @@ The proposal’s confirmed requirements remain in scope. Candidate city/weapon/r
+ | PLAYER-01 | 1 / CORE-01 | partial; unassigned | historical player_controller assignment; no live worker | game/features/player/{player_controller,input_settings}.gd, player.tscn, game/tests/scenes/player_movement.tscn, game/tests/player/test_controller.gd | working tree | test_controller.gd exists; controller/settings/player scene and movement fixture absent; preserve test and resume later |
+ | PLAYER-02 | 1 / CORE-02 | complete | Main Agent / session model | game/features/player/health_state.gd, game/tests/player/test_health.gd | working tree | Accepted 19/19 focused, all 60/60; reports/PLAYER-02.md |
+ | WORLD-02 | 1 / WORLD-01, CORE-01 | complete | Main Agent / session model; bounded reviewer world02_review / gpt-6-luna medium | game/world/chunk_loader.gd, game/tests/world/test_chunk_loader.gd; coordinated runtime fixture, runner integration and contracts | working tree on codex/stage-0-readiness | Accepted 23 October 2026; callback red6 and native-token red2 fixed; focused42/all184, physics7, rendered10; reports/WORLD-02.md |
++| WORLD-03 | 1 / WORLD-02, CORE-04 | complete | Main Agent integration; entity_hydrator worker and world03_review; dispatch requested gpt-6-luna medium | worker hydrator/tests/projection; Main manifest/loader/registry hooks, tests, contracts, runner/runtime fixture | base f71404e; uncommitted working tree | Accepted 23 October 2026; red/green including callback re-entry; focused54/all258, headless12/rendered14; reports/WORLD-03.md |
+ | WORLD-01 | 1 / CORE-02 | complete | world_manifest / gpt-6-luna medium | game/world/{chunk_manifest,world_manager}.gd, game/world/fixtures/chunk_{a,b}.tscn, game/tests/world/test_manifest.gd | working tree | Accepted 37/37 after red6 review fixes; reports/WORLD-01-worker.md |
+ | CORE-04 | 1 / CORE-03 | complete | Main Agent / session model; historical worker metadata unverified | save_migrations.gd, snapshot_adapters.gd, test_migrations.gd, state-contracts migration section; coordinated registry/faction snapshot APIs, save migration hook and runner integration | working tree on codex/stage-0-readiness | Accepted 23 October 2026; rejected-migration false success fixed red→green; migrations 22/22, all 142/142, import/sample exit 0; reports/CORE-04.md |
+ | CORE-03 | 1 / CORE-02 | complete | save_store / gpt-6-luna medium | game/persistence/save_store.gd, game/tests/persistence/test_save_store.gd, docs/state-contracts.md save envelope | working tree | Accepted 23/23; independent review clean; reports/CORE-03-worker.md |
+@@ -71,7 +73,7 @@ The proposal’s confirmed requirements remain in scope. Candidate city/weapon/r
+ | ASSET-02 | 0 / ASSET-01 | complete | reference_assets / gpt-6-luna medium | art/reference/{wall_doorway,mechanical_prop}.blend, tools/blender/build_reference.py, docs/art-reference.md, docs/evidence/ASSET-02/ | working tree | Accepted all four QA checks exit 0, visual review; reports/ASSET-02-worker.md |
+ | ASSET-01 | 0 / none | complete | asset_readiness / gpt-6-luna medium | docs/asset-pipeline.md, tools/blender/check_environment.py, art/reference/, docs/asset-provenance.md | working tree | Accepted; export, QA, structural Godot import exit 0; reports/ASSET-01-worker.md |
+ 
+-Main Agent exclusively owns shared toolchain/tracker/configuration and acceptance updates. The repository began without commits; all existing source documents and partial handoffs were preserved. On 23 October 2026 the user authorized committing the entire project snapshot and pushing the current `codex/stage-0-readiness` branch to `https://github.com/RukithNayak/cyberpunk-3d-game`. Integrated all passes 184 checks, including accepted migrations and chunk loading; the pre-commit rerun also passed 184/184, exit 0. PLAYER-01 remains outside all pending its task acceptance. Work occurs in the supplied workspace; ignored caches, credentials and model weights remain excluded.
++Main Agent exclusively owns shared toolchain/tracker/configuration and acceptance updates. Initial snapshot `f71404e` was pushed to `origin/codex/stage-0-readiness` on the user's request. WORLD-03 changes remain uncommitted on that branch. Integrated all now passes 258 checks, including registry, migrations, chunk loading and persistence. PLAYER-01 remains outside all pending its task acceptance. Existing asset/player partial work is preserved; ignored caches, credentials and model weights remain excluded.
+ 
+ ## Dependencies and recommended sequence
+ 
+@@ -84,7 +86,7 @@ Main Agent exclusively owns shared toolchain/tracker/configuration and acceptanc
+ | 4 — checkpoint and feasibility | CORE-05 → WORLD-06 | Cross-system context is confined to checkpoint restoration, navigation handoff and the combined feasibility gate. All direct prerequisites in WORLD-06 must pass first. |
+ | Later — scope dependent | CORE-06, WORLD-07, PLAYER-06, INV-06, AI-06, NPC-07, ASSET-05/06 | Approve content/targets, decompose each outline into small tickets, then execute. Do not create an entire city before feasibility evidence. |
+ 
+-WORLD-02 is accepted; its read-only reviewer has finished, and no task/worker is left active at this handoff. Other prior worker names identify historical assignments. Exact dependencies in each task take precedence over this wave summary. Preserve unaccepted player/asset files until their bounded review or resumption.
++WORLD-03 is accepted; implementer/reviewer work is finished. No task or worker is left active at this handoff. Prior worker names identify historical assignments. Exact dependencies in each task take precedence over this wave summary. Preserve unaccepted player/asset files until their bounded review or resumption.
+ 
+ ## Milestone checklists
+ 
+@@ -110,7 +112,7 @@ WORLD-02 is accepted; its read-only reviewer has finished, and no task/worker is
+ 
+ ## Next recommended task
+ 
+-**WORLD-03 — Hydrate and unload persistent entities** in [World & Scene Manager](tasks/world-scene-manager.md). WORLD-02 and CORE-04 are accepted. Start with bounded ownership of `game/world/entity_hydrator.gd` and `game/tests/world/test_chunk_persistence.gd`; consume the registry/snapshot and generation-tagged lifecycle contracts. Observe failing door/loot/NPC unload/reload regressions before implementation; register any suite with Main Agent coordination.
++**WORLD-04 — Implement safe interior fades** in [World & Scene Manager](tasks/world-scene-manager.md). Its WORLD-03 prerequisite is accepted. Scope: asynchronous interior transitions with brief fades, return position/state preservation, failure/duplicate recovery and control locks. Use test fixtures until the production controller is accepted; record any supporting shared edits before implementation and observe named regressions failing first.
+ 
+ ASSET-03 remains an alternative eligible partial task: preserve the existing exporter/assets, complete repeatability and in-engine fixture/evidence under the applicable Blender skills. Native Blender 5.2.3 and Godot 4.7.2 MCP calls now succeed. CORE-05 is blocked by unfinished PLAYER-04, INV-04, NPC-05 and HACK-05. Do not install tools or download models implicitly.
+ 
+@@ -141,3 +143,5 @@ ASSET-03 remains an alternative eligible partial task: preserve the existing exp
+ 
+ - WORLD-02 accepted 23 October 2026 (Asia/Kolkata), Main Agent with bounded reviewer gpt-6-luna / medium. Preserved baseline 33/33; callback generation/recursive-budget regressions red6→green, native retry/cancel token regressions red2→green. Final focused42/all184, import/sample/physics exit0; expected unknown/malformed2 and deliberate1. Real capsule support/traversal verified headless7 and rendered10 at 960×540 Compatibility via Godot MCP; three captures inspected. [Report](reports/WORLD-02.md), [review](reports/WORLD-02-review.md), [commands/exits](evidence/WORLD-02/verification.json). WORLD-03 is now eligible. No sustained performance, navigation/hydration, production player feel or human playtest gate accepted.
+ - TOOL-01 activation follow-up: native Blender MCP environment query succeeded (5.2.3 LTS, current scene unchanged). Godot MCP version/project/runtime calls also succeeded. Existing asset/player partial files were preserved, and no new dependency or software installation occurred in this implementation task.
++
++- WORLD-03 accepted 23 October 2026 (Asia/Kolkata), base f71404e / uncommitted working tree. Main coordinated disjoint hydrator worker and read-only review. Added authored UUID/node-path/default descriptors, checked registry commits, pre-entry hydration and generation-safe unload invalidation. Callback re-entry defects reproduced/fixed before acceptance. Final import/sample/registry44/manifest45/loader49/persistence54/all258/runtime12 exit0; unknown/malformed2 and deliberate1 expected. Godot MCP rendered14 with zero warnings/errors; before/restored captures inspected. [Report](reports/WORLD-03.md), [review](reports/WORLD-03-review.md), [commands/exits](evidence/WORLD-03/verification.json). WORLD-04 eligible; production gameplay domains/checkpoints, navigation and sustained performance/playtest gates remain unaccepted.
+diff --git a/docs/state-contracts.md b/docs/state-contracts.md
+index 598addb..09dc52b 100644
+--- a/docs/state-contracts.md
++++ b/docs/state-contracts.md
+@@ -10,6 +10,7 @@ This document publishes the Stage 1 identity, entity-state and faction-standing
+ - `get_entity_state(uuid: String) -> Dictionary` returns a deep copy. Unknown or invalid IDs return `{}`. Mutating the returned dictionary cannot change registry truth.
+ - `has_entity(uuid: String) -> bool` reports whether a valid ID is registered.
+ - `commit_state_delta(uuid: String, delta: Dictionary) -> void` ignores unknown IDs and invalid deltas with a warning. A valid top-level dictionary delta merges recursively where both old and new values are dictionaries. Scalars and arrays replace their prior values; `null` is a value and replaces. The entire merged result is validated before commit, so invalid updates have no partial effect.
++- `try_commit_state_delta(uuid: String, delta: Dictionary) -> bool` uses the same validation/merge path and returns false on rejection or true on acceptance, including a valid no-op. The original void method delegates to it. WORLD-03 uses this result to avoid projecting a rejected authority update; no second merge implementation or state owner is introduced.
+ 
+ Entity records use JSON-like values only: `null`, booleans, signed 64-bit integers, finite floats, UTF-8 strings, arrays and dictionaries with string keys. Nodes, all other Objects, packed arrays and engine-specific values are rejected. Bounds are 16 nested container levels, 1,024 entries per container, 10,000 values in one submitted record/delta, 16 KiB per string and 256 bytes per dictionary key. The merged record must also fit these bounds. These engineering limits constrain memory and recursion; they are not gameplay balance values.
+ 
+diff --git a/docs/tasks/world-scene-manager.md b/docs/tasks/world-scene-manager.md
+index 6a98b81..9d1609c 100644
+--- a/docs/tasks/world-scene-manager.md
++++ b/docs/tasks/world-scene-manager.md
+@@ -75,7 +75,9 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent / session model; reviewer gp
+ 
+ ### WORLD-03: Hydrate and unload persistent entities
+ 
+-- [ ] **WORLD-03 — deliverable complete** (Stage 1).
++Supporting integration scope recorded before implementation (23 October 2026): optional authored entity descriptors in `chunk_manifest.gd`, pre-entry/activation/retirement hooks in `chunk_loader.gd`, a boolean registry commit adapter in `entity_registry.gd`, corresponding regressions in their existing suites, and test-only projection/runtime fixtures. These support WORLD-03's existing hydration-before-interaction and unload/save-boundary requirements. Main owns shared files/runner/contracts; bounded worker owns hydrator and persistence tests. [Design/ownership ledger](../briefs/WORLD-03.md).
++
++- [x] **WORLD-03 — deliverable complete** (Stage 1).
+ 
+ **Dependencies / sequencing:** WORLD-02, CORE-04. Prerequisite IDs resolve through the master progress task index.
+ 
+@@ -83,11 +85,13 @@ Accepted 23 October 2026 (Asia/Kolkata), Main Agent / session model; reviewer gp
+ 
+ **Interfaces:** Use CORE-02 registry contracts and WORLD-01 pre-unload/activation events; entity identity comes from authored manifest data.
+ 
+-- [ ] **Acceptance:** Hydrate modified entities before enabling interactions. Commit relevant changes before unloading; notify consumers to invalidate pending interactions and model requests. Collected/destroyed records do not respawn on backtracking.
++- [x] **Acceptance:** Hydrate modified entities before enabling interactions. Commit relevant changes before unloading; notify consumers to invalidate pending interactions and model requests. Collected/destroyed records do not respawn on backtracking.
+ 
+-- [ ] **Test expectations:** Unlock a door, collect loot and alter an NPC record; unload/reload in reverse order and assert identical UUID/state with no duplicates. Exercise save at a boundary and stale loader responses after unload.
++- [x] **Test expectations:** Unlock a door, collect loot and alter an NPC record; unload/reload in reverse order and assert identical UUID/state with no duplicates. Exercise save at a boundary and stale loader responses after unload.
+ 
+-- [ ] **Evidence recorded:** Add focused commands/results and applicable capture/report links here before checking the deliverable.
++- [x] **Evidence recorded:** [Main Agent report](../reports/WORLD-03.md), [worker report](../reports/WORLD-03-worker.md), [review/resolution](../reports/WORLD-03-review.md), [exact commands/exits](../evidence/WORLD-03/verification.json), [focused54](../evidence/WORLD-03/chunk_persistence.log), [all258](../evidence/WORLD-03/all.log), [runtime](../evidence/WORLD-03/runtime-rendered.json), [before](../evidence/WORLD-03/before-changes.png), [restored](../evidence/WORLD-03/after-restore.png).
++
++Accepted 23 October 2026 (Asia/Kolkata), Main Agent integration with bounded implementer/reviewer (requested gpt-6-luna / medium). Behavior-first hydrator red35/20→green; callback red51/5 and retained-root red51/1 corrected; final focused54/all258, registry44, manifest45, loader49, import/sample/runtime exit0. Real SnapshotAdapters/SaveStore boundary save, complete runtime unload, reverse-order reload and stale-generation rejection passed headless12 and rendered14. Two captures inspected; no final engine/script/leak warnings. Generic entity projections establish persistence/lifecycle only; gameplay-specific modules/checkpoints/performance remain their own gates. WORLD-04 now eligible.
+ 
+ ### WORLD-04: Implement safe interior fades
+ 
+diff --git a/docs/world-contracts.md b/docs/world-contracts.md
+index be4b36d..7d1cf58 100644
+--- a/docs/world-contracts.md
++++ b/docs/world-contracts.md
+@@ -36,7 +36,7 @@ Consumers compare generations before accepting asynchronous completion. The mana
+ 
+ ## Asynchronous chunk loader
+ 
+-`ChunkLoader` is a transient `Node` configured once with `configure(manager, manifest, activation_root, backend, activation_budget, timeout_msec, clock) -> bool`. The backend and clock are injectable for deterministic tests; production uses `ResourceLoader.load_threaded_request`, status polling and `load_threaded_get` only after `THREAD_LOAD_LOADED`. Each process-frame pump reconciles manager desired IDs and generations, polls outstanding work, and instantiates no more than the configured activation budget. A single `PackedScene.instantiate()` is indivisible and can exceed a frame budget; fixtures are small and no performance threshold is claimed.
++`ChunkLoader` is a transient `Node` configured once with `configure(manager, manifest, activation_root, backend, activation_budget, timeout_msec, clock, entity_lifecycle = null) -> bool`. The backend and clock are injectable for deterministic tests; production uses `ResourceLoader.load_threaded_request`, status polling and `load_threaded_get` only after `THREAD_LOAD_LOADED`. Each process-frame pump reconciles manager desired IDs and generations, polls outstanding work, and instantiates no more than the configured activation budget. A single `PackedScene.instantiate()` is indivisible and can exceed a frame budget; fixtures are small and no performance threshold is claimed.
+ 
+ Repeated desired-state observations coalesce to one in-flight request per chunk. `chunk_activated`, `chunk_failed`, and `chunk_unloaded` each publish a `{chunk_id, lifecycle_generation}` payload; activation also supplies the transient `Node3D`, and failure supplies a reason. Before activation the loader rechecks both desired membership and the current generation. Work that finishes after unload is discarded. A stale active instance remains available through rapid re-entry and is acknowledged for the fresh desired generation rather than duplicated. Leaving the desired set clears pending activation and unloads the transient instance. Timeout and resource failures publish one failure per generation and stop automatic retries; `retry_chunk(chunk_id)` restarts work only while that chunk is desired.
+ 
+@@ -45,3 +45,21 @@ Scene entry (`_ready`) and the manager's activation acknowledgement can synchron
+ The production backend owns one native threaded-load token per requested path. A retry coalesces with its own in-progress or completed-but-unconsumed request instead of acquiring another token. Successful retrieval consumes that token. On subsequent pumps, the optional backend hook `release_unused(pending_paths)` consumes completed requests no longer needed by any pending chunk. It never calls `load_threaded_get` while work is in progress. Godot background work itself is not cancelable here: cancellation invalidates activation immediately, and unused results are drained when complete while the loader continues pumping. This is not a proof of bounded memory for large scenes or teardown with long-running jobs; WORLD-06 must measure that workload.
+ 
+ For authored adjacent chunks with touching X/Z bounds, the loader places a temporary collision wall at the shared edge while the neighbor has no active instance. This keeps the currently active floor intact and prevents crossing into unavailable space. The wall is removed after the neighbor activates. `res://tests/scenes/chunk_streaming.tscn` verifies real capsule collision/support through delayed neighbor status, injected failure, explicit retry, crossing, unload and backtracking; its backend uses actual threaded resources with controlled neighbor status. Overview captures document the fixture, not production art quality. Navigation synchronization, entity hydration, production player feel, large-scene frame-time/memory and human playtest gates remain separate work.
++
++## Persistent entity projection lifecycle (WORLD-03)
++
++Each authored chunk may include `entities`, defaulting to an empty array. Descriptors have exactly `uuid`, `node_path`, and `initial_state`. UUIDs use CORE-02 canonical identities and must be unique across the manifest. Node paths are distinct relative descendant paths within each chunk; empty, absolute, `.`/`..`, empty-segment and property/subname paths reject. Initial dictionaries obey the registry's data-only limits. Descriptors are copied; a manifest failure changes no accepted manifest. Entity targets are validated at hydration time, after all scene resources are available.
++
++`EntityHydrator.configure(registry, manifest, manager) -> bool` binds a transient service once. Only the registry owns durable records; the hydrator keeps runtime Node bindings outside persistent state. Projection nodes implement `apply_persistent_state(state: Dictionary) -> void` and `set_interaction_enabled(enabled: bool) -> void`. They consume copies, must not mutate the registry, and must preserve hydrated values in `_ready`. Generic test projections do not implement gameplay authority, NPC behavior, loot rewards, inventory or missions.
++
++The optional loader lifecycle protocol is:
++
++- `prepare_chunk(chunk_id, generation, instance) -> bool`: before scene entry, validate the full descriptor set/targets/ownership, atomically register missing defaults through registry preparation, then project current records with interactions disabled. Existing records win over defaults. Collected/destroyed records suppress their projection; retained re-entry may therefore legitimately have no matching tombstoned node. Valid authored defaults may remain if a subsequent callback cancels scene activation.
++- `activate_chunk(chunk_id, generation, instance) -> bool`: after scene entry but before manager acknowledgement/loader activation publication, validate the prepared root/current desired generation and enable interactions. This synchronous ordering allows rejection to remain retryable PRELOADING rather than falsely ACTIVE; manager activation observers receive fully hydrated projections. No process frame runs between enable and acknowledgement. Generation/instance checks run after each callback boundary. Retained instance re-entry prepares again before activation.
++- `retire_chunk(chunk_id, generation, instance) -> void`: release only matching runtime ownership before teardown/rejected preparation. `chunk_pre_unload` also revokes bindings and disables interactions synchronously, allowing other consumers to cancel pending work. Cleanup must not erase newer generation/root bindings installed by a callback.
++
++`commit_entity_delta(uuid, delta, generation) -> bool` requires a currently bound, valid, unsuppressed identity and matching desired generation before calling registry's checked commit API. Accepted mutations commit immediately and then project the registry copy. The save boundary therefore never depends on scraping mutable scene Nodes. Collected/destroyed tombstones revoke their binding, disable/remove the projection and remain in registry data for backtracking/save restoration. Domain-specific permissions and preconditions remain the responsibility of the owning gameplay services.
++
++`get_runtime_entity(uuid)` returns only a current valid projection (otherwise null); `get_bound_entity_count()` counts runtime bindings. `interactions_invalidated(payload)` publishes `{chunk_id, lifecycle_generation, entity_uuids}` for retired active bindings; the generation is the retirement generation. Listeners must reject stale generations and tolerate reentrant publication. State is already committed and old authority revoked before callbacks can issue another interaction.
++
++`res://tests/scenes/chunk_persistence.tscn` integrates real threaded chunks, generic door/loot/NPC projections, SnapshotAdapters and a real temporary SaveStore slot. It verifies save at pre-unload, removal of all runtime chunks, data restore, reverse-order re-entry, tombstones and stale writes. It is supporting WORLD-03 evidence, not the CORE-05 checkpoint/production-domain or WORLD-06 performance gate.
+diff --git a/game/persistence/entity_registry.gd b/game/persistence/entity_registry.gd
+index fa452f0..7b0d04b 100644
+--- a/game/persistence/entity_registry.gd
++++ b/game/persistence/entity_registry.gd
+@@ -31,20 +31,25 @@ func register_entity(uuid: String, initial_state: Dictionary) -> void:
+ 
+ 
+ func commit_state_delta(uuid: String, delta: Dictionary) -> void:
++	try_commit_state_delta(uuid, delta)
++
++
++func try_commit_state_delta(uuid: String, delta: Dictionary) -> bool:
+ 	if not _is_valid_uuid(uuid):
+ 		push_warning("EntityRegistry rejected delta for non-canonical UUID: %s" % uuid)
+-		return
++		return false
+ 	if not _entities.has(uuid):
+ 		push_warning("EntityRegistry ignored delta for unknown UUID: %s" % uuid)
+-		return
++		return false
+ 	if not _is_valid_data(delta):
+ 		push_warning("EntityRegistry rejected non-serializable or oversized delta for UUID: %s" % uuid)
+-		return
++		return false
+ 	var merged: Dictionary = _deep_merge(_entities[uuid], delta)
+ 	if not _is_valid_data(merged):
+ 		push_warning("EntityRegistry rejected delta whose merged state exceeds limits for UUID: %s" % uuid)
+-		return
++		return false
+ 	_entities[uuid] = merged
++	return true
+ 
+ 
+ func get_entity_state(uuid: String) -> Dictionary:
+diff --git a/game/tests/persistence/test_registry.gd b/game/tests/persistence/test_registry.gd
+index 9468a87..f9a321a 100644
+--- a/game/tests/persistence/test_registry.gd
++++ b/game/tests/persistence/test_registry.gd
+@@ -5,12 +5,27 @@ const FACTION_PATH: String = "res://persistence/faction_state.gd"
+ const VALID_ENTITY_ID: String = "123e4567-e89b-42d3-a456-426614174000"
+ 
+ 
++func _test_checked_delta(check: Callable, registry_script: Script) -> void:
++	var registry: Object = registry_script.new()
++	check.call(registry.has_method("try_commit_state_delta"), "registry reports authority commit acceptance for projection consumers")
++	if not registry.has_method("try_commit_state_delta"):
++		return
++	registry.call("register_entity", VALID_ENTITY_ID, {"flags": {"locked": true}, "opaque": 7})
++	check.call(registry.call("try_commit_state_delta", VALID_ENTITY_ID, {"flags": {"locked": false}}) and registry.call("get_entity_state", VALID_ENTITY_ID) == {"flags": {"locked": false}, "opaque": 7}, "checked delta commits through the registry merge and preserves unrelated data")
++	check.call(registry.call("try_commit_state_delta", VALID_ENTITY_ID, {}), "checked valid no-op is an accepted commit")
++	check.call(not registry.call("try_commit_state_delta", "123e4567-e89b-42d3-a456-426614174099", {}), "checked commit rejects unknown identity")
++	var node: Node = Node.new()
++	check.call(not registry.call("try_commit_state_delta", VALID_ENTITY_ID, {"unsafe": node}) and registry.call("get_entity_state", VALID_ENTITY_ID) == {"flags": {"locked": false}, "opaque": 7}, "checked unsafe delta rejects without changing truth")
++	node.free()
++
++
+ func run(check: Callable) -> void:
+ 	var registry_script: Script = load(REGISTRY_PATH) as Script
+ 	check.call(registry_script != null, "entity registry script is available")
+ 	if registry_script == null:
+ 		return
+ 	var registry: Object = registry_script.new()
++	_test_checked_delta(check, registry_script)
+ 	check.call(registry.has_method("register_entity"), "registry exposes registration")
+ 	check.call(registry.has_method("commit_state_delta"), "registry exposes state deltas")
+ 	check.call(registry.has_method("get_entity_state"), "registry exposes copied state lookup")
+diff --git a/game/tests/run_tests.gd b/game/tests/run_tests.gd
+index e473fbc..98b7e5d 100644
+--- a/game/tests/run_tests.gd
++++ b/game/tests/run_tests.gd
+@@ -8,7 +8,7 @@ var _failures: int = 0
+ func _initialize() -> void:
+ 	var args: PackedStringArray = OS.get_cmdline_user_args()
+ 	if args.size() != 2 or args[0] != "--suite":
+-		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|player_controller|deliberate_failure>")
++		printerr("Usage: -- --suite <sample|all|registry|save_store|world_manifest|health|migrations|chunk_loader|chunk_persistence|player_controller|deliberate_failure>")
+ 		quit(2)
+ 		return
+ 	var suite: String = args[1]
+@@ -32,6 +32,8 @@ func _initialize() -> void:
+ 				migration_test.run(_check)
+ 				var loader_test: RefCounted = load("res://tests/world/test_chunk_loader.gd").new()
+ 				await loader_test.run(_check)
++				var chunk_state_test: RefCounted = load("res://tests/world/test_chunk_persistence.gd").new()
++				await chunk_state_test.run(_check)
+ 		"registry":
+ 			var registry_test: RefCounted = load("res://tests/persistence/test_registry.gd").new()
+ 			registry_test.run(_check)
+@@ -50,6 +52,9 @@ func _initialize() -> void:
+ 		"chunk_loader":
+ 			var loader_test: RefCounted = load("res://tests/world/test_chunk_loader.gd").new()
+ 			await loader_test.run(_check)
++		"chunk_persistence":
++			var persistence_test: RefCounted = load("res://tests/world/test_chunk_persistence.gd").new()
++			await persistence_test.run(_check)
+ 		"player_controller":
+ 			var controller_test: RefCounted = load("res://tests/player/test_controller.gd").new()
+ 			await controller_test.run(_check)
+diff --git a/game/tests/world/test_chunk_loader.gd b/game/tests/world/test_chunk_loader.gd
+index be1f0e0..d273f27 100644
+--- a/game/tests/world/test_chunk_loader.gd
++++ b/game/tests/world/test_chunk_loader.gd
+@@ -28,6 +28,7 @@ func run(check: Callable) -> void:
+ 	await _test_threaded_resource_progress(check, loader_script)
+ 	await _test_native_backend_coalesces_loaded_retry(check)
+ 	await _test_cancelled_native_request_cleanup(check, loader_script)
++	_test_entity_lifecycle_hooks(check, loader_script)
+ 
+ 
+ func _test_delayed_duplicate_budget_and_cleanup(check: Callable, loader_script: Script) -> void:
+@@ -315,7 +316,62 @@ func _test_cancelled_native_request_cleanup(check: Callable, loader_script: Scri
+ 	_free_context(context)
+ 
+ 
+-func _make_context(loader_script: Script, backend: Object, activation_budget: int, timeout_msec: int) -> Dictionary:
++func _test_entity_lifecycle_hooks(check: Callable, loader_script: Script) -> void:
++	var inspect_loader: Node = loader_script.new()
++	var supports_hook: bool = false
++	for method: Dictionary in inspect_loader.get_method_list():
++		if method["name"] == "configure":
++			supports_hook = method["args"].size() >= 8
++	inspect_loader.free()
++	check.call(supports_hook, "loader supports an optional entity hydration lifecycle")
++	if not supports_hook:
++		return
++	var lifecycle: LifecycleProbe = LifecycleProbe.new()
++	var backend: FakeBackend = FakeBackend.new()
++	var context: Dictionary = _make_context(loader_script, backend, 1, 500, lifecycle)
++	var manager: Object = context["manager"]
++	var loader: Node = context["loader"]
++	manager.call("update_player_position", Vector3(-5, 0, 0))
++	loader.call("pump_frame")
++	backend.complete(CHUNK_A)
++	loader.call("pump_frame")
++	check.call(lifecycle.calls == ["prepare:off_tree", "activate:in_tree"], "entity preparation occurs before tree entry and activation after entry")
++	manager.call("update_player_position", Vector3(40, 0, 0))
++	manager.call("update_player_position", Vector3(-5, 0, 0))
++	loader.call("pump_frame")
++	check.call(lifecycle.calls == ["prepare:off_tree", "activate:in_tree", "prepare:in_tree", "activate:in_tree"], "retained re-entry hydrates again before renewing entity interactions")
++	manager.call("update_player_position", Vector3(40, 0, 0))
++	loader.call("pump_frame")
++	check.call(lifecycle.calls.back() == "retire", "entity retirement runs before transient terrain teardown")
++	_free_context(context)
++	lifecycle = LifecycleProbe.new()
++	lifecycle.allow_prepare = false
++	backend = FakeBackend.new()
++	context = _make_context(loader_script, backend, 1, 500, lifecycle)
++	manager = context["manager"]
++	loader = context["loader"]
++	manager.call("update_player_position", Vector3(-5, 0, 0))
++	loader.call("pump_frame")
++	backend.complete(CHUNK_A)
++	loader.call("pump_frame")
++	check.call(loader.call("get_active_instance", "chunk_a") == null and lifecycle.calls == ["prepare:off_tree", "retire"], "rejected entity preparation cannot enter or activate the scene")
++	lifecycle.allow_prepare = true
++	lifecycle.allow_activate = false
++	loader.call("retry_chunk", "chunk_a")
++	loader.call("pump_frame")
++	backend.complete(CHUNK_A)
++	loader.call("pump_frame")
++	check.call(loader.call("get_active_instance", "chunk_a") == null and manager.call("get_load_state", "chunk_a") == 1, "rejected entity activation keeps manager retryable instead of falsely active")
++	lifecycle.allow_activate = true
++	loader.call("retry_chunk", "chunk_a")
++	loader.call("pump_frame")
++	backend.complete(CHUNK_A)
++	loader.call("pump_frame")
++	check.call(loader.call("get_active_instance", "chunk_a") != null and manager.call("get_load_state", "chunk_a") == 2, "entity activation failure recovers through an explicit retry")
++	_free_context(context)
++
++
++func _make_context(loader_script: Script, backend: Object, activation_budget: int, timeout_msec: int, lifecycle: Object = null) -> Dictionary:
+ 	var manifest_script: Script = load(MANIFEST_PATH) as Script
+ 	var manager_script: Script = load(MANAGER_PATH) as Script
+ 	var manifest: Object = manifest_script.new()
+@@ -332,7 +388,11 @@ func _make_context(loader_script: Script, backend: Object, activation_budget: in
+ 	var loader: Node = loader_script.new()
+ 	root.add_child(loader)
+ 	var clock: Callable = Callable(self, "_read_clock")
+-	var configured: bool = loader.call("configure", manager, manifest, root, backend, activation_budget, timeout_msec, clock)
++	var configured: bool
++	if lifecycle == null:
++		configured = loader.call("configure", manager, manifest, root, backend, activation_budget, timeout_msec, clock)
++	else:
++		configured = loader.call("configure", manager, manifest, root, backend, activation_budget, timeout_msec, clock, lifecycle)
+ 	assert(configured)
+ 	return {"manager": manager, "manifest": manifest, "root": root, "loader": loader, "backend": backend}
+ 
+@@ -347,6 +407,23 @@ func _read_clock() -> int:
+ 	return clock_msec
+ 
+ 
++class LifecycleProbe extends RefCounted:
++	var calls: Array[String] = []
++	var allow_prepare: bool = true
++	var allow_activate: bool = true
++
++	func prepare_chunk(_id: String, _generation: int, instance: Node3D) -> bool:
++		calls.append("prepare:in_tree" if instance.is_inside_tree() else "prepare:off_tree")
++		return allow_prepare
++
++	func activate_chunk(_id: String, _generation: int, instance: Node3D) -> bool:
++		calls.append("activate:in_tree" if instance.is_inside_tree() else "activate:off_tree")
++		return allow_activate
++
++	func retire_chunk(_id: String, _generation: int, _instance: Node3D) -> void:
++		calls.append("retire")
++
++
+ class FakeBackend extends RefCounted:
+ 	var states: Dictionary = {}
+ 	var resources: Dictionary = {}
+diff --git a/game/tests/world/test_manifest.gd b/game/tests/world/test_manifest.gd
+index 265073c..0a5a000 100644
+--- a/game/tests/world/test_manifest.gd
++++ b/game/tests/world/test_manifest.gd
+@@ -21,6 +21,7 @@ func run(check: Callable) -> void:
+ 		{"id": "chunk_a", "bounds": AABB(Vector3(-10.0, -2.0, -10.0), Vector3(10.0, 8.0, 20.0)), "scene_path": "res://world/fixtures/chunk_a.tscn", "adjacent": ["chunk_b"]},
+ 		{"id": "chunk_b", "bounds": AABB(Vector3(0.0, -2.0, -10.0), Vector3(10.0, 8.0, 20.0)), "scene_path": "res://world/fixtures/chunk_b.tscn", "adjacent": ["chunk_a"]}
+ 	]
++	_test_entity_descriptors(check, entries)
+ 	check.call(not manifest.call("configure", [{"id": "../bad", "bounds": AABB(), "scene_path": "res://world/fixtures/chunk_a.tscn", "adjacent": []}]), "malformed chunk IDs are rejected")
+ 	check.call(not manifest.call("configure", [entries[0], entries[0].duplicate(true)]), "duplicate chunk IDs are rejected")
+ 	check.call(not manifest.call("configure", [{"id": "missing_neighbor", "bounds": AABB(Vector3.ZERO, Vector3.ONE), "scene_path": "res://world/fixtures/chunk_a.tscn", "adjacent": ["unknown"]}]), "unknown adjacent chunk IDs are rejected")
+@@ -114,3 +115,38 @@ func run(check: Callable) -> void:
+ 	check.call(manager.call("get_load_state", "chunk_a") == 0, "deactivation returns lifecycle state to unloaded")
+ 	check.call(deactivation_payloads.size() == 1 and deactivation_payloads[0] == {"chunk_id": "chunk_a", "lifecycle_generation": retired_generation}, "deactivation event publishes chunk ID and generation")
+ 	manager.disconnect("chunk_pre_unload", observation_callback)
++
++
++func _test_entity_descriptors(check: Callable, entries: Array[Dictionary]) -> void:
++	var descriptor: Dictionary = {"uuid": "123e4567-e89b-42d3-a456-426614174000", "node_path": "SeamMarker", "initial_state": {"locked": true}}
++	var authored: Array[Dictionary] = entries.duplicate(true)
++	authored[0]["entities"] = [descriptor.duplicate(true)]
++	var manifest: ChunkManifest = ChunkManifest.new()
++	var accepted: bool = manifest.configure(authored)
++	check.call(accepted and manifest.get_chunk("chunk_a").get("entities") == [descriptor], "manifest preserves authored stable-identity descriptors")
++	var copied: Dictionary = manifest.get_chunk("chunk_a")
++	if copied.has("entities"):
++		copied["entities"][0]["initial_state"]["locked"] = false
++	check.call(manifest.get_chunk("chunk_a").get("entities") == [descriptor], "authored entity default data is copy isolated")
++	var invalid: Array[Dictionary] = authored.duplicate(true)
++	invalid[0]["entities"][0]["uuid"] = "bad-id"
++	check.call(not ChunkManifest.new().configure(invalid), "manifest rejects malformed entity UUIDs")
++	invalid = authored.duplicate(true)
++	invalid[1]["entities"] = [descriptor.duplicate(true)]
++	check.call(not ChunkManifest.new().configure(invalid), "manifest rejects duplicate UUID ownership across chunks")
++	invalid = authored.duplicate(true)
++	invalid[0]["entities"][0]["node_path"] = "../Outside"
++	check.call(not ChunkManifest.new().configure(invalid), "manifest entity node paths cannot escape their chunk")
++	invalid = authored.duplicate(true)
++	var duplicate_path: Dictionary = descriptor.duplicate(true)
++	duplicate_path["uuid"] = "123e4567-e89b-42d3-a456-426614174001"
++	invalid[0]["entities"].append(duplicate_path)
++	check.call(not ChunkManifest.new().configure(invalid), "manifest rejects two persistent identities for one node path")
++	invalid = authored.duplicate(true)
++	var node: Node = Node.new()
++	invalid[0]["entities"][0]["initial_state"]["unsafe"] = node
++	check.call(not ChunkManifest.new().configure(invalid), "manifest initial entity data rejects engine Objects")
++	node.free()
++	invalid = authored.duplicate(true)
++	invalid[0]["entities"] = "bad container"
++	check.call(not ChunkManifest.new().configure(invalid), "manifest rejects malformed entity descriptor containers")
+diff --git a/game/world/chunk_loader.gd b/game/world/chunk_loader.gd
+index 757659e..24ad676 100644
+--- a/game/world/chunk_loader.gd
++++ b/game/world/chunk_loader.gd
+@@ -21,6 +21,7 @@ var _manifest: ChunkManifest
+ var _activation_root: Node
+ var _backend: Object
+ var _clock: Callable
++var _entity_lifecycle: Object
+ var _configured: bool = false
+ var _pumping: bool = false
+ var _requests: Dictionary = {}
+@@ -37,12 +38,18 @@ func configure(
+ 	backend: Object = null,
+ 	configured_activation_budget: int = 1,
+ 	configured_timeout_msec: int = DEFAULT_TIMEOUT_MSEC,
+-	configured_clock: Callable = Callable()
++	configured_clock: Callable = Callable(),
++	entity_lifecycle: Object = null
+ ) -> bool:
+ 	if _configured or manager == null or manifest == null or activation_root == null:
+ 		return false
+ 	if configured_activation_budget < 1 or configured_timeout_msec < 1:
+ 		return false
++	if entity_lifecycle != null:
++		for method: String in ["prepare_chunk", "activate_chunk", "retire_chunk"]:
++			if not entity_lifecycle.has_method(method):
++				return false
++	_entity_lifecycle = entity_lifecycle
+ 	_manager = manager
+ 	_manifest = manifest
+ 	_activation_root = activation_root
+@@ -109,6 +116,10 @@ func _sync_lifecycle() -> void:
+ 			if _instances.has(chunk_id):
+ 				if int(_instance_generations.get(chunk_id, -1)) != generation:
+ 					_instance_generations[chunk_id] = generation
++					if not _prepare_entities(chunk_id, generation, _instances[chunk_id]):
++						_retire_invalid_activation(chunk_id, generation)
++						_fail_request(chunk_id, generation, "entity_preparation_failed")
++						continue
+ 					_finish_activation(chunk_id, generation, _instances[chunk_id])
+ 				continue
+ 			if _failed_generation.get(chunk_id, -1) == generation:
+@@ -191,6 +202,14 @@ func _activate_ready() -> void:
+ 			_fail_request(chunk_id, generation, "invalid_scene_root")
+ 			continue
+ 		activated_count += 1
++		if not _prepare_entities(chunk_id, generation, instance):
++			if _entity_lifecycle != null and is_instance_valid(instance):
++				_entity_lifecycle.call("retire_chunk", chunk_id, generation, instance)
++			if is_instance_valid(instance):
++				instance.free()
++			_requests.erase(chunk_id)
++			_fail_request(chunk_id, generation, "entity_preparation_failed")
++			continue
+ 		_activation_root.add_child(instance)
+ 		_instances[chunk_id] = instance
+ 		_instance_generations[chunk_id] = generation
+@@ -204,6 +223,15 @@ func _finish_activation(chunk_id: String, generation: int, instance: Node3D) ->
+ 	if not _is_currently_desired(chunk_id, generation) or not is_instance_valid(instance) or instance.is_queued_for_deletion():
+ 		_retire_invalid_activation(chunk_id, generation)
+ 		return
++	if _entity_lifecycle != null:
++		var activated: Variant = _entity_lifecycle.call("activate_chunk", chunk_id, generation, instance)
++		if typeof(activated) != TYPE_BOOL or not activated:
++			_retire_invalid_activation(chunk_id, generation)
++			_fail_request(chunk_id, generation, "entity_activation_failed")
++			return
++		if not _is_currently_desired(chunk_id, generation) or not is_instance_valid(instance) or instance.is_queued_for_deletion():
++			_retire_invalid_activation(chunk_id, generation)
++			return
+ 	var acknowledged: bool = _manager.acknowledge_activated(chunk_id, generation)
+ 	if not acknowledged or not _is_currently_desired(chunk_id, generation) or not is_instance_valid(instance) or instance.is_queued_for_deletion():
+ 		_retire_invalid_activation(chunk_id, generation)
+@@ -213,6 +241,14 @@ func _finish_activation(chunk_id: String, generation: int, instance: Node3D) ->
+ 		_retire_invalid_activation(chunk_id, generation)
+ 
+ 
++func _prepare_entities(chunk_id: String, generation: int, instance: Node3D) -> bool:
++	if _entity_lifecycle == null:
++		return true
++	var prepared: Variant = _entity_lifecycle.call("prepare_chunk", chunk_id, generation, instance)
++	return typeof(prepared) == TYPE_BOOL and prepared and _is_currently_desired(chunk_id, generation) \
++		and is_instance_valid(instance) and not instance.is_queued_for_deletion()
++
++
+ func _retire_invalid_activation(chunk_id: String, generation: int) -> void:
+ 	var retired_generation: int = generation
+ 	if not _manager.get_desired_chunk_ids().has(chunk_id):
+@@ -224,6 +260,8 @@ func _unload_chunk(chunk_id: String, generation: int) -> void:
+ 	var instance: Node3D = _instances[chunk_id]
+ 	_instances.erase(chunk_id)
+ 	_instance_generations.erase(chunk_id)
++	if _entity_lifecycle != null and is_instance_valid(instance):
++		_entity_lifecycle.call("retire_chunk", chunk_id, generation, instance)
+ 	if is_instance_valid(instance):
+ 		instance.queue_free()
+ 	_manager.acknowledge_deactivated(chunk_id, generation)
+diff --git a/game/world/chunk_manifest.gd b/game/world/chunk_manifest.gd
+index ae7ddb1..4727452 100644
+--- a/game/world/chunk_manifest.gd
++++ b/game/world/chunk_manifest.gd
+@@ -11,6 +11,7 @@ func configure(records: Array) -> bool:
+ 	if _configured:
+ 		return false
+ 	var candidate: Dictionary = {}
++	var entity_ids: Dictionary = {}
+ 	for raw_record: Variant in records:
+ 		if not raw_record is Dictionary:
+ 			return false
+@@ -37,11 +38,15 @@ func configure(records: Array) -> bool:
+ 			if not neighbor is String or not _is_valid_id(neighbor) or neighbors.has(neighbor):
+ 				return false
+ 			neighbors.append(neighbor)
++		var entity_result: Dictionary = _validated_entities(record.get("entities", []), entity_ids)
++		if not entity_result["ok"]:
++			return false
+ 		candidate[chunk_id] = {
+ 			"id": chunk_id,
+ 			"bounds": bounds,
+ 			"scene_path": scene_path,
+-			"adjacent": neighbors
++			"adjacent": neighbors,
++			"entities": entity_result["entities"]
+ 		}
+ 	if candidate.is_empty():
+ 		return false
+@@ -64,6 +69,33 @@ func get_chunk_ids() -> Array[String]:
+ 	return ids
+ 
+ 
++func _validated_entities(raw_entities: Variant, entity_ids: Dictionary) -> Dictionary:
++	if typeof(raw_entities) != TYPE_ARRAY or raw_entities.size() > EntityRegistry.MAX_CONTAINER_ENTRIES:
++		return {"ok": false}
++	var entities: Array[Dictionary] = []
++	var paths: Dictionary = {}
++	var validator: EntityRegistry = EntityRegistry.new()
++	for raw: Variant in raw_entities:
++		if typeof(raw) != TYPE_DICTIONARY or raw.size() != 3:
++			return {"ok": false}
++		var uuid: Variant = raw.get("uuid")
++		var path: Variant = raw.get("node_path")
++		var state: Variant = raw.get("initial_state")
++		if typeof(uuid) != TYPE_STRING or typeof(path) != TYPE_STRING or typeof(state) != TYPE_DICTIONARY:
++			return {"ok": false}
++		if entity_ids.has(uuid) or paths.has(path) or path.is_empty() or path.contains(":"):
++			return {"ok": false}
++		for part: String in path.split("/", true):
++			if part.is_empty() or part == "." or part == "..":
++				return {"ok": false}
++		if not validator.validate_snapshot_records([{"uuid": uuid, "state": state}]):
++			return {"ok": false}
++		entity_ids[uuid] = true
++		paths[path] = true
++		entities.append(raw.duplicate(true))
++	return {"ok": true, "entities": entities}
++
++
+ func get_chunk(chunk_id: String) -> Dictionary:
+ 	if not _chunks.has(chunk_id):
+ 		return {}
+--- /dev/null
++++ b/docs/briefs/WORLD-03.md
+@@ -0,0 +1,24 @@
++# WORLD-03 implementation contract and ledger
++
++Approved scope: `docs/tasks/world-scene-manager.md` WORLD-03 and design modules 1/2. Dependencies WORLD-02 and CORE-04 accepted. Base: `f71404e`; branch `codex/stage-0-readiness`; clean at task start. Main Agent owns integration/acceptance. No dependency installation, asset production, AI/inventory rules or Stage 2–5 expansion.
++
++## Design decisions
++- Registry remains authoritative. Persistent mutations go through a generation-checked hydrator API and commit immediately; save-at-boundary therefore sees current data before unload. Nodes only project copied state. There is no second pending-state store to serialize or flush.
++- Authored manifest records gain optional `entities: [{uuid, node_path, initial_state}]` (default empty). UUIDs are globally unique across the manifest; node paths are nonempty relative descendant paths (no `.`/`..`/absolute paths, unique within a chunk). Initial state is validated against registry limits; no Nodes. Manifest validation rejects malformed descriptors atomically. Runtime checks ensure each unsuppressed target exists and supports `apply_persistent_state(state: Dictionary) -> void` and `set_interaction_enabled(enabled: bool) -> void`. These callbacks are authored projections, must not mutate registry data, and must preserve their hydrated state in `_ready`.
++- `collected: true` or `destroyed: true` is a data tombstone. Hydration removes that authored projection before scene entry; later backtracking never recreates it as interactive. No loot grants, mission rewards or enemy behavior are added.
++- Loader gets an optional final `entity_lifecycle: Object = null` configure parameter. Protocol: `prepare_chunk(chunk_id: String, generation: int, instance: Node3D) -> bool` before scene entry, `activate_chunk(chunk_id: String, generation: int, instance: Node3D) -> bool` after scene entry and before manager acknowledgement/publishing loader activation, and `retire_chunk(chunk_id: String, generation: int, instance: Node3D) -> void` before scene teardown or rejected preparation. Recheck generation/instance after callbacks. Retained-instance re-entry also prepares again, since pre-unload invalidates prior bindings. Activation accepts PRELOADING: enabling hydrated projections and manager acknowledgement occur synchronously without a process-frame gap. This ordering permits a projection rejection to fail/retry without leaving the manager falsely ACTIVE.
++- `EntityHydrator` is a transient RefCounted service, configured once with `(registry: EntityRegistry, manifest: ChunkManifest, manager: WorldManager) -> bool`. It connects to `manager.chunk_pre_unload` and exposes the loader protocol above. It may retain transient Nodes in runtime bindings; the registry never does.
++- API: `commit_entity_delta(uuid: String, delta: Dictionary, generation: int) -> bool` rejects unknown/unbound/suppressed IDs and stale generations before authority mutation; then calls registry's new `try_commit_state_delta` and reprojects copied state. Accepted tombstones disable/remove projections and revoke bindings immediately. `get_runtime_entity(uuid: String) -> Node3D` returns only current valid bound nodes, otherwise null. `get_bound_entity_count() -> int` exposes current live bindings. `interactions_invalidated(payload: Dictionary)` emits once per currently bound chunk when pre-unload revokes its bindings; payload includes chunk_id, retirement lifecycle_generation and `entity_uuids` array. Invalidating consumers must not revive retired generations.
++- Prepare validates the whole chunk (all descriptors, target nodes, existing ownership and data) before registering any missing defaults or invoking projections. Use registry prepared snapshot APIs for an atomic merge of missing defaults; existing records always win. On projection callback invalidation/failure, disable/revoke all staged bindings; never overwrite newer registry progress. Valid authored defaults may remain registered after a later canceled activation, since identity/data are independent of live scenes.
++- Registry adds `try_commit_state_delta(uuid, delta) -> bool` sharing existing validation/merge logic; existing void method delegates to it unchanged. This lets projection code distinguish a rejected authority update from an accepted no-op without duplicating merge rules.
++
++## Ownership / implementation steps
++- [x] Main: add failing manifest/registry/loader-hook regressions, observe red, implement shared integrations; publish their tests/evidence.
++- [x] Worker WORLD-03: create `game/world/entity_hydrator.gd`, `game/tests/world/test_chunk_persistence.gd` and `game/tests/world/fixtures/persistent_projection.gd`; return behavioral red/green evidence. Main reviewed/fixed integration and added three destroyed-record characterization assertions after worker freeze. No worker tracker/shared edits or commits.
++- [x] Main: register `chunk_persistence` in focused/all runner; add `game/tests/scenes/chunk_persistence.{gd,tscn}` and `game/tests/world/fixtures/persistence_visual.gd`. Runtime fixture uses temporary scenes/save slots and cleans them afterward.
++- [x] Main/reviewer: verify reverse-order state restoration, tombstones, duplicates, stale callbacks/loads, save boundary, rejection atomicity and reentrant replacement/retained roots. Review findings fixed through failing regressions.
++- [x] Main: import/sample/focused/all and runtime MCP checks; accepted 23 October 2026. Focused54/all258, headless runtime12 and rendered14; exact exits in evidence/WORLD-03/verification.json. Next: WORLD-04.
++
++## Rulings
++- This follows the already approved WORLD-03 plan and delegated engineering contracts; no new user-facing design decision or balance value is needed. Generic projection fixtures stand in for unimplemented door/loot/NPC gameplay owners. The consequence is that those future modules must consume this protocol, not that their own tasks are accepted.
++- Work in the supplied feature branch/root. Main owns shared contracts/configuration; the worker has disjoint assigned files. No commit/push is part of this implementation request.
+--- /dev/null
++++ b/game/tests/scenes/chunk_persistence.gd
+@@ -0,0 +1,224 @@
++extends Node3D
++## WORLD-03 end-to-end lifecycle/save fixture, independent of future gameplay modules.
++
++const DOOR: String = "00000000-0000-4000-8000-000000000031"
++const LOOT: String = "00000000-0000-4000-8000-000000000032"
++const NPC: String = "00000000-0000-4000-8000-000000000033"
++const PROJECTION: Script = preload("res://tests/world/fixtures/persistence_visual.gd")
++const EVIDENCE: String = "res://../docs/evidence/WORLD-03"
++
++var _registry: EntityRegistry = EntityRegistry.new()
++var _manager: WorldManager = WorldManager.new()
++var _hydrator: EntityHydrator = EntityHydrator.new()
++var _loader: ChunkLoader = ChunkLoader.new()
++var _chunks: Node3D = Node3D.new()
++var _label: Label = Label.new()
++var _store: SaveStore
++var _checks: Array[Dictionary] = []
++var _invalidations: Array[Dictionary] = []
++var _boundary_saved: bool = false
++var _temporary_paths: Array[String] = []
++var _save_directory: String
++var _player: Dictionary = {"health": 100}
++var _domains: Dictionary = {}
++
++
++func _ready() -> void:
++	_setup_view()
++	_save_directory = "user://world03_runtime_%d" % OS.get_process_id()
++	var a_path: String = _build_chunk(true)
++	var b_path: String = _build_chunk(false)
++	var manifest: ChunkManifest = ChunkManifest.new()
++	var entries: Array[Dictionary] = [
++		{"id": "chunk_a", "bounds": AABB(Vector3(-10, -2, -10), Vector3(10, 8, 20)), "scene_path": a_path, "adjacent": ["chunk_b"], "entities": [_descriptor(DOOR, "Door", {"locked": true}), _descriptor(LOOT, "Loot", {"collected": false})]},
++		{"id": "chunk_b", "bounds": AABB(Vector3(0, -2, -10), Vector3(10, 8, 20)), "scene_path": b_path, "adjacent": ["chunk_a"], "entities": [_descriptor(NPC, "NPC", {"trust": 1, "opaque": "preserve"})]}
++	]
++	assert(manifest.configure(entries))
++	assert(_manager.configure(manifest, 0.0, 0.0))
++	assert(_hydrator.configure(_registry, manifest, _manager))
++	_hydrator.interactions_invalidated.connect(_on_invalidation)
++	add_child(_chunks)
++	add_child(_loader)
++	assert(_loader.configure(_manager, manifest, _chunks, null, 1, 5000, Callable(), _hydrator))
++	var factions: FactionState = FactionState.new([])
++	var adapters: SnapshotAdapters = SnapshotAdapters.new(_registry, factions, _capture_player, _prepare_data, _commit_player, _capture_domains, _prepare_data, _commit_domains)
++	_store = SaveStore.new(_save_directory, adapters.capture_snapshot, adapters.validate_snapshot, adapters.apply_snapshot)
++	_manager.chunk_pre_unload.connect(_save_boundary)
++	_manager.update_player_position(Vector3(-5, 0, 0))
++	var a: Node3D = await _wait_chunk("chunk_a")
++	if a == null:
++		_finish()
++		return
++	var old_a_generation: int = _manager.get_lifecycle_generation("chunk_a")
++	var door: Node3D = _hydrator.get_runtime_entity(DOOR)
++	_check(door != null and door.get("ready_state") == {"locked": true} and not door.get("ready_interactions_enabled") and door.get("interactions_enabled"), "loader hydrates before ready and enables interactions only after entry")
++	await _capture("before-changes")
++	_check(_hydrator.commit_entity_delta(DOOR, {"locked": false}, old_a_generation), "door unlock commits through current-generation authority")
++	_check(_hydrator.commit_entity_delta(LOOT, {"collected": true}, old_a_generation) and _hydrator.get_runtime_entity(LOOT) == null, "collected loot immediately loses its runtime projection")
++	_manager.update_player_position(Vector3(5, 0, 0))
++	_check(_boundary_saved and _registry.get_entity_state(DOOR) == {"locked": false} and _registry.get_entity_state(LOOT) == {"collected": true}, "pre-unload boundary save sees already-committed door and loot records")
++	var b: Node3D = await _wait_chunk("chunk_b")
++	if b == null:
++		_finish()
++		return
++	_check(_hydrator.commit_entity_delta(NPC, {"trust": 4}, _manager.get_lifecycle_generation("chunk_b")) and _registry.get_entity_state(NPC)["opaque"] == "preserve", "NPC record changes preserve unrelated authoritative data")
++	_check(_store.save_to_disk(1) == OK, "all entity records save through CORE-04 snapshot adapters")
++	_manager.update_player_position(Vector3(40, 0, 0))
++	await get_tree().process_frame
++	await get_tree().process_frame
++	_check(_hydrator.get_bound_entity_count() == 0 and _loader.get_active_instance("chunk_a") == null and _loader.get_active_instance("chunk_b") == null and _invalidations.size() == 2, "unload revokes both chunks and notifies stale-work consumers")
++	var clear_plan: Dictionary = _registry.prepare_snapshot_replacement([])
++	_registry.commit_prepared_snapshot(clear_plan)
++	_check(_store.load_from_disk(1) == OK and _registry.get_entity_state(NPC)["trust"] == 4, "saved entity data restores after all runtime scenes are gone")
++	# Unloaded A then B; reload B then A to prove identity is independent of order.
++	_manager.update_player_position(Vector3(5, 0, 0))
++	b = await _wait_chunk("chunk_b")
++	if b == null:
++		_finish()
++		return
++	_check(_hydrator.get_runtime_entity(NPC).get("ready_state")["trust"] == 4, "reverse-order NPC re-entry restores saved state before ready")
++	_manager.update_player_position(Vector3(-5, 0, 0))
++	a = await _wait_chunk("chunk_a")
++	if a == null:
++		_finish()
++		return
++	_check(_hydrator.get_runtime_entity(DOOR).get("ready_state") == {"locked": false} and a.get_node_or_null("Loot") == null, "reverse-order door re-entry preserves unlock and suppresses collected loot")
++	_check(not _hydrator.commit_entity_delta(DOOR, {"locked": true}, old_a_generation) and not _registry.get_entity_state(DOOR)["locked"], "old asynchronous interaction cannot mutate a reloaded generation")
++	_manager.update_player_position(Vector3.ZERO)
++	b = await _wait_chunk("chunk_b")
++	_check(b != null and _hydrator.get_bound_entity_count() == 2 and _registry.snapshot_records().size() == 3, "two runtime projections and one tombstone retain exactly three stable identities")
++	_finish()
++
++
++func _build_chunk(first: bool) -> String:
++	var scene: PackedScene = load("res://world/fixtures/chunk_a.tscn" if first else "res://world/fixtures/chunk_b.tscn") as PackedScene
++	var source: Node3D = scene.instantiate() as Node3D
++	if first:
++		_add_projection(source, "Door", Vector3(-4, 1, 0), Vector3(0.4, 2, 1.4))
++		_add_projection(source, "Loot", Vector3(-2, 0.4, 2), Vector3(0.7, 0.8, 0.7))
++	else:
++		_add_projection(source, "NPC", Vector3(3, 0.9, 0), Vector3(0.7, 1.8, 0.7))
++	var packed: PackedScene = PackedScene.new()
++	assert(packed.pack(source) == OK)
++	source.free()
++	var path: String = "user://world03_runtime_%d_%s.tscn" % [OS.get_process_id(), "a" if first else "b"]
++	assert(ResourceSaver.save(packed, path) == OK)
++	_temporary_paths.append(path)
++	return path
++
++
++func _add_projection(root: Node3D, node_name: String, at: Vector3, dimensions: Vector3) -> void:
++	var projection: Node3D = Node3D.new()
++	projection.name = node_name
++	projection.position = at
++	projection.set_script(PROJECTION)
++	root.add_child(projection)
++	projection.owner = root
++	var visual: MeshInstance3D = MeshInstance3D.new()
++	visual.name = "Visual"
++	var mesh: BoxMesh = BoxMesh.new()
++	mesh.size = dimensions
++	visual.mesh = mesh
++	projection.add_child(visual)
++	visual.owner = root
++
++
++func _descriptor(uuid: String, node_path: String, state: Dictionary) -> Dictionary:
++	return {"uuid": uuid, "node_path": node_path, "initial_state": state}
++
++
++func _wait_chunk(chunk_id: String) -> Node3D:
++	var deadline: int = Time.get_ticks_msec() + 5000
++	while _loader.get_active_instance(chunk_id) == null and Time.get_ticks_msec() < deadline:
++		await get_tree().process_frame
++	var instance: Node3D = _loader.get_active_instance(chunk_id)
++	if instance == null:
++		_check(false, "chunk loading deadline: " + chunk_id)
++	return instance
++
++
++func _on_invalidation(payload: Dictionary) -> void:
++	_invalidations.append(payload.duplicate(true))
++
++
++func _save_boundary(payload: Dictionary) -> void:
++	if payload["chunk_id"] == "chunk_a" and not _boundary_saved:
++		_boundary_saved = _store.save_to_disk(0) == OK
++
++
++func _setup_view() -> void:
++	var camera: Camera3D = Camera3D.new()
++	camera.position = Vector3(0, 13, 16)
++	add_child(camera)
++	camera.look_at(Vector3.ZERO)
++	camera.current = true
++	var sun: DirectionalLight3D = DirectionalLight3D.new()
++	sun.rotation_degrees = Vector3(-50, -30, 0)
++	add_child(sun)
++	var world: WorldEnvironment = WorldEnvironment.new()
++	var environment: Environment = Environment.new()
++	environment.background_mode = Environment.BG_COLOR
++	environment.background_color = Color(0.05, 0.08, 0.12)
++	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
++	environment.ambient_light_energy = 0.7
++	world.environment = environment
++	add_child(world)
++	var canvas: CanvasLayer = CanvasLayer.new()
++	_label.position = Vector2(20, 20)
++	_label.text = "WORLD-03 / PERSISTENT ENTITY LIFECYCLE\nDoor, loot and NPC projection fixture"
++	_label.add_theme_font_size_override("font_size", 18)
++	canvas.add_child(_label)
++	add_child(canvas)
++
++
++func _check(passed: bool, description: String) -> void:
++	_checks.append({"passed": passed, "description": description})
++	print("WORLD-03 %s: %s" % ["PASS" if passed else "FAIL", description])
++
++
++func _capture(capture_name: String) -> void:
++	if DisplayServer.get_name() == "headless":
++		return
++	await RenderingServer.frame_post_draw
++	_check(get_viewport().get_texture().get_image().save_png(ProjectSettings.globalize_path(EVIDENCE).path_join(capture_name + ".png")) == OK, "rendered capture saved: " + capture_name)
++
++
++func _finish() -> void:
++	_label.text = "WORLD-03 / PERSISTENCE VERIFIED\nDoor unlocked · loot collected · NPC trust 4\nSave restored; reverse-order reload retained UUIDs"
++	await _capture("after-restore")
++	var passed: bool = not _checks.is_empty()
++	for result: Dictionary in _checks:
++		passed = passed and result["passed"]
++	var mode: String = "headless" if DisplayServer.get_name() == "headless" else "rendered"
++	var file: FileAccess = FileAccess.open(ProjectSettings.globalize_path(EVIDENCE).path_join("runtime-" + mode + ".json"), FileAccess.WRITE)
++	assert(file != null)
++	file.store_string(JSON.stringify({"passed": passed, "checks": _checks, "records": _registry.snapshot_records(), "invalidations": _invalidations, "godot": Engine.get_version_info()["string"], "display_server": DisplayServer.get_name(), "renderer": RenderingServer.get_current_rendering_method()}, "\t"))
++	file.close()
++	for path: String in _temporary_paths:
++		DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
++	for slot: int in [0, 1]:
++		DirAccess.remove_absolute(ProjectSettings.globalize_path(_save_directory.path_join("slot_%02d.save" % slot)))
++	DirAccess.remove_absolute(ProjectSettings.globalize_path(_save_directory))
++	print("WORLD-03 runtime %s: %d checks; %s" % ["PASS" if passed else "FAIL", _checks.size(), mode])
++	if mode == "headless" or OS.get_cmdline_user_args().has("--verify"):
++		get_tree().quit(0 if passed else 1)
++
++
++func _capture_player() -> Dictionary:
++	return _player.duplicate(true)
++
++
++func _capture_domains() -> Dictionary:
++	return _domains.duplicate(true)
++
++
++func _prepare_data(candidate: Dictionary) -> Dictionary:
++	return {"ok": true, "prepared": candidate.duplicate(true)}
++
++
++func _commit_player(candidate: Dictionary) -> void:
++	_player = candidate.duplicate(true)
++
++
++func _commit_domains(candidate: Dictionary) -> void:
++	_domains = candidate.duplicate(true)
+--- /dev/null
++++ b/game/tests/scenes/chunk_persistence.gd.uid
+@@ -0,0 +1 @@
++uid://c3klc8ue1obwg
+--- /dev/null
++++ b/game/tests/scenes/chunk_persistence.tscn
+@@ -0,0 +1,6 @@
++[gd_scene load_steps=2 format=3]
++
++[ext_resource type="Script" path="res://tests/scenes/chunk_persistence.gd" id="1_script"]
++
++[node name="ChunkPersistenceVerification" type="Node3D"]
++script = ExtResource("1_script")
+--- /dev/null
++++ b/game/tests/world/fixtures/persistence_visual.gd
+@@ -0,0 +1,16 @@
++extends "res://tests/world/fixtures/persistent_projection.gd"
++## Greybox state projection only; no door/loot/NPC gameplay rules.
++
++func apply_persistent_state(state: Dictionary) -> void:
++	super.apply_persistent_state(state)
++	var visual: MeshInstance3D = get_node_or_null("Visual") as MeshInstance3D
++	if visual == null:
++		return
++	var material: StandardMaterial3D = StandardMaterial3D.new()
++	if state.has("locked"):
++		material.albedo_color = Color(0.9, 0.22, 0.2) if state["locked"] else Color(0.18, 0.9, 0.45)
++	elif state.has("trust"):
++		material.albedo_color = Color(0.15, 0.8, 0.95) if state["trust"] >= 4 else Color(0.65, 0.35, 0.8)
++	else:
++		material.albedo_color = Color(1.0, 0.7, 0.15)
++	visual.material_override = material
+--- /dev/null
++++ b/game/tests/world/fixtures/persistence_visual.gd.uid
+@@ -0,0 +1 @@
++uid://ciw4qrcrrcwug
+--- /dev/null
++++ b/game/tests/world/fixtures/persistent_projection.gd
+@@ -0,0 +1,28 @@
++extends Node3D
++## Small authored projection used by chunk persistence regressions.
++
++var persistent_state: Dictionary = {}
++var interactions_enabled: bool = false
++var ready_state: Dictionary = {}
++var ready_interactions_enabled: bool = false
++var invalidation_callback: Callable
++var fail_apply: bool = false
++
++
++func apply_persistent_state(state: Dictionary) -> void:
++	if fail_apply:
++		return
++	persistent_state = state.duplicate(true)
++	if invalidation_callback.is_valid():
++		invalidation_callback.call()
++
++
++func set_interaction_enabled(enabled: bool) -> void:
++	interactions_enabled = enabled
++	if invalidation_callback.is_valid():
++		invalidation_callback.call()
++
++
++func _ready() -> void:
++	ready_state = persistent_state.duplicate(true)
++	ready_interactions_enabled = interactions_enabled
+--- /dev/null
++++ b/game/tests/world/fixtures/persistent_projection.gd.uid
+@@ -0,0 +1 @@
++uid://dtdpfg6htlkt0
+--- /dev/null
++++ b/game/tests/world/test_chunk_persistence.gd
+@@ -0,0 +1,334 @@
++extends RefCounted
++
++const HYDRATOR_PATH: String = "res://world/entity_hydrator.gd"
++const PROJECTION_SCRIPT: Script = preload("res://tests/world/fixtures/persistent_projection.gd")
++const UUID_DOOR: String = "00000000-0000-4000-8000-000000000031"
++const UUID_LOOT: String = "00000000-0000-4000-8000-000000000032"
++const UUID_NPC: String = "00000000-0000-4000-8000-000000000033"
++const CHUNK_ID: String = "persist_room"
++const SCENE_PATH: String = "user://world_03_projection_fixture.tscn"
++
++
++func run(check: Callable) -> void:
++	var script: Script = load(HYDRATOR_PATH) as Script
++	check.call(script != null, "entity hydrator service script is available")
++	if script == null:
++		return
++	var scene: PackedScene = _make_projection_scene()
++	if scene == null:
++		check.call(false, "projection fixture scene can be prepared")
++		return
++	var manifest: ChunkManifest = _manifest([_descriptor(UUID_DOOR, "Door", {"locked": true}), _descriptor(UUID_LOOT, "Loot", {"collected": false}), _descriptor(UUID_NPC, "NPC", {"trust": 1})], SCENE_PATH)
++	check.call(manifest != null, "valid persistent projection manifest is accepted")
++	if manifest == null:
++		return
++	check.call(manifest.get_chunk(CHUNK_ID).get("entities", []).size() == 3, "manifest publishes all authored persistent entity descriptors")
++	var manager: WorldManager = WorldManager.new()
++	check.call(manager.configure(manifest, 0.0, 0.0), "persistent test world manager configures")
++	manager.update_player_position(Vector3(0.0, 0.0, 0.0))
++	var generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++	var registry: EntityRegistry = EntityRegistry.new()
++	var hydrator: RefCounted = script.new()
++	check.call(hydrator.call("configure", registry, manifest, manager), "hydrator accepts registry, manifest and lifecycle manager")
++	var root: Node3D = scene.instantiate() as Node3D
++	check.call(hydrator.call("prepare_chunk", CHUNK_ID, generation, root), "whole chunk defaults prepare before scene entry")
++	check.call(registry.has_entity(UUID_DOOR) and registry.has_entity(UUID_LOOT) and registry.has_entity(UUID_NPC), "prepare registers all missing authored defaults")
++	var door: Node3D = root.get_node("Door") as Node3D
++	var loot: Node3D = root.get_node("Loot") as Node3D
++	var npc: Node3D = root.get_node("NPC") as Node3D
++	check.call(not door.get("interactions_enabled") and not loot.get("interactions_enabled") and not npc.get("interactions_enabled"), "prepared projections remain non-interactive")
++	var tree: SceneTree = Engine.get_main_loop() as SceneTree
++	tree.root.add_child(root)
++	await tree.process_frame
++	check.call(door.get("ready_state") == {"locked": true} and not bool(door.get("ready_interactions_enabled")), "door _ready observes hydrated state while interactions are disabled (%s / %s)" % [str(door.get("ready_state")), str(door.get("ready_interactions_enabled"))])
++	check.call(hydrator.call("activate_chunk", CHUNK_ID, generation, root), "current prepared chunk activates")
++	check.call(bool(door.get("interactions_enabled")) and hydrator.call("get_bound_entity_count") == 3, "activation enables exactly the live projections")
++	check.call(not hydrator.call("prepare_chunk", CHUNK_ID, generation, root), "duplicate live chunk preparation is rejected")
++	check.call(hydrator.call("commit_entity_delta", UUID_DOOR, {"locked": false}, generation), "door state mutation commits through current generation")
++	check.call(registry.get_entity_state(UUID_DOOR).get("locked") == false and door.get("persistent_state").get("locked") == false, "door delta is authoritative immediately and reprojected")
++	check.call(hydrator.call("commit_entity_delta", UUID_LOOT, {"collected": true}, generation), "loot collection tombstone commits")
++	check.call(not loot.get("interactions_enabled") and hydrator.call("get_runtime_entity", UUID_LOOT) == null, "collected loot projection is disabled and unbound")
++	check.call(hydrator.call("commit_entity_delta", UUID_NPC, {"trust": 4, "memory": {"met": true}}, generation), "NPC record delta commits")
++	check.call(registry.get_entity_state(UUID_NPC) == {"trust": 4, "memory": {"met": true}}, "NPC record preserves recursively merged data")
++	var invalidated: Array[Dictionary] = []
++	hydrator.connect("interactions_invalidated", func(payload: Dictionary) -> void: invalidated.append(payload.duplicate(true)))
++	manager.update_player_position(Vector3(100.0, 0.0, 0.0))
++	check.call(invalidated.size() == 1 and invalidated[0].get("chunk_id") == CHUNK_ID and invalidated[0].get("lifecycle_generation") == manager.get_lifecycle_generation(CHUNK_ID), "pre-unload invalidates live interactions with retirement generation")
++	check.call(hydrator.call("get_bound_entity_count") == 0 and not door.get("interactions_enabled"), "retirement revokes bindings and disables retained projection")
++	check.call(registry.get_entity_state(UUID_DOOR).get("locked") == false and registry.get_entity_state(UUID_LOOT).get("collected") == true, "save-boundary registry reads include mutations before unload")
++	var boundary_path: String = "user://world_03_boundary_save"
++	var boundary_store: SaveStore = SaveStore.new(boundary_path, func() -> Dictionary:
++		return {"player": {}, "entities": registry.snapshot_records(), "factions": {}, "domains": {}}
++	, func(candidate: Dictionary) -> bool:
++		return _snapshot_has_boundary_state(candidate)
++	, func(_candidate: Dictionary) -> bool:
++		return true
++	)
++	check.call(boundary_store.save_to_disk(1) == OK and boundary_store.load_from_disk(1) == OK, "real SaveStore round trips authoritative entity state at the unload boundary")
++	var stale_generation: int = generation
++	check.call(not hydrator.call("commit_entity_delta", UUID_DOOR, {"locked": true}, stale_generation), "stale generation cannot write after unload")
++	tree.root.remove_child(root)
++	manager.update_player_position(Vector3(0.0, 0.0, 0.0))
++	var reverse_generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++	check.call(hydrator.call("prepare_chunk", CHUNK_ID, reverse_generation, root), "retained instance prepares again on reverse entry")
++	check.call(root.get_node_or_null("Loot") == null, "tombstoned loot projection stays removed on backtracking")
++	tree.root.add_child(root)
++	check.call(hydrator.call("activate_chunk", CHUNK_ID, reverse_generation, root), "reverse-entry chunk activates with current generation")
++	check.call(hydrator.call("get_runtime_entity", UUID_DOOR) == door and registry.get_entity_state(UUID_NPC).get("trust") == 4, "reverse order preserves UUID ownership and NPC state without duplicate bindings")
++	var stale_live: int = reverse_generation - 1
++	check.call(not hydrator.call("commit_entity_delta", UUID_NPC, {"trust": 99}, stale_live), "older generation cannot overwrite live progress")
++	check.call(registry.get_entity_state(UUID_NPC).get("trust") == 4, "stale rejection leaves newer NPC record intact")
++	hydrator.call("retire_chunk", CHUNK_ID, manager.get_lifecycle_generation(CHUNK_ID) + 1, root)
++	tree.root.remove_child(root)
++	root.free()
++	var bad_manifest: ChunkManifest = _manifest([_descriptor(UUID_DOOR, "Door", {"locked": true}), _descriptor(UUID_NPC, "Missing", {"trust": 1})], SCENE_PATH)
++	if bad_manifest != null:
++		var bad_registry: EntityRegistry = EntityRegistry.new()
++		var bad_manager: WorldManager = WorldManager.new()
++		bad_manager.configure(bad_manifest, 0.0, 0.0)
++		bad_manager.update_player_position(Vector3.ZERO)
++		var bad_hydrator: RefCounted = script.new()
++		bad_hydrator.call("configure", bad_registry, bad_manifest, bad_manager)
++		var bad_root: Node3D = scene.instantiate() as Node3D
++		check.call(not bad_hydrator.call("prepare_chunk", CHUNK_ID, bad_manager.get_lifecycle_generation(CHUNK_ID), bad_root), "missing target rejects whole chunk preparation")
++		check.call(not bad_registry.has_entity(UUID_DOOR) and bad_hydrator.call("get_bound_entity_count") == 0, "failed preparation registers no partial defaults or bindings")
++		bad_root.free()
++	else:
++		check.call(false, "invalid-target manifest fixture is accepted for runtime atomicity check")
++	var fresh_manifest: ChunkManifest = _manifest([_descriptor(UUID_DOOR, "Door", {"locked": true})], SCENE_PATH)
++	if fresh_manifest != null:
++		var fresh_registry: EntityRegistry = EntityRegistry.new()
++		var fresh_manager: WorldManager = WorldManager.new()
++		fresh_manager.configure(fresh_manifest, 0.0, 0.0)
++		fresh_manager.update_player_position(Vector3.ZERO)
++		var fresh_hydrator: RefCounted = script.new()
++		fresh_hydrator.call("configure", fresh_registry, fresh_manifest, fresh_manager)
++		var fresh_root: Node3D = scene.instantiate() as Node3D
++		fresh_hydrator.call("prepare_chunk", CHUNK_ID, fresh_manager.get_lifecycle_generation(CHUNK_ID), fresh_root)
++		fresh_hydrator.call("activate_chunk", CHUNK_ID, fresh_manager.get_lifecycle_generation(CHUNK_ID), fresh_root)
++		var forbidden_value: Node = Node.new()
++		check.call(not fresh_hydrator.call("commit_entity_delta", UUID_DOOR, {"bad": forbidden_value}, fresh_manager.get_lifecycle_generation(CHUNK_ID)), "invalid data delta rejects without mutation")
++		forbidden_value.free()
++		check.call(fresh_registry.get_entity_state(UUID_DOOR) == {"locked": true}, "invalid delta has no partial authority effect")
++		fresh_hydrator.call("retire_chunk", CHUNK_ID, fresh_manager.get_lifecycle_generation(CHUNK_ID), fresh_root)
++		fresh_root.free()
++	var cancel_manifest: ChunkManifest = _manifest([_descriptor(UUID_DOOR, "Door", {"locked": true})], SCENE_PATH)
++	if cancel_manifest != null:
++		var cancel_registry: EntityRegistry = EntityRegistry.new()
++		var cancel_manager: WorldManager = WorldManager.new()
++		cancel_manager.configure(cancel_manifest, 0.0, 0.0)
++		cancel_manager.update_player_position(Vector3.ZERO)
++		var cancel_hydrator: RefCounted = script.new()
++		cancel_hydrator.call("configure", cancel_registry, cancel_manifest, cancel_manager)
++		var cancel_root: Node3D = scene.instantiate() as Node3D
++		var cancel_projection: Node3D = cancel_root.get_node("Door") as Node3D
++		cancel_projection.set("invalidation_callback", func() -> void: cancel_manager.update_player_position(Vector3(20.0, 0.0, 0.0)))
++		check.call(not cancel_hydrator.call("prepare_chunk", CHUNK_ID, cancel_manager.get_lifecycle_generation(CHUNK_ID), cancel_root), "generation invalidation from projection callback cancels preparation")
++		check.call(cancel_registry.has_entity(UUID_DOOR) and cancel_hydrator.call("get_bound_entity_count") == 0, "authored defaults may remain after callback cancellation without staged live ownership")
++		cancel_root.free()
++	else:
++		check.call(false, "callback cancellation manifest fixture is available")
++	_test_retirement_callback_reentry(check, script, scene)
++	_test_same_instance_retirement_reentry(check, script, scene)
++	_test_activation_callback_cancellation(check, script, scene)
++	_test_tombstone_callback_reentry(check, script, scene)
++	_test_destroyed_record_reentry(check, script, scene)
++	DirAccess.remove_absolute(ProjectSettings.globalize_path(SCENE_PATH))
++	DirAccess.remove_absolute(ProjectSettings.globalize_path(boundary_path.path_join("slot_01.save")))
++	DirAccess.remove_absolute(ProjectSettings.globalize_path(boundary_path))
++
++
++func _descriptor(uuid: String, node_path: String, initial_state: Dictionary) -> Dictionary:
++	return {"uuid": uuid, "node_path": node_path, "initial_state": initial_state}
++
++
++func _manifest(entities: Array[Dictionary], scene_path: String) -> ChunkManifest:
++	var manifest: ChunkManifest = ChunkManifest.new()
++	var records: Array[Dictionary] = [{
++		"id": CHUNK_ID,
++		"bounds": AABB(Vector3(-2.0, -2.0, -2.0), Vector3(4.0, 4.0, 4.0)),
++		"scene_path": scene_path,
++		"adjacent": [],
++		"entities": entities
++	}]
++	return manifest if manifest.configure(records) else null
++
++
++func _make_projection_scene() -> PackedScene:
++	var scene_root: Node3D = Node3D.new()
++	scene_root.name = "ProjectionRoom"
++	for projection_name: String in ["Door", "Loot", "NPC"]:
++		var projection: Node3D = PROJECTION_SCRIPT.new() as Node3D
++		projection.name = projection_name
++		scene_root.add_child(projection)
++		projection.owner = scene_root
++	var packed: PackedScene = PackedScene.new()
++	if packed.pack(scene_root) != OK:
++		scene_root.free()
++		return null
++	var error: Error = ResourceSaver.save(packed, SCENE_PATH)
++	scene_root.free()
++	return packed if error == OK else null
++
++
++func _snapshot_has_boundary_state(candidate: Dictionary) -> bool:
++	if not candidate.has("entities") or typeof(candidate["entities"]) != TYPE_ARRAY:
++		return false
++	var records: Dictionary = {}
++	for record: Dictionary in candidate["entities"]:
++		records[record["uuid"]] = record["state"]
++	return records.get(UUID_DOOR, {}).get("locked") == false and records.get(UUID_LOOT, {}).get("collected") == true
++
++
++func _test_destroyed_record_reentry(check: Callable, script: Script, scene: PackedScene) -> void:
++	var manifest: ChunkManifest = _manifest([_descriptor(UUID_NPC, "NPC", {"destroyed": false, "trust": 1})], SCENE_PATH)
++	var manager: WorldManager = WorldManager.new()
++	assert(manager.configure(manifest, 0.0, 0.0))
++	manager.update_player_position(Vector3.ZERO)
++	var registry: EntityRegistry = EntityRegistry.new()
++	registry.register_entity(UUID_NPC, {"destroyed": true, "trust": 7})
++	var hydrator: RefCounted = script.new()
++	assert(hydrator.call("configure", registry, manifest, manager))
++	var instance: Node3D = scene.instantiate() as Node3D
++	var generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++	var prepared: bool = hydrator.call("prepare_chunk", CHUNK_ID, generation, instance)
++	check.call(prepared and instance.get_node_or_null("NPC") == null and hydrator.call("activate_chunk", CHUNK_ID, generation, instance), "saved destroyed record suppresses an authored live NPC projection")
++	check.call(not hydrator.call("commit_entity_delta", UUID_NPC, {"destroyed": false}, generation) and registry.get_entity_state(UUID_NPC) == {"destroyed": true, "trust": 7}, "suppressed destroyed identity cannot be revived by an interaction")
++	manager.update_player_position(Vector3(20, 0, 0))
++	instance.free()
++	manager.update_player_position(Vector3.ZERO)
++	instance = scene.instantiate() as Node3D
++	check.call(hydrator.call("prepare_chunk", CHUNK_ID, manager.get_lifecycle_generation(CHUNK_ID), instance) and instance.get_node_or_null("NPC") == null and registry.get_entity_state(UUID_NPC) == {"destroyed": true, "trust": 7}, "destroyed NPC stays absent on fresh-instance backtracking with stable saved data")
++	hydrator.call("retire_chunk", CHUNK_ID, manager.get_lifecycle_generation(CHUNK_ID), instance)
++	instance.free()
++
++
++func _test_retirement_callback_reentry(check: Callable, script: Script, scene: PackedScene) -> void:
++	var manifest: ChunkManifest = _manifest([_descriptor(UUID_DOOR, "Door", {"locked": true}), _descriptor(UUID_LOOT, "Loot", {"collected": false}), _descriptor(UUID_NPC, "NPC", {"trust": 1})], SCENE_PATH)
++	var manager: WorldManager = WorldManager.new()
++	manager.configure(manifest, 0.0, 0.0)
++	manager.update_player_position(Vector3.ZERO)
++	var registry: EntityRegistry = EntityRegistry.new()
++	var hydrator: RefCounted = script.new()
++	hydrator.call("configure", registry, manifest, manager)
++	var old_root: Node3D = scene.instantiate() as Node3D
++	var old_generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++	hydrator.call("prepare_chunk", CHUNK_ID, old_generation, old_root)
++	hydrator.call("activate_chunk", CHUNK_ID, old_generation, old_root)
++	var callback_fired: Array[bool] = [false]
++	var newer_root: Array[Node3D] = []
++	var old_door: Node3D = old_root.get_node("Door") as Node3D
++	old_door.set("invalidation_callback", func() -> void:
++		if callback_fired[0]:
++			return
++		callback_fired[0] = true
++		manager.update_player_position(Vector3(100.0, 0.0, 0.0))
++		manager.update_player_position(Vector3.ZERO)
++		var new_generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++		var replacement: Node3D = scene.instantiate() as Node3D
++		newer_root.append(replacement)
++		check.call(hydrator.call("prepare_chunk", CHUNK_ID, new_generation, replacement), "retirement callback can prepare a newly entered generation")
++		check.call(hydrator.call("activate_chunk", CHUNK_ID, new_generation, replacement), "retirement callback can activate a newly entered generation")
++	)
++	manager.update_player_position(Vector3(100.0, 0.0, 0.0))
++	var replacement_door: Node3D = newer_root[0].get_node("Door") as Node3D if not newer_root.is_empty() else null
++	check.call(replacement_door != null and bool(replacement_door.get("interactions_enabled")) and hydrator.call("get_runtime_entity", UUID_DOOR) == replacement_door, "older retirement callback preserves newer generation bindings")
++	check.call(hydrator.call("commit_entity_delta", UUID_DOOR, {"locked": false}, manager.get_lifecycle_generation(CHUNK_ID)), "newer binding remains writable after reentrant retirement")
++	old_root.free()
++	if not newer_root.is_empty():
++		newer_root[0].free()
++
++
++func _test_activation_callback_cancellation(check: Callable, script: Script, scene: PackedScene) -> void:
++	var manifest: ChunkManifest = _manifest([_descriptor(UUID_DOOR, "Door", {"locked": true}), _descriptor(UUID_LOOT, "Loot", {"collected": false}), _descriptor(UUID_NPC, "NPC", {"trust": 1})], SCENE_PATH)
++	var manager: WorldManager = WorldManager.new()
++	manager.configure(manifest, 0.0, 0.0)
++	manager.update_player_position(Vector3.ZERO)
++	var registry: EntityRegistry = EntityRegistry.new()
++	var hydrator: RefCounted = script.new()
++	hydrator.call("configure", registry, manifest, manager)
++	var root: Node3D = scene.instantiate() as Node3D
++	var generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++	hydrator.call("prepare_chunk", CHUNK_ID, generation, root)
++	var callback_fired: Array[bool] = [false]
++	var door: Node3D = root.get_node("Door") as Node3D
++	door.set("invalidation_callback", func() -> void:
++		if callback_fired[0]:
++			return
++		callback_fired[0] = true
++		manager.update_player_position(Vector3(100.0, 0.0, 0.0))
++	)
++	check.call(not hydrator.call("activate_chunk", CHUNK_ID, generation, root), "activation callback invalidation rejects the stale generation")
++	check.call(not door.get("interactions_enabled") and not (root.get_node("Loot") as Node3D).get("interactions_enabled") and not (root.get_node("NPC") as Node3D).get("interactions_enabled"), "activation cancellation leaves every staged projection disabled")
++	root.free()
++
++
++func _test_same_instance_retirement_reentry(check: Callable, script: Script, scene: PackedScene) -> void:
++	var manifest: ChunkManifest = _manifest([_descriptor(UUID_DOOR, "Door", {"locked": true}), _descriptor(UUID_LOOT, "Loot", {"collected": false})], SCENE_PATH)
++	var manager: WorldManager = WorldManager.new()
++	manager.configure(manifest, 0.0, 0.0)
++	manager.update_player_position(Vector3.ZERO)
++	var registry: EntityRegistry = EntityRegistry.new()
++	var hydrator: RefCounted = script.new()
++	hydrator.call("configure", registry, manifest, manager)
++	var retained_root: Node3D = scene.instantiate() as Node3D
++	var old_generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++	hydrator.call("prepare_chunk", CHUNK_ID, old_generation, retained_root)
++	hydrator.call("activate_chunk", CHUNK_ID, old_generation, retained_root)
++	var callback_fired: Array[bool] = [false]
++	var door: Node3D = retained_root.get_node("Door") as Node3D
++	var loot: Node3D = retained_root.get_node("Loot") as Node3D
++	door.set("invalidation_callback", func() -> void:
++		if callback_fired[0]:
++			return
++		callback_fired[0] = true
++		manager.update_player_position(Vector3.ZERO)
++		var new_generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++		check.call(hydrator.call("prepare_chunk", CHUNK_ID, new_generation, retained_root), "retirement callback prepares the retained instance at its newer generation")
++		check.call(hydrator.call("activate_chunk", CHUNK_ID, new_generation, retained_root), "retirement callback reactivates the retained instance")
++	)
++	manager.update_player_position(Vector3(100.0, 0.0, 0.0))
++	var new_generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++	check.call(bool(door.get("interactions_enabled")) and bool(loot.get("interactions_enabled")), "old retirement leaves every same-instance newer projection enabled")
++	check.call(hydrator.call("get_runtime_entity", UUID_LOOT) == loot and hydrator.call("commit_entity_delta", UUID_LOOT, {"collected": false, "visited": true}, new_generation), "same-instance newer binding remains readable and writable")
++	retained_root.free()
++
++
++func _test_tombstone_callback_reentry(check: Callable, script: Script, scene: PackedScene) -> void:
++	var manifest: ChunkManifest = _manifest([_descriptor(UUID_DOOR, "Door", {"locked": true}), _descriptor(UUID_LOOT, "Loot", {"collected": false}), _descriptor(UUID_NPC, "NPC", {"trust": 1})], SCENE_PATH)
++	var manager: WorldManager = WorldManager.new()
++	manager.configure(manifest, 0.0, 0.0)
++	manager.update_player_position(Vector3.ZERO)
++	var registry: EntityRegistry = EntityRegistry.new()
++	var hydrator: RefCounted = script.new()
++	hydrator.call("configure", registry, manifest, manager)
++	var old_root: Node3D = scene.instantiate() as Node3D
++	var generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++	hydrator.call("prepare_chunk", CHUNK_ID, generation, old_root)
++	hydrator.call("activate_chunk", CHUNK_ID, generation, old_root)
++	var callback_fired: Array[bool] = [false]
++	var nested_write_accepted: Array[bool] = [false]
++	var newer_root: Array[Node3D] = []
++	var loot: Node3D = old_root.get_node("Loot") as Node3D
++	loot.set("invalidation_callback", func() -> void:
++		if callback_fired[0]:
++			return
++		callback_fired[0] = true
++		nested_write_accepted[0] = hydrator.call("commit_entity_delta", UUID_LOOT, {"collected": false}, generation)
++		manager.update_player_position(Vector3(100.0, 0.0, 0.0))
++		manager.update_player_position(Vector3.ZERO)
++		var new_generation: int = manager.get_lifecycle_generation(CHUNK_ID)
++		var replacement: Node3D = scene.instantiate() as Node3D
++		newer_root.append(replacement)
++		check.call(hydrator.call("prepare_chunk", CHUNK_ID, new_generation, replacement), "tombstone callback prepares a newer chunk generation")
++		check.call(hydrator.call("activate_chunk", CHUNK_ID, new_generation, replacement), "tombstone callback activates a newer chunk generation")
++	)
++	check.call(hydrator.call("commit_entity_delta", UUID_LOOT, {"collected": true}, generation), "collected tombstone commits through a reentrant projection callback")
++	var replacement_door: Node3D = newer_root[0].get_node("Door") as Node3D if not newer_root.is_empty() else null
++	var replacement_npc: Node3D = newer_root[0].get_node("NPC") as Node3D if not newer_root.is_empty() else null
++	check.call(replacement_door != null and replacement_npc != null and hydrator.call("get_runtime_entity", UUID_DOOR) == replacement_door and hydrator.call("get_runtime_entity", UUID_NPC) == replacement_npc, "tombstone cleanup preserves other newer-generation entity bindings")
++	check.call(not newer_root.is_empty() and newer_root[0].get_node_or_null("Loot") == null, "newer-generation tombstoned projection remains suppressed")
++	check.call(not nested_write_accepted[0] and registry.get_entity_state(UUID_LOOT).get("collected") == true, "tombstone revokes its old owner before callback can issue a reentrant stale delta")
++	old_root.free()
++	if not newer_root.is_empty():
++		newer_root[0].free()
+--- /dev/null
++++ b/game/tests/world/test_chunk_persistence.gd.uid
+@@ -0,0 +1 @@
++uid://m2pnbm14bgv7
+--- /dev/null
++++ b/game/world/entity_hydrator.gd
+@@ -0,0 +1,304 @@
++extends RefCounted
++class_name EntityHydrator
++## Projects registry-owned entity records onto the currently loaded chunk scenes.
++
++signal interactions_invalidated(payload: Dictionary)
++
++var _registry: EntityRegistry
++var _manifest: ChunkManifest
++var _manager: WorldManager
++var _configured: bool = false
++var _bindings: Dictionary = {}
++var _chunks: Dictionary = {}
++var _prepared: Dictionary = {}
++
++func configure(registry: EntityRegistry, manifest: ChunkManifest, manager: WorldManager) -> bool:
++	if _configured or registry == null or manifest == null or manager == null or manifest.get_chunk_ids().is_empty():
++		return false
++	_registry = registry
++	_manifest = manifest
++	_manager = manager
++	_manager.chunk_pre_unload.connect(_on_chunk_pre_unload)
++	_configured = true
++	return true
++
++
++func prepare_chunk(chunk_id: String, generation: int, instance: Node3D) -> bool:
++	if not _is_current(chunk_id, generation) or not is_instance_valid(instance) or instance.is_queued_for_deletion():
++		return false
++	if _chunks.has(chunk_id) and int(_chunks[chunk_id]["generation"]) == generation:
++		return false
++	if _prepared.has(chunk_id) and int(_prepared[chunk_id]["generation"]) == generation:
++		return false
++	var chunk: Dictionary = _manifest.get_chunk(chunk_id)
++	var descriptors: Variant = chunk.get("entities", [])
++	if typeof(descriptors) != TYPE_ARRAY:
++		return false
++	var staged: Array[Dictionary] = []
++	var pending_defaults: Dictionary = {}
++	for raw_descriptor: Variant in descriptors:
++		if typeof(raw_descriptor) != TYPE_DICTIONARY:
++			return false
++		var descriptor: Dictionary = raw_descriptor
++		var uuid: Variant = descriptor.get("uuid")
++		var node_path: Variant = descriptor.get("node_path")
++		var initial_state: Variant = descriptor.get("initial_state")
++		if typeof(uuid) != TYPE_STRING or typeof(node_path) != TYPE_STRING or typeof(initial_state) != TYPE_DICTIONARY:
++			return false
++		if _has_other_owner(uuid, chunk_id) or _prepared_has_other_owner(uuid, chunk_id):
++			return false
++		var state: Dictionary = _registry.get_entity_state(uuid)
++		if not _registry.has_entity(uuid):
++			state = initial_state.duplicate(true)
++			pending_defaults[uuid] = state
++		var tombstoned: bool = bool(state.get("collected", false)) or bool(state.get("destroyed", false))
++		var target: Node3D = _resolve_target(instance, node_path) if not tombstoned else null
++		if not tombstoned and target == null:
++			return false
++		if not tombstoned and (not target.has_method("apply_persistent_state") or not target.has_method("set_interaction_enabled")):
++			return false
++		staged.append({"uuid": uuid, "node_path": node_path, "state": state, "node": target, "tombstoned": tombstoned})
++	if not _is_current(chunk_id, generation) or not is_instance_valid(instance):
++		return false
++	if not pending_defaults.is_empty() and not _commit_missing_defaults(pending_defaults):
++		return false
++	# Set all interactions off before any user projection callback can observe the scene.
++	for binding: Dictionary in staged:
++		if bool(binding["tombstoned"]):
++			continue
++		var node: Node3D = binding["node"]
++		if not _is_current(chunk_id, generation) or not is_instance_valid(node):
++			_revoke_staged(chunk_id, generation, staged)
++			return false
++		node.call("set_interaction_enabled", false)
++		if not _is_current(chunk_id, generation) or not is_instance_valid(node) or instance.is_queued_for_deletion():
++			_revoke_staged(chunk_id, generation, staged)
++			return false
++		node.call("apply_persistent_state", (binding["state"] as Dictionary).duplicate(true))
++		if not _is_current(chunk_id, generation) or not is_instance_valid(node) or instance.is_queued_for_deletion():
++			_revoke_staged(chunk_id, generation, staged)
++			return false
++	for binding: Dictionary in staged:
++		if bool(binding["tombstoned"]):
++			var tombstone_target: Node3D = _resolve_target(instance, binding["node_path"])
++			if tombstone_target != null and tombstone_target.get_parent() != null:
++				tombstone_target.get_parent().remove_child(tombstone_target)
++				tombstone_target.queue_free()
++	_chunks[chunk_id] = {"generation": generation, "instance": instance, "bindings": staged, "active": false}
++	_prepared[chunk_id] = {"generation": generation, "instance": instance}
++	return _is_current(chunk_id, generation) and is_instance_valid(instance) and not instance.is_queued_for_deletion()
++
++
++func activate_chunk(chunk_id: String, generation: int, instance: Node3D) -> bool:
++	if not _is_current(chunk_id, generation) or not is_instance_valid(instance) or instance.is_queued_for_deletion():
++		return false
++	if not _prepared.has(chunk_id):
++		return false
++	var prepared: Dictionary = _prepared[chunk_id]
++	if int(prepared["generation"]) != generation or prepared["instance"] != instance:
++		return false
++	var chunk: Dictionary = _chunks.get(chunk_id, {})
++	var staged: Array = chunk.get("bindings", [])
++	for binding_variant: Variant in staged:
++		var binding: Dictionary = binding_variant
++		if bool(binding["tombstoned"]):
++			continue
++		var node: Node3D = binding["node"]
++		if not _is_current(chunk_id, generation) or not is_instance_valid(node) or not is_instance_valid(instance):
++			_retire_internal(chunk_id, generation, instance)
++			return false
++		# Publish this exact generation's ownership before the callback. If enabling
++		# synchronously invalidates the chunk, retirement can now disable this node.
++		_bindings[binding["uuid"]] = {"node": node, "chunk_id": chunk_id, "generation": generation}
++		node.call("set_interaction_enabled", true)
++		if not _is_current(chunk_id, generation) or not is_instance_valid(node) or instance.is_queued_for_deletion():
++			_retire_internal(chunk_id, generation, instance)
++			return false
++	chunk["active"] = true
++	_chunks[chunk_id] = chunk
++	_prepared.erase(chunk_id)
++	return true
++
++
++func retire_chunk(chunk_id: String, generation: int, instance: Node3D) -> void:
++	_retire_internal(chunk_id, generation, instance)
++
++
++func commit_entity_delta(uuid: String, delta: Dictionary, generation: int) -> bool:
++	if not _configured or not _bindings.has(uuid):
++		return false
++	var binding: Dictionary = _bindings[uuid]
++	var chunk_id: String = binding["chunk_id"]
++	if generation != int(binding["generation"]) or not _is_current(chunk_id, generation):
++		return false
++	var node: Node3D = binding["node"]
++	if not is_instance_valid(node) or node.is_queued_for_deletion():
++		return false
++	if not _registry.try_commit_state_delta(uuid, delta):
++		return false
++	var state: Dictionary = _registry.get_entity_state(uuid)
++	if bool(state.get("collected", false)) or bool(state.get("destroyed", false)):
++		var chunk: Dictionary = _chunks.get(chunk_id, {})
++		# Revoke only the exact old binding before invoking user code. A callback may
++		# synchronously re-enter this chunk and install a newer instance/generation.
++		if _bindings.has(uuid) and _binding_matches(_bindings[uuid], chunk_id, generation, node):
++			_bindings.erase(uuid)
++		if _chunk_matches(chunk, generation, binding.get("instance", chunk.get("instance")) as Node3D):
++			var remaining: Array = []
++			for raw_binding: Variant in chunk.get("bindings", []):
++				if raw_binding["uuid"] != uuid:
++					remaining.append(raw_binding)
++			chunk["bindings"] = remaining
++			_chunks[chunk_id] = chunk
++		if is_instance_valid(node) and not node.is_queued_for_deletion():
++			node.call("set_interaction_enabled", false)
++			if is_instance_valid(node) and not node.is_queued_for_deletion():
++				if node.get_parent() != null:
++					node.get_parent().remove_child(node)
++				node.queue_free()
++		return true
++	node.call("apply_persistent_state", state.duplicate(true))
++	return true
++
++
++func get_runtime_entity(_uuid: String) -> Node3D:
++	if not _bindings.has(_uuid):
++		return null
++	var binding: Dictionary = _bindings[_uuid]
++	var node: Node3D = binding["node"]
++	if not _is_current(binding["chunk_id"], int(binding["generation"])) or not is_instance_valid(node) or node.is_queued_for_deletion():
++		return null
++	return node
++
++
++func get_bound_entity_count() -> int:
++	return _bindings.size()
++
++
++func _commit_missing_defaults(missing: Dictionary) -> bool:
++	var records: Array[Dictionary] = _registry.snapshot_records()
++	var present: Dictionary = {}
++	for record: Dictionary in records:
++		present[record["uuid"]] = true
++	for uuid: String in missing:
++		if not present.has(uuid):
++			records.append({"uuid": uuid, "state": (missing[uuid] as Dictionary).duplicate(true)})
++	var plan: Dictionary = _registry.prepare_snapshot_replacement(records)
++	if not plan.get("ok", false):
++		return false
++	_registry.commit_prepared_snapshot(plan)
++	return true
++
++
++func _resolve_target(instance: Node3D, path: String) -> Node3D:
++	if path.is_empty() or path.begins_with("/"):
++		return null
++	var node: Node = instance.get_node_or_null(NodePath(path))
++	if node == null or not node is Node3D:
++		return null
++	return node as Node3D
++
++
++func _has_other_owner(uuid: String, chunk_id: String) -> bool:
++	if _bindings.has(uuid) and _bindings[uuid]["chunk_id"] != chunk_id:
++		return true
++	return false
++
++
++func _prepared_has_other_owner(uuid: String, chunk_id: String) -> bool:
++	for other_chunk: String in _chunks:
++		if other_chunk == chunk_id:
++			continue
++		for binding: Dictionary in _chunks[other_chunk].get("bindings", []):
++			if binding["uuid"] == uuid:
++				return true
++	return false
++
++
++func _revoke_staged(chunk_id: String, generation: int, staged: Array[Dictionary]) -> void:
++	var chunk: Dictionary = _chunks.get(chunk_id, {})
++	var instance: Node3D = chunk.get("instance") as Node3D
++	if _chunk_matches(chunk, generation, instance):
++		_chunks.erase(chunk_id)
++	var prepared: Dictionary = _prepared.get(chunk_id, {})
++	if int(prepared.get("generation", -1)) == generation and prepared.get("instance") == instance:
++		_prepared.erase(chunk_id)
++	var to_disable: Array[Dictionary] = []
++	for binding: Dictionary in staged:
++		if bool(binding["tombstoned"]):
++			continue
++		var node: Node3D = binding["node"]
++		if _bindings.has(binding["uuid"]) and _binding_matches(_bindings[binding["uuid"]], chunk_id, generation, node):
++			_bindings.erase(binding["uuid"])
++		if is_instance_valid(node):
++			to_disable.append({"uuid": binding["uuid"], "node": node})
++	for owner: Dictionary in to_disable:
++		var node: Node3D = owner["node"]
++		if _has_same_node_binding(owner["uuid"], node):
++			continue
++		if is_instance_valid(node) and not node.is_queued_for_deletion():
++			node.call("set_interaction_enabled", false)
++
++
++func _on_chunk_pre_unload(payload: Dictionary) -> void:
++	var chunk_id: String = String(payload.get("chunk_id", ""))
++	var generation: int = int(payload.get("lifecycle_generation", -1))
++	var chunk: Dictionary = _chunks.get(chunk_id, {})
++	_retire_internal(chunk_id, generation, chunk.get("instance") as Node3D)
++
++
++func _retire_internal(chunk_id: String, generation: int, instance: Node3D) -> void:
++	if not _chunks.has(chunk_id):
++		_prepared.erase(chunk_id)
++		return
++	var chunk: Dictionary = _chunks[chunk_id]
++	var bound_generation: int = int(chunk["generation"])
++	if generation < bound_generation:
++		return
++	if instance != null and is_instance_valid(instance) and chunk["instance"] != instance:
++		return
++	var uuids: Array[String] = []
++	var to_disable: Array[Dictionary] = []
++	for binding_variant: Variant in chunk.get("bindings", []):
++		var binding: Dictionary = binding_variant
++		var uuid: String = binding["uuid"]
++		if _bindings.has(uuid) and _binding_matches(_bindings[uuid], chunk_id, bound_generation, binding.get("node") as Node3D):
++			var node: Node3D = _bindings[uuid]["node"]
++			_bindings.erase(uuid)
++			uuids.append(uuid)
++			if is_instance_valid(node):
++				to_disable.append({"uuid": uuid, "node": node})
++	# Revoke ownership before any projection callback can re-enter and bind a new
++	# chunk instance. All cleanup below is local to the captured old instance.
++	if _chunk_matches(_chunks.get(chunk_id, {}), bound_generation, chunk["instance"] as Node3D):
++		_chunks.erase(chunk_id)
++	var prepared: Dictionary = _prepared.get(chunk_id, {})
++	if int(prepared.get("generation", -1)) == bound_generation and prepared.get("instance") == chunk["instance"]:
++		_prepared.erase(chunk_id)
++	for owner: Dictionary in to_disable:
++		var node: Node3D = owner["node"]
++		if _has_same_node_binding(owner["uuid"], node):
++			continue
++		if is_instance_valid(node) and not node.is_queued_for_deletion():
++			node.call("set_interaction_enabled", false)
++	if not uuids.is_empty():
++		interactions_invalidated.emit({"chunk_id": chunk_id, "lifecycle_generation": generation, "entity_uuids": uuids})
++
++
++func _binding_matches(binding: Dictionary, chunk_id: String, generation: int, node: Node3D) -> bool:
++	return binding.get("chunk_id") == chunk_id and int(binding.get("generation", -1)) == generation \
++		and binding.get("node") == node
++
++
++func _chunk_matches(chunk: Dictionary, generation: int, instance: Node3D) -> bool:
++	return not chunk.is_empty() and int(chunk.get("generation", -1)) == generation \
++		and chunk.get("instance") == instance
++
++
++func _has_same_node_binding(uuid: String, node: Node3D) -> bool:
++	return _bindings.has(uuid) and _bindings[uuid].get("node") == node
++
++
++func _is_current(chunk_id: String, generation: int) -> bool:
++	return _configured and _manager.get_desired_chunk_ids().has(chunk_id) \
++		and _manager.get_lifecycle_generation(chunk_id) == generation
+--- /dev/null
++++ b/game/world/entity_hydrator.gd.uid
+@@ -0,0 +1 @@
++uid://dy43ywkg0feqf
