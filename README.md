@@ -29,3 +29,9 @@ godot --headless --path game --script res://tests/run_tests.gd -- --suite all
 ```
 
 See [AGENTS.md](AGENTS.md) for project workflow, runtime, and scope constraints.
+
+## Project layout
+
+- `game/` contains the Godot project, gameplay code, scenes, and tests.
+- `art/` contains editable Blender sources and asset provenance.
+- `docs/` contains the design, task tracker, and implementation evidence.
